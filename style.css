@@ -78,32 +78,17 @@ p {
   margin: 0 0 18px 0;
 }
 
-h1 {
-  font-size: 30px;
-  font-weight: 700;
-  margin: 0 0 24px 0;
-}
-
-h2 {
-  font-size: 22px;
-  font-weight: 700;
-  margin: 28px 0 14px 0;
-}
-
-ul {
-  font-size: 14px;
-  line-height: 1.45;
-  margin-top: 0;
-}
-
 main h1 {
-  font-size: 34px;
+  font-size: 52px;
   font-weight: 400;
+  line-height: 1.2;
+  margin: 0 0 28px 0;
 }
 
 main h2 {
-  font-size: 26px;
+  font-size: 22px;
   font-weight: 400;
+  margin: 36px 0 14px 0;
 }
 
 main ul {
@@ -113,10 +98,6 @@ main ul {
 main li {
   font-size: 15px;
   margin-bottom: 8px;
-}
-
-li {
-  margin-bottom: 2px;
 }
 
 a {
