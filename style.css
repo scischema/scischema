@@ -1,83 +1,94 @@
 body {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
-  background: #ffffff;
-  color: #333333;
+  color: #111;
+  background: #fff;
 }
 
 header {
-  background: #f4f8fb;
-  border-bottom: 1px solid #cfdbe6;
-  padding: 18px 40px;
+  height: 70px;
+  border-bottom: 1px solid #c40000;
+  display: flex;
+  align-items: center;
+  padding: 0 28px;
 }
 
-.site-title {
-  font-size: 28px;
+.logo {
+  color: #c40000;
   font-weight: bold;
-  color: #2b5d7c;
   text-decoration: none;
-}
-
-nav {
-  margin-top: 12px;
+  margin-right: 36px;
 }
 
 nav a {
-  margin-right: 24px;
-  color: #2b5d7c;
+  color: #111;
+  text-decoration: none;
+  font-weight: bold;
+  margin-right: 28px;
+  font-size: 14px;
+}
+
+nav a:hover {
+  color: #c40000;
+}
+
+.search {
+  margin-left: auto;
+  width: 350px;
+  height: 42px;
+  border: 1px solid #111;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  padding-left: 24px;
+  color: #555;
+}
+
+main {
+  max-width: 1180px;
+  margin: 42px auto;
+  padding: 0 40px;
+}
+
+.hero {
+  max-width: 680px;
+  font-size: 28px;
+  line-height: 1.25;
+  margin-bottom: 36px;
+}
+
+.hero .brand {
+  color: #c40000;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 70px;
+  max-width: 1180px;
+}
+
+p {
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+a {
+  color: #c40000;
   text-decoration: none;
   font-weight: bold;
 }
 
-nav a:hover {
-  text-decoration: underline;
-}
-
-main {
-  max-width: 980px;
-  margin: 40px auto;
-  padding: 0 24px;
-  line-height: 1.6;
-}
-
-h1 {
-  color: #2b5d7c;
-  font-size: 30px;
-}
-
-h2 {
-  color: #444444;
-  border-bottom: 1px solid #dddddd;
-  padding-bottom: 6px;
-  margin-top: 36px;
-}
-
-.tagline {
-  font-size: 20px;
-  color: #555555;
-}
-
-.card {
-  background: #f8fbfd;
-  border: 1px solid #d7e3ec;
-  border-radius: 4px;
-  padding: 18px;
-  margin: 18px 0;
-}
-
-.schema-list a {
-  color: #2b5d7c;
-  text-decoration: none;
-}
-
-.schema-list a:hover {
+a:hover {
   text-decoration: underline;
 }
 
 footer {
-  border-top: 1px solid #dddddd;
-  margin-top: 60px;
-  padding: 20px 40px;
-  font-size: 14px;
-  color: #666666;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: #faf5f5;
+  padding: 20px 28px;
+  font-size: 13px;
+  color: #111;
 }
