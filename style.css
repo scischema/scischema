@@ -16,11 +16,22 @@ header {
 }
 
 .logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
   color: #cc0000;
-  font-weight: 700;
   text-decoration: none;
-  margin-right: 58px;
+  font-weight: 700;
   font-size: 16px;
+
+  margin-right: 58px;
+}
+
+.logo img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
 }
 
 nav a {
