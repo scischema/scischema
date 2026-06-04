@@ -29,8 +29,8 @@ header {
 }
 
 .logo img {
-  width: 52px;
-  height: 52px;
+  width: 58px;
+  height: 58px;
   object-fit: contain;
 }
 
@@ -45,20 +45,6 @@ nav a {
 nav a:hover,
 a:hover {
   text-decoration: underline;
-}
-
-.search {
-  margin-left: auto;
-  width: 410px;
-  height: 50px;
-  border: 1.5px solid #222;
-  border-radius: 28px;
-  display: flex;
-  align-items: center;
-  padding-left: 34px;
-  font-size: 22px;
-  color: #333;
-  box-sizing: border-box;
 }
 
 main {
