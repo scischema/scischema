@@ -1,0 +1,1070 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Steam Reforming Process Schema",
+    "description": "A comprehensive schema representing the steam reforming process for hydrogen production, including reactor conditions, catalyst properties, performance metrics, and advanced reactor designs like fractal microreactors. This schema includes specific details for acetic acid reforming, ethanol reforming, methanol steam reforming, and general steam reforming processes. This version incorporates insights from the research on zinc-free CuAl/AC catalysts for methanol steam reforming.",
+    "type": "object",
+    "properties": {
+        "process_metadata": {
+            "type": "object",
+            "description": "General metadata about the steam reforming process.",
+            "properties": {
+                "process_name": {
+                    "type": "string",
+                    "description": "Name or identifier of the steam reforming process (e.g., 'Autothermal Reforming', 'Conventional Steam Reforming', 'Acetic Acid Steam Reforming', 'Ethanol Steam Reforming', 'Methanol Steam Reforming').",
+                    "default": "Steam Reforming"
+                },
+                "date": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Timestamp of the process run or data collection."
+                },
+                "feedstock_type": {
+                    "type": "string",
+                    "description": "Type of feedstock used in the reforming process.",
+                    "enum": [
+                        "methane",
+                        "acetic_acid",
+                        "bio_oil",
+                        "ethanol",
+                        "glycerol",
+                        "methanol"
+                    ]
+                },
+                "reactor_type": {
+                    "type": "string",
+                    "description": "Type of reactor used in the reforming process (e.g., 'traditional', 'fractal_microreactor', 'plate_heat_exchanger','melt_infiltration').",
+                    "enum": [
+                        "traditional",
+                        "fractal_microreactor",
+                        "plate_heat_exchanger",
+                        "melt_infiltration"
+                    ]
+                }
+            },
+            "required": [
+                "process_name",
+                "feedstock_type",
+                "reactor_type"
+            ]
+        },
+        "input_parameters": {
+            "type": "object",
+            "description": "Parameters defining the input conditions for the steam reforming process.",
+            "properties": {
+                "steam_to_carbon_ratio": {
+                    "type": "number",
+                    "description": "Molar ratio of steam (H\u2082O) to carbon in the feedstock (e.g., CH\u2084, CH\u2083COOH, CH\u2083OH, C\u2082H\u2085OH). Controls equilibrium and minimizes carbon deposition.",
+                    "minimum": 2.0,
+                    "maximum": 10.0,
+                    "default": 3.0,
+                    "units": "molar ratio"
+                },
+                "feedstock_feed_rate": {
+                    "type": "number",
+                    "description": "Volumetric or mass flow rate of the feedstock (e.g., methane, acetic acid, ethanol, methanol).",
+                    "minimum": 0,
+                    "units": "kg/hr or m\u00b3/hr",
+                    "required": true
+                },
+                "steam_feed_rate": {
+                    "type": "number",
+                    "description": "Volumetric or mass flow rate of steam fed into the reactor.",
+                    "minimum": 0,
+                    "units": "kg/hr or m\u00b3/hr"
+                },
+                "carrier_gas_flow_rate": {
+                    "type": "number",
+                    "description": "Flow rate of the carrier gas (e.g., N\u2082) used in the process.",
+                    "minimum": 0,
+                    "units": "mL/min or L/min"
+                },
+                "liquid_hourly_space_velocity": {
+                    "type": "number",
+                    "description": "Liquid hourly space velocity (LHSV) for liquid feedstocks.",
+                    "minimum": 0,
+                    "units": "h\u207b\u00b9"
+                },
+                "weight_hourly_space_velocity": {
+                    "type": "number",
+                    "description": "Weight hourly space velocity (WHSV) for methanol steam reforming.",
+                    "minimum": 0,
+                    "units": "h\u207b\u00b9",
+                    "if": {
+                        "properties": {
+                            "feedstock_type": {
+                                "const": "methanol"
+                            }
+                        }
+                    },
+                    "then": {
+                        "required": true
+                    }
+                },
+                "fractal_iteration_order": {
+                    "type": "integer",
+                    "description": "Order of fractal iteration for fractal microreactors (0 for traditional reactors).",
+                    "minimum": 0,
+                    "maximum": 4,
+                    "default": 0,
+                    "if": {
+                        "properties": {
+                            "reactor_type": {
+                                "const": "fractal_microreactor"
+                            }
+                        }
+                    },
+                    "then": {
+                        "required": true
+                    }
+                },
+                "tree_length_ratio": {
+                    "type": "number",
+                    "description": "Successive length ratio of tree-like microchannel branches in fractal microreactors.",
+                    "minimum": 0.1,
+                    "maximum": 1.0,
+                    "default": 0.5,
+                    "if": {
+                        "properties": {
+                            "reactor_type": {
+                                "const": "fractal_microreactor"
+                            }
+                        }
+                    },
+                    "then": {
+                        "required": true
+                    }
+                },
+                "tree_diameter_ratio": {
+                    "type": "number",
+                    "description": "Successive diameter ratio of tree-like microchannel branches in fractal microreactors.",
+                    "minimum": 0.1,
+                    "maximum": 1.0,
+                    "default": 0.707,
+                    "if": {
+                        "properties": {
+                            "reactor_type": {
+                                "const": "fractal_microreactor"
+                            }
+                        }
+                    },
+                    "then": {
+                        "required": true
+                    }
+                },
+                "ball_milling_time": {
+                    "type": "number",
+                    "description": "Time for ball milling in the preparation of CuAl/AC catalysts.",
+                    "minimum": 0,
+                    "units": "minutes",
+                    "if": {
+                        "properties": {
+                            "reactor_type": {
+                                "const": "melt_infiltration"
+                            }
+                        }
+                    },
+                    "then": {
+                        "required": true
+                    }
+                },
+                "calcination_temperature": {
+                    "type": "number",
+                    "description": "Calcination temperature for CuAl/AC catalyst preparation.",
+                    "minimum": 100,
+                    "maximum": 1000,
+                    "default": 600,
+                    "units": "\u00b0C",
+                    "if": {
+                        "properties": {
+                            "reactor_type": {
+                                "const": "melt_infiltration"
+                            }
+                        }
+                    },
+                    "then": {
+                        "required": true
+                    }
+                },
+                "calcination_duration": {
+                    "type": "number",
+                    "description": "Duration of calcination for CuAl/AC catalyst preparation.",
+                    "minimum": 0.1,
+                    "maximum": 24,
+                    "default": 1,
+                    "units": "hours",
+                    "if": {
+                        "properties": {
+                            "reactor_type": {
+                                "const": "melt_infiltration"
+                            }
+                        }
+                    },
+                    "then": {
+                        "required": true
+                    }
+                }
+            },
+            "required": [
+                "steam_to_carbon_ratio",
+                "feedstock_feed_rate"
+            ]
+        },
+        "catalyst_properties": {
+            "type": "object",
+            "description": "Properties related to the catalyst used in the steam reforming process, including synthesis method, composition, and performance metrics.",
+            "properties": {
+                "synthesis_method": {
+                    "type": "string",
+                    "enum": [
+                        "co-precipitation",
+                        "impregnation",
+                        "solid-phase",
+                        "melt_infiltration",
+                        "mechanochemical",
+                        "other"
+                    ],
+                    "description": "Method used to prepare the catalyst. Influences dispersion, stability, and active site formation. The melt infiltration method is particularly effective for CuAl/AC catalysts.",
+                    "default": "other"
+                },
+                "composition": {
+                    "type": "object",
+                    "description": "Detailed composition of the catalyst including active metals, supports, and promoters.",
+                    "properties": {
+                        "active_metals": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "Ni",
+                                    "Co",
+                                    "Rh",
+                                    "Pt",
+                                    "Pd",
+                                    "Fe",
+                                    "Cu",
+                                    "Mg",
+                                    "Zr",
+                                    "K",
+                                    "La",
+                                    "Ce",
+                                    "Al",
+                                    "Si",
+                                    "other"
+                                ],
+                                "description": "List of primary catalytic metals (e.g., Ni, Co, Rh). May include noble metals or base metals depending on the system."
+                            },
+                            "description": "Primary catalytic metals responsible for reforming activity.",
+                            "minItems": 1
+                        },
+                        "support_material": {
+                            "type": "string",
+                            "enum": [
+                                "Al\u2082O\u2083",
+                                "SiO\u2082",
+                                "CeO\u2082",
+                                "MgO",
+                                "ZrO\u2082",
+                                "CeZrO\u2082",
+                                "NiAl\u2082O\u2084",
+                                "MgAl\u2082O\u2084",
+                                "CoAl\u2082O\u2084",
+                                "spinel",
+                                "activated_carbon",
+                                "other"
+                            ],
+                            "description": "Material used as the catalyst support (e.g., Al\u2082O\u2083, SiO\u2082, CeO\u2082, spinel, activated carbon). Influences dispersion, stability, and metal-support interaction.",
+                            "default": "Al\u2082O\u2083"
+                        },
+                        "promoters": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "K",
+                                    "Mg",
+                                    "Zr",
+                                    "La",
+                                    "Ce",
+                                    "Fe",
+                                    "Cu",
+                                    "B",
+                                    "P",
+                                    "other"
+                                ],
+                                "description": "Additives that enhance catalyst performance (e.g., K, Mg, Zr). Improve activity, stability, or resistance to coking."
+                            },
+                            "description": "Elements added to improve catalytic performance, stability, or coke resistance.",
+                            "minItems": 0
+                        },
+                        "metal_ratio": {
+                            "type": "object",
+                            "description": "Molar ratios of key metal components in the catalyst, especially relevant for bimetallic or doped systems.",
+                            "properties": {
+                                "ni_mg_ratio": {
+                                    "type": "number",
+                                    "minimum": 0,
+                                    "description": "Molar ratio of Ni to Mg in Ni-Mg-Al spinel supports. Influences acidity, basicity, and oxygen vacancy concentration.",
+                                    "units": "mol/mol"
+                                },
+                                "co_loading": {
+                                    "type": "number",
+                                    "minimum": 0,
+                                    "maximum": 100,
+                                    "description": "Weight percentage of cobalt in the catalyst. Affects reducibility, coke resistance, and water-gas shift activity.",
+                                    "units": "%"
+                                }
+                            },
+                            "required": []
+                        }
+                    },
+                    "required": [
+                        "active_metals",
+                        "support_material"
+                    ]
+                },
+                "textural_properties": {
+                    "type": "object",
+                    "description": "Physical characteristics of the catalyst related to surface area and porosity.",
+                    "properties": {
+                        "bet_surface_area": {
+                            "type": "number",
+                            "minimum": 0,
+                            "description": "BET surface area of the catalyst, measured in m\u00b2/g. Affects availability of active sites and overall catalytic activity.",
+                            "units": "m\u00b2/g"
+                        },
+                        "pore_volume": {
+                            "type": "number",
+                            "minimum": 0,
+                            "description": "Total pore volume of the catalyst, measured in cm\u00b3/g. Influences mass transfer and accessibility of active sites.",
+                            "units": "cm\u00b3/g"
+                        },
+                        "average_pore_diameter": {
+                            "type": "number",
+                            "minimum": 0,
+                            "description": "Average pore diameter of the catalyst, measured in nm. Affects diffusion and residence time of reactants.",
+                            "units": "nm"
+                        },
+                        "pore_size_distribution": {
+                            "type": "object",
+                            "description": "Distribution of pore sizes across the catalyst, categorized into mesopores and micropores.",
+                            "properties": {
+                                "mesopores_2_10nm": {
+                                    "type": "number",
+                                    "minimum": 0,
+                                    "description": "Fraction of pores in the 2\u201310 nm range, typically associated with high surface area and active site dispersion.",
+                                    "units": "%"
+                                },
+                                "mesopores_10_50nm": {
+                                    "type": "number",
+                                    "minimum": 0,
+                                    "description": "Fraction of pores in the 10\u201350 nm range, important for mass transfer and catalyst stability.",
+                                    "units": "%"
+                                }
+                            },
+                            "required": [
+                                "mesopores_2_10nm",
+                                "mesopores_10_50nm"
+                            ]
+                        }
+                    },
+                    "required": [
+                        "bet_surface_area",
+                        "pore_volume",
+                        "average_pore_diameter",
+                        "pore_size_distribution"
+                    ]
+                },
+                "surface_properties": {
+                    "type": "object",
+                    "description": "Chemical surface characteristics influencing catalytic activity and selectivity.",
+                    "properties": {
+                        "acid_site_density": {
+                            "type": "number",
+                            "minimum": 0,
+                            "description": "Total density of acidic sites on the catalyst surface, measured in mmol/g. Influences adsorption and activation of organic molecules.",
+                            "units": "mmol/g"
+                        },
+                        "basic_site_density": {
+                            "type": "number",
+                            "minimum": 0,
+                            "description": "Total density of basic sites on the catalyst surface, measured in mmol/g. Promotes CO\u2082 adsorption and water dissociation.",
+                            "units": "mmol/g"
+                        },
+                        "oxygen_vacancy_concentration": {
+                            "type": "number",
+                            "minimum": 0,
+                            "description": "Concentration of oxygen vacancies in the catalyst lattice, measured as a fraction of total oxygen sites. Enhances redox activity and coke gasification.",
+                            "units": "fraction"
+                        },
+                        "surface_enrichment": {
+                            "type": "object",
+                            "description": "Surface composition relative to bulk, indicating preferential enrichment of certain elements.",
+                            "properties": {
+                                "al_surface_enrichment": {
+                                    "type": "number",
+                                    "minimum": 0,
+                                    "description": "Degree of aluminum enrichment at the catalyst surface, which enhances basicity and stabilizes oxygenated intermediates.",
+                                    "units": "fraction"
+                                },
+                                "cu_delta_plus_fraction": {
+                                    "type": "number",
+                                    "minimum": 0,
+                                    "maximum": 1,
+                                    "description": "Fraction of copper in the positive valence state (Cu\u03b4\u207a), which is critical for methanol activation and low-temperature activity.",
+                                    "units": "fraction"
+                                }
+                            },
+                            "required": [
+                                "al_surface_enrichment",
+                                "cu_delta_plus_fraction"
+                            ]
+                        }
+                    },
+                    "required": [
+                        "acid_site_density",
+                        "basic_site_density",
+                        "oxygen_vacancy_concentration",
+                        "surface_enrichment"
+                    ]
+                },
+                "activation_energy": {
+                    "type": "number",
+                    "minimum": 0,
+                    "description": "Minimum energy required for the reforming reaction to proceed (in kJ/mol). Used to compare catalyst performance and reaction kinetics.",
+                    "units": "kJ/mol"
+                },
+                "catalyst_activity": {
+                    "type": "number",
+                    "minimum": 0,
+                    "description": "Rate at which the catalyst accelerates the reforming reactions. Often measured via methane or acetic acid conversion.",
+                    "units": "mol/(g\u00b7h)"
+                },
+                "coking_mechanism": {
+                    "type": "string",
+                    "enum": [
+                        "amorphous carbon",
+                        "filamentous carbon",
+                        "graphitic carbon",
+                        "encapsulating carbon",
+                        "none"
+                    ],
+                    "description": "Primary type of carbon deposit formed during reforming. Influences deactivation mechanism and regeneration strategy.",
+                    "default": "none"
+                },
+                "thermal_stability": {
+                    "type": "object",
+                    "description": "Catalyst's ability to maintain structure and activity under prolonged high-temperature exposure.",
+                    "properties": {
+                        "max_operating_temperature": {
+                            "type": "number",
+                            "minimum": 0,
+                            "description": "Maximum temperature the catalyst can withstand without structural degradation.",
+                            "units": "\u00b0C"
+                        },
+                        "deactivation_rate": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1,
+                            "description": "Fractional loss of activity per unit time (e.g., per hour or per day). Reflects long-term stability.",
+                            "units": "1/h"
+                        },
+                        "sintering_tendency": {
+                            "type": "string",
+                            "enum": [
+                                "low",
+                                "medium",
+                                "high"
+                            ],
+                            "description": "Degree to which catalyst metal particles agglomerate at high temperatures, reducing active surface area.",
+                            "default": "medium"
+                        }
+                    },
+                    "required": [
+                        "max_operating_temperature"
+                    ]
+                }
+            },
+            "required": [
+                "synthesis_method",
+                "composition",
+                "textural_properties",
+                "surface_properties",
+                "activation_energy",
+                "catalyst_activity",
+                "coking_mechanism",
+                "thermal_stability"
+            ]
+        },
+        "stability_metrics": {
+            "type": "object",
+            "description": "Parameters measuring catalyst durability and resistance to deactivation",
+            "properties": {
+                "stability_test_duration": {
+                    "type": "number",
+                    "description": "Duration of continuous operation test to evaluate catalyst stability. Unit: hours (h). Typical range: 10-100+ hours",
+                    "minimum": 0
+                },
+                "activity_decay_rate": {
+                    "type": "number",
+                    "description": "Rate of decrease in catalytic activity over time. Unit: percentage per hour (%/h)",
+                    "maximum": 0
+                },
+                "coking_rate": {
+                    "type": "number",
+                    "description": "Rate of solid carbon deposition on catalyst surface. Indicates deactivation tendency. Unit: milligrams per hour (mg/h)",
+                    "minimum": 0
+                },
+                "sintering_degree": {
+                    "type": "number",
+                    "description": "Quantitative measure of metal particle growth due to sintering. Unit: percentage increase in particle size or nanometers (nm)",
+                    "minimum": 0
+                },
+                "carbon_deposition_rate": {
+                    "type": "number",
+                    "description": "Rate of carbon deposition on the catalyst during the stability test.",
+                    "minimum": 0,
+                    "units": "mg/h"
+                },
+                "coke_characterization": {
+                    "type": "object",
+                    "description": "Characterization of coke formed during the stability test.",
+                    "properties": {
+                        "amorphous_coke": {
+                            "type": "number",
+                            "description": "Amount of amorphous coke formed.",
+                            "minimum": 0,
+                            "units": "wt%"
+                        },
+                        "filamentous_coke": {
+                            "type": "number",
+                            "description": "Amount of filamentous coke formed.",
+                            "minimum": 0,
+                            "units": "wt%"
+                        }
+                    }
+                }
+            },
+            "required": [
+                "stability_test_duration",
+                "coking_rate"
+            ]
+        },
+        "emissions_and_byproducts": {
+            "type": "object",
+            "description": "Environmental impact metrics and carbon management parameters",
+            "properties": {
+                "carbon_formation_rate": {
+                    "type": "number",
+                    "description": "Rate of solid carbon deposition on catalyst surface. Indicates deactivation tendency. Unit: grams per hour (g/h) or weight percent per hour (wt%/h)",
+                    "minimum": 0
+                },
+                "carbon_dioxide_emission": {
+                    "type": "number",
+                    "description": "Quantity of CO2 produced as by-product before capture. Unit: kilograms per hour (kg/h)",
+                    "minimum": 0
+                },
+                "co2_capture_efficiency": {
+                    "type": "number",
+                    "description": "Effectiveness of CO2 capture process. Unit: percentage (%). Range: 0-100. Typical target: \u226595%",
+                    "minimum": 0,
+                    "maximum": 100
+                },
+                "co2_purity": {
+                    "type": "number",
+                    "description": "Concentration of CO2 in captured stream. Unit: mole percentage (mol%). Typical range: 90-99% (e.g., 96.6 mol% for MEA-based capture)",
+                    "minimum": 0,
+                    "maximum": 100
+                },
+                "co2_capture_technique": {
+                    "type": "string",
+                    "description": "Method used for CO2 separation (e.g., 'amine scrubbing', 'pressure swing adsorption', 'membrane separation', 'cryogenic distillation')"
+                },
+                "liquid_byproducts": {
+                    "type": "object",
+                    "description": "Byproducts detected in liquid phase after reaction",
+                    "properties": {
+                        "methanol": {
+                            "type": "number",
+                            "description": "Concentration of methanol in liquid byproducts. Unit: weight percentage (wt%)",
+                            "minimum": 0,
+                            "maximum": 100
+                        },
+                        "acetone": {
+                            "type": "number",
+                            "description": "Concentration of acetone in liquid byproducts. Unit: weight percentage (wt%)",
+                            "minimum": 0,
+                            "maximum": 100
+                        },
+                        "acetic_acid_residual": {
+                            "type": "number",
+                            "description": "Residual concentration of unreacted acetic acid. Unit: weight percentage (wt%)",
+                            "minimum": 0,
+                            "maximum": 100
+                        }
+                    }
+                }
+            },
+            "required": [
+                "carbon_formation_rate",
+                "carbon_dioxide_emission",
+                "co2_capture_efficiency",
+                "co2_purity",
+                "co2_capture_technique"
+            ]
+        },
+        "performance_metrics": {
+            "type": "object",
+            "description": "Key performance metrics of the steam reforming process.",
+            "properties": {
+                "feedstock_conversion": {
+                    "type": "number",
+                    "description": "Percentage of feedstock converted into synthesis gas components (e.g., H\u2082, CO, CO\u2082).",
+                    "minimum": 0,
+                    "maximum": 1,
+                    "default": 0.85,
+                    "units": "fraction (0-1)"
+                },
+                "hydrogen_production": {
+                    "type": "number",
+                    "description": "Quantity of hydrogen generated from the steam reforming process.",
+                    "minimum": 0,
+                    "units": "kg/hr or mol/hr"
+                },
+                "h2_purity": {
+                    "type": "number",
+                    "description": "Concentration of hydrogen in the product gas stream.",
+                    "minimum": 0,
+                    "maximum": 1,
+                    "default": 0.95,
+                    "units": "fraction (0-1)"
+                },
+                "carbon_dioxide_emission": {
+                    "type": "number",
+                    "description": "Amount of CO\u2082 produced as a by-product of the reforming process.",
+                    "minimum": 0,
+                    "units": "kg/hr or mol/hr"
+                },
+                "catalyst_activity": {
+                    "type": "number",
+                    "description": "Rate at which the catalyst accelerates the reforming reactions.",
+                    "minimum": 0,
+                    "default": 0.5,
+                    "units": "mol/g_cat/hr"
+                },
+                "thermal_efficiency": {
+                    "type": "number",
+                    "description": "Efficiency of the process in converting fuel and heat input into hydrogen output.",
+                    "minimum": 0,
+                    "maximum": 1,
+                    "default": 0.75,
+                    "units": "dimensionless (0-1)"
+                },
+                "product_selectivity": {
+                    "type": "object",
+                    "description": "Selectivity of various products in the reforming process.",
+                    "properties": {
+                        "h2_selectivity": {
+                            "type": "number",
+                            "description": "Selectivity towards hydrogen production.",
+                            "minimum": 0,
+                            "maximum": 1,
+                            "default": 0.85,
+                            "units": "fraction (0-1)"
+                        },
+                        "co_selectivity": {
+                            "type": "number",
+                            "description": "Selectivity towards carbon monoxide production.",
+                            "minimum": 0,
+                            "maximum": 1,
+                            "default": 0.1,
+                            "units": "fraction (0-1)"
+                        },
+                        "co2_selectivity": {
+                            "type": "number",
+                            "description": "Selectivity towards carbon dioxide production.",
+                            "minimum": 0,
+                            "maximum": 1,
+                            "default": 0.05,
+                            "units": "fraction (0-1)"
+                        },
+                        "ch4_selectivity": {
+                            "type": "number",
+                            "description": "Selectivity towards methane production.",
+                            "minimum": 0,
+                            "maximum": 1,
+                            "default": 0.01,
+                            "units": "fraction (0-1)"
+                        },
+                        "acetaldehyde_selectivity": {
+                            "type": "number",
+                            "description": "Selectivity towards acetaldehyde production in ethanol steam reforming.",
+                            "minimum": 0,
+                            "maximum": 1,
+                            "default": 0.0,
+                            "units": "fraction (0-1)"
+                        },
+                        "ethylene_selectivity": {
+                            "type": "number",
+                            "description": "Selectivity towards ethylene production in ethanol steam reforming.",
+                            "minimum": 0,
+                            "maximum": 1,
+                            "default": 0.0,
+                            "units": "fraction (0-1)"
+                        },
+                        "methane_selectivity": {
+                            "type": "number",
+                            "description": "Selectivity towards methane production in methanol steam reforming.",
+                            "minimum": 0,
+                            "maximum": 1,
+                            "default": 0.0,
+                            "units": "fraction (0-1)"
+                        },
+                        "methanol_conversion": {
+                            "type": "number",
+                            "description": "Conversion rate of methanol in the feedstock.",
+                            "minimum": 0,
+                            "maximum": 1,
+                            "default": 0,
+                            "units": "fraction (0-1)",
+                            "if": {
+                                "properties": {
+                                    "feedstock_type": {
+                                        "const": "methanol"
+                                    }
+                                }
+                            },
+                            "then": {
+                                "required": true
+                            }
+                        }
+                    }
+                },
+                "hydrogen_utilization_efficiency": {
+                    "type": "number",
+                    "description": "Efficiency of hydrogen production relative to the feedstock input.",
+                    "minimum": 0,
+                    "maximum": 1,
+                    "default": 0.6,
+                    "units": "fraction (0-1)"
+                },
+                "activity_decay": {
+                    "type": "number",
+                    "description": "Percentage of activity decay of the catalyst during stability tests.",
+                    "minimum": 0,
+                    "maximum": 1,
+                    "default": 0,
+                    "units": "fraction (0-1)"
+                }
+            },
+            "required": [
+                "feedstock_conversion",
+                "hydrogen_production",
+                "h2_purity"
+            ]
+        },
+                
+        "reactor_geometry": {
+            "type": "object",
+            "description": "Geometrical parameters of the reactor.",
+            "properties": {
+                "reactor_diameter": {
+                    "type": "number",
+                    "description": "Diameter of the reactor.",
+                    "minimum": 0.01,
+                    "units": "meters"
+                },
+                "reactor_length": {
+                    "type": "number",
+                    "description": "Length of the reactor.",
+                    "minimum": 0.1,
+                    "units": "meters"
+                },
+                "heat_duty": {
+                    "type": "number",
+                    "description": "Heat duty of the reactor, indicating the amount of heat required for the process.",
+                    "minimum": 0,
+                    "units": "MW"
+                },
+                "channel_width": {
+                    "type": "number",
+                    "description": "Width of microchannels in fractal microreactors.",
+                    "minimum": 0.001,
+                    "units": "meters",
+                    "if": {
+                        "properties": {
+                            "reactor_type": {
+                                "const": "fractal_microreactor"
+                            }
+                        }
+                    },
+                    "then": {
+                        "required": true
+                    }
+                },
+                "channel_depth": {
+                    "type": "number",
+                    "description": "Depth of microchannels in fractal microreactors.",
+                    "minimum": 0.001,
+                    "units": "meters",
+                    "if": {
+                        "properties": {
+                            "reactor_type": {
+                                "const": "fractal_microreactor"
+                            }
+                        }
+                    },
+                    "then": {
+                        "required": true
+                    }
+                },
+                "ball_milling_medium": {
+                    "type": "string",
+                    "description": "Medium used during ball milling for catalyst preparation (e.g., 'dry', 'wet').",
+                    "enum": [
+                        "dry",
+                        "wet"
+                    ],
+                    "if": {
+                        "properties": {
+                            "reactor_type": {
+                                "const": "melt_infiltration"
+                            }
+                        }
+                    },
+                    "then": {
+                        "required": true
+                    }
+                }
+            }
+        },
+        "performance_evaluation_criteria": {
+            "type": "object",
+            "description": "Performance evaluation criteria for microreactors.",
+            "properties": {
+                "pec": {
+                    "type": "number",
+                    "description": "Performance evaluation criteria (PEC) for heat and mass transfer in microreactors.",
+                    "minimum": 0,
+                    "units": "dimensionless"
+                },
+                "friction_coefficient": {
+                    "type": "number",
+                    "description": "Friction coefficient indicating flow resistance in microreactors.",
+                    "minimum": 0,
+                    "units": "dimensionless"
+                }
+            }
+        },
+        "system_properties": {
+            "type": "object",
+            "description": "Reactor-level characteristics affecting heat management and physical design",
+            "properties": {
+                "heat_transfer_rate": {
+                    "type": "number",
+                    "description": "Rate of thermal energy movement within reactor system. Critical for maintaining endothermic reaction temperatures. Unit: kilowatts (kW)",
+                    "minimum": 0
+                },
+                "reactor_type": {
+                    "type": "string",
+                    "description": "Type of reactor configuration used (e.g., 'fixed bed', 'fluidized bed', 'tubular reactor', 'microreactor')"
+                },
+                "reactor_diameter": {
+                    "type": "number",
+                    "description": "Internal diameter of the reforming reactor. Critical for determining flow characteristics and production capacity. Unit: meters (m). Typical range: 0.1-1.0 m (e.g., 0.18 m for 10 t/day H2 production from ethanol)",
+                    "minimum": 0
+                },
+                "reactor_length": {
+                    "type": "number",
+                    "description": "Length of the reforming reactor. Critical for determining residence time and conversion. Unit: meters (m). Typical range: 1-5 m (e.g., 2 m for 10 t/day H2 production from ethanol)",
+                    "minimum": 0
+                },
+                "fractal_reactor_parameters": {
+                    "type": "object",
+                    "description": "Parameters specific to fractal microreactor designs incorporating tree-like networks and Sierpinski carpet structures",
+                    "properties": {
+                        "successive_length_ratio": {
+                            "type": "number",
+                            "description": "Ratio of length between successive branching levels in tree-like microchannel network. Unit: dimensionless ratio. Typical range: 0.5-1.0",
+                            "minimum": 0,
+                            "maximum": 1
+                        },
+                        "successive_diameter_ratio": {
+                            "type": "number",
+                            "description": "Ratio of diameter between successive branching levels in tree-like microchannel network. Unit: dimensionless ratio. Typical range: 0.5-0.8",
+                            "minimum": 0,
+                            "maximum": 1
+                        },
+                        "fractal_iteration_order": {
+                            "type": "integer",
+                            "description": "Number of iterations in fractal structure design (e.g., Sierpinski carpet). Higher orders increase surface area but may affect flow dynamics. Typical range: 0-4",
+                            "minimum": 0
+                        },
+                        "sierpinski_carpet": {
+                            "type": "boolean",
+                            "description": "Indicates whether the reactor design incorporates a Sierpinski carpet structure for enhanced surface area and heat/mass transfer"
+                        }
+                    }
+                }
+            },
+            "required": [
+                "heat_transfer_rate",
+                "reactor_diameter",
+                "reactor_length"
+            ]
+        },
+        "post_processing": {
+            "type": "object",
+            "description": "Parameters related to downstream processing of reformate gas",
+            "properties": {
+                "co2_capture_efficiency": {
+                    "type": "number",
+                    "description": "Effectiveness of CO2 separation process. Unit: percentage (%). Range: 0-100",
+                    "minimum": 0,
+                    "maximum": 100
+                },
+                "hydrogen_purification_method": {
+                    "type": "string",
+                    "description": "Technique used for hydrogen purification (e.g., 'pressure swing adsorption', 'palladium membrane', 'cryogenic separation')"
+                },
+                "hydrogen_purity_increase": {
+                    "type": "number",
+                    "description": "Improvement in hydrogen purity achieved through purification process. Unit: percentage points",
+                    "minimum": 0
+                },
+                "absorber": {
+                    "type": "object",
+                    "description": "Parameters specific to the CO2 absorber column in amine-based capture systems",
+                    "properties": {
+                        "packing_height": {
+                            "type": "number",
+                            "description": "Height of packing material in absorber column. Unit: meters (m). Typical range: 10-15 m (e.g., 12.2 m for 95% CO2 capture)",
+                            "minimum": 0
+                        },
+                        "diameter": {
+                            "type": "number",
+                            "description": "Internal diameter of absorber column. Unit: meters (m). Typical range: 1-2 m (e.g., 1.22 m for 95% CO2 capture)",
+                            "minimum": 0
+                        },
+                        "co2_loading": {
+                            "type": "number",
+                            "description": "Molar ratio of CO2 to amine in rich solvent. Unit: dimensionless ratio. Typical range: 0.1-0.5 (e.g., 0.12-0.14 for MEA systems)",
+                            "minimum": 0,
+                            "maximum": 1
+                        }
+                    },
+                    "required": [
+                        "packing_height",
+                        "diameter"
+                    ]
+                },
+                "stripper": {
+                    "type": "object",
+                    "description": "Parameters specific to the CO2 stripper column in amine-based capture systems",
+                    "properties": {
+                        "packing_height": {
+                            "type": "number",
+                            "description": "Height of packing material in stripper column. Unit: meters (m). Typical range: 4-7 m (e.g., 5 m for MEA systems)",
+                            "minimum": 0
+                        },
+                        "diameter": {
+                            "type": "number",
+                            "description": "Internal diameter of stripper column. Unit: meters (m). Typical range: 2-3 m (e.g., 2.60 m for MEA systems)",
+                            "minimum": 0
+                        },
+                        "reboiler_duty": {
+                            "type": "number",
+                            "description": "Thermal energy requirement for solvent regeneration in stripper. Unit: megawatts (MW). Typical range: 15-25 MW (e.g., 18.9-20.0 MW for MEA systems)",
+                            "minimum": 0
+                        }
+                    },
+                    "required": [
+                        "packing_height",
+                        "diameter",
+                        "reboiler_duty"
+                    ]
+                },
+                "solvent": {
+                    "type": "object",
+                    "description": "Parameters related to the solvent used in chemical absorption systems",
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "description": "Chemical composition of the solvent (e.g., 'monoethanolamine (MEA)', 'diethanolamine (DEA)', 'methyldiethanolamine (MDEA)')"
+                        },
+                        "flow_rate": {
+                            "type": "number",
+                            "description": "Circulation rate of solvent through the capture system. Unit: kilograms per second (kg/s). Typical range: 1-10 kg/s (e.g., 1.6 kg/s for MEA systems)",
+                            "minimum": 0
+                        },
+                        "concentration": {
+                            "type": "number",
+                            "description": "Mass percentage of active amine in solvent solution. Unit: weight percentage (wt%). Typical range: 20-50% (e.g., 30% for MEA systems)",
+                            "minimum": 0,
+                            "maximum": 100
+                        }
+                    },
+                    "required": [
+                        "type",
+                        "flow_rate"
+                    ]
+                }
+            },
+            "required": [
+                "co2_capture_efficiency",
+                "hydrogen_purification_method",
+                "absorber",
+                "stripper",
+                "solvent"
+            ]
+        },
+        "economic_metrics": {
+            "type": "object",
+            "description": "Financial indicators for assessing the economic viability of the steam reforming process with carbon capture",
+            "properties": {
+                "hydrogen_production_cost": {
+                    "type": "number",
+                    "description": "Cost to produce one unit of hydrogen. Unit: dollars per kilogram ($/kg H2). Typical range: 2-5 $/kg for blue hydrogen systems (e.g., $3.5/kg for ethanol-steam reforming with carbon capture)",
+                    "minimum": 0
+                },
+                "internal_rate_of_return": {
+                    "type": "number",
+                    "description": "Annualized effective compounded return rate. Unit: percentage (%). Typical target: >10% (e.g., 16.6% for ethanol-steam reforming system)",
+                    "minimum": 0,
+                    "maximum": 100
+                },
+                "discounted_payback_period": {
+                    "type": "number",
+                    "description": "Time required to recover the initial investment considering the time value of money. Unit: years. Typical target: <10 years (e.g., 6 years for ethanol-steam reforming system)",
+                    "minimum": 0
+                },
+                "net_present_value": {
+                    "type": "number",
+                    "description": "Difference between the present value of cash inflows and outflows over a period of time. Unit: dollars ($). Positive values indicate profitable projects (e.g., $13 million for ethanol-steam reforming system)",
+                    "minimum": 0
+                },
+                "capital_expenditure": {
+                    "type": "number",
+                    "description": "Total cost to acquire, install, and commission physical assets. Unit: dollars ($). Includes reactor, heat exchangers, absorber, stripper, and other equipment (e.g., $3,856,619 for ESR unit and $4,077,444 for CO2 capture unit)",
+                    "minimum": 0
+                },
+                "operating_expenditure": {
+                    "type": "number",
+                    "description": "Ongoing costs for running the plant. Unit: dollars per year ($/year). Includes feedstock, solvent, labor, maintenance, and power (e.g., $962,995/year for ESR unit and $1,386,937/year for CO2 capture unit)",
+                    "minimum": 0
+                }
+            },
+            "required": [
+                "hydrogen_production_cost",
+                "internal_rate_of_return",
+                "discounted_payback_period",
+                "net_present_value"
+            ]
+        }
+    },
+    "required": [
+        "process_metadata",
+        "input_parameters",
+        "catalyst_properties",
+        "performance_metrics"
+    ]
+}

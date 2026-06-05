@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>SciSchema — Dynamic Mechanical Analysis (DMA)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="icon" type="image/png" href="/assets/logo.png">
+  <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+  <header>
+    <a class="logo" href="/">
+      <img src="/assets/logo.png" alt="SciSchema Logo">
+      <span>SciSchema</span>
+    </a>
+    <nav>
+      <a href="/docs/">Docs</a>
+      <a href="/schemas/">Schemas</a>
+      <a href="/about/">About</a>
+      <a href="https://github.com/scischema">GitHub</a>
+    </nav>
+  </header>
+
+  <main class="schema-page">
+    <p class="schema-breadcrumb">
+      <a href="/schemas/">Schemas</a> ›
+      Materials &amp; Chemistry ›
+      Dynamic Mechanical Analysis (DMA)
+    </p>
+
+    <section class="schema-hero">
+      <h1>Dynamic Mechanical Analysis (DMA)</h1>
+      <p class="schema-subtitle">A SciSchema.org Process Schema</p>
+
+      <p class="schema-meta">
+        Domain: Materials &amp; Chemistry<br>
+        Schema: DMA / SAOS experiment record (stable interchange schema)
+      </p>
+
+      <p class="schema-description">
+        Dynamic Mechanical Analysis is used to study how a material responds to time-varying mechanical forces.
+      </p>
+    </section>
+
+    <section class="schema-section">
+      <h2>Properties from Dynamic Mechanical Analysis (DMA)</h2>
+
+      <p class="schema-description">
+        The table below lists the top-level properties of this master schema.
+        Each property may contain more detailed nested fields in the JSON Schema representation.
+      </p>
+
+      <table class="schema-table">
+        <thead>
+          <tr>
+            <th>Property</th>
+            <th>Expected Type</th>
+            <th>Description</th>
+            <th>Required</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>schema_version</td>
+            <td>String</td>
+            <td>Stable external contract version.</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>experiment_mode</td>
+            <td>String</td>
+            <td>High-level experimental modality used to route parsing, UI defaults, and validation expectations.</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>metadata</td>
+            <td>Object</td>
+            <td></td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>sample</td>
+            <td>Object</td>
+            <td></td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>instrument</td>
+            <td>Object</td>
+            <td></td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>segments</td>
+            <td>Array</td>
+            <td>Ordered protocol/data segments. Use one segment for a simple single-protocol experiment.</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>time_temperature_superposition</td>
+            <td>Object</td>
+            <td></td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td>data_quality</td>
+            <td>Object</td>
+            <td></td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td>interpretation</td>
+            <td>Object</td>
+            <td></td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td>extensions</td>
+            <td>Object</td>
+            <td>Namespaced lab- or domain-specific payloads outside the stable core contract.</td>
+            <td>No</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="schema-download">
+        <h2>Machine-readable schema representations</h2>
+
+        <p>
+          This schema is available in two machine-readable representations:
+          as an ORKG template, which can be exported as SHACL, and as a JSON Schema
+          document for download and reuse.
+        </p>
+
+        <ul>
+          <li>
+            <span>ORKG template / SHACL representation — forthcoming</span>
+          </li>
+          <li>
+            <a href="master-schema.json">Download master-schema.json</a>
+            <span> — JSON Schema representation</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <a href="/terms/">Terms and conditions</a>
+    <span>•</span>
+    <span>SciSchema</span>
+    <span>•</span>
+    <span>V0.1.0</span>
+    <span>|</span>
+    <span>2026-06-04</span>
+  </footer>
+</body>
+</html>

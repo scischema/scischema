@@ -1,0 +1,1442 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "MEA Recordings Process Schema",
+    "description": "Comprehensive schema for multi-electrode array (MEA) recordings process, capturing experimental setup, acquisition parameters, environmental controls, and specialized techniques for intracellular recordings with enhanced biological and technical metadata",
+    "type": "object",
+    "properties": {
+        "sampleType": {
+            "type": "object",
+            "description": "Biological preparation characteristics, culture conditions, and maturation status",
+            "properties": {
+                "species": {
+                    "type": "string",
+                    "description": "Species from which the biological preparation was derived (e.g., human, rat, mouse). Critical for physiological relevance and cross-species comparisons.",
+                    "examples": [
+                        "human",
+                        "rat",
+                        "mouse",
+                        "rabbit"
+                    ]
+                },
+                "cellOrigin": {
+                    "type": "string",
+                    "description": "Source of cells used in the preparation. Affects electrophysiological properties and experimental interpretation.",
+                    "enum": [
+                        "primary",
+                        "immortalized",
+                        "hiPSC-derived",
+                        "other"
+                    ],
+                    "default": "hiPSC-derived"
+                },
+                "cellCultureType": {
+                    "type": "string",
+                    "description": "Specific type of cardiomyocyte culture being used. Important for interpreting electrophysiological properties and drug responses. NRVMs represent primary ventricular cells, HL-1 is an immortalized atrial cell line, and hiPSC-CMs are stem cell-derived with potential ventricular or atrial characteristics.",
+                    "enum": [
+                        "NRVM",
+                        "HL-1",
+                        "hiPSC-CM",
+                        "other"
+                    ],
+                    "examples": [
+                        "NRVM",
+                        "HL-1",
+                        "hiPSC-CM"
+                    ]
+                },
+                "sex": {
+                    "type": "string",
+                    "description": "Sex of the biological source for the cells. Important for identifying potential sex-specific electrophysiological differences, though the research shows NRVMs from male and female sources exhibit similar electrophysiology.",
+                    "enum": [
+                        "male",
+                        "female",
+                        "mixed"
+                    ],
+                    "default": "mixed"
+                },
+                "biologicalPreparation": {
+                    "type": "string",
+                    "description": "Specific biological preparation type (e.g., primary neurons, iPSC-derived cardiomyocytes, brain slices). Determines signal characteristics and analysis approaches. Must match electrode configuration and analysis pipeline.",
+                    "examples": [
+                        "rat cortical neurons",
+                        "human iPSC-derived cardiomyocytes",
+                        "mouse hippocampal slice",
+                        "RCS rat retina explant"
+                    ]
+                },
+                "cultureDimensionality": {
+                    "type": "string",
+                    "description": "Culture dimensionality (2D monolayer or 3D structure). Affects network connectivity and signal propagation.",
+                    "enum": [
+                        "2D",
+                        "3D"
+                    ],
+                    "default": "2D"
+                },
+                "isogenicPair": {
+                    "type": "boolean",
+                    "description": "Indicates whether the sample is part of an isogenic pair (genetically matched control)",
+                    "default": false
+                },
+                "surfaceCoating": {
+                    "type": "string",
+                    "description": "Surface functionalization for cell adhesion (e.g., poly-D-lysine, laminin isoforms, fibronectin). Enhances cell attachment and recording stability. Specific laminin isoforms (LN-521, LN-221) can influence cell differentiation and electrophysiological properties. Fibronectin (40 \u03bcg/ml) is commonly used for cardiomyocyte cultures.",
+                    "examples": [
+                        "poly-D-lysine",
+                        "laminin (LN-521)",
+                        "laminin (LN-221)",
+                        "laminin (LN-211)",
+                        "ornithine",
+                        "poly-L-lysine",
+                        "fibronectin (40 \u03bcg/ml)",
+                        "Geltrex",
+                        "gelatin (0.02%)"
+                    ]
+                },
+                "seedingMethod": {
+                    "type": "string",
+                    "description": "Method used for seeding cells on the MEA. Droplet seeding over the central recording matrix significantly improves field potential detection capacity and amplitude compared to whole MEA seeding by keeping the internal reference electrode free of cell monolayer.",
+                    "enum": [
+                        "droplet",
+                        "wholeMEA"
+                    ],
+                    "default": "droplet"
+                },
+                "hydrophobicityTreatment": {
+                    "type": "object",
+                    "description": "Pre-treatment of MEA to increase hydrophobicity for optimal droplet formation during seeding. Critical for establishing a confluent cardiomyocyte monolayer with droplet seeding methodology.",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "Whether hydrophobicity treatment was applied to the MEA",
+                            "default": false
+                        },
+                        "temperature": {
+                            "type": "number",
+                            "description": "Temperature used for hydrophobicity treatment in degrees Celsius (\u00b0C)",
+                            "unit": "\u00b0C",
+                            "minimum": 20.0,
+                            "maximum": 100.0
+                        },
+                        "duration": {
+                            "type": "number",
+                            "description": "Duration of hydrophobicity treatment in hours",
+                            "unit": "hours",
+                            "minimum": 0.5,
+                            "maximum": 24
+                        }
+                    },
+                    "dependencies": {
+                        "enabled": {
+                            "oneOf": [
+                                {
+                                    "properties": {
+                                        "enabled": {
+                                            "const": false
+                                        }
+                                    }
+                                },
+                                {
+                                    "properties": {
+                                        "enabled": {
+                                            "const": true
+                                        },
+                                        "temperature": {
+                                            "type": "number"
+                                        },
+                                        "duration": {
+                                            "type": "number"
+                                        }
+                                    },
+                                    "required": [
+                                        "temperature",
+                                        "duration"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                },
+                "seedingDensity": {
+                    "type": "number",
+                    "description": "Cell seeding density in cells per square centimeter (cells/cm\u00b2). Critical for network formation and activity patterns. For cardiomyocytes, typical densities range from 50,000-500,000 cells/cm\u00b2. Droplet seeding achieves higher density (~1,000,000 cells/cm\u00b2) compared to whole MEA seeding (500,000 cells/cm\u00b2).",
+                    "unit": "cells/cm\u00b2",
+                    "minimum": 100,
+                    "maximum": 2000000
+                },
+                "cellArrangement": {
+                    "type": "string",
+                    "description": "Spatial arrangement of cells on the MEA. Affects signal quality and interpretation of network activity. Clustered arrangements may enhance local network connectivity while uniform arrangements provide broader coverage. hiPSC-CMs typically form clusters rather than confluent monolayers.",
+                    "enum": [
+                        "uniform",
+                        "clustered",
+                        "patterned",
+                        "random"
+                    ],
+                    "default": "uniform"
+                },
+                "cellCultureMedia": {
+                    "type": "string",
+                    "description": "Specific formulation of culture media used for cell maintenance. Different cell types require specialized media formulations that affect electrophysiological properties and drug responses.",
+                    "examples": [
+                        "DMEM/Glutamax with specific supplements for NRVMs",
+                        "Claycomb media with supplements for HL-1 cells",
+                        "RPMI with B27 minus vitamin A for hiPSC-CMs",
+                        "Neurobasal with B27",
+                        "AMES Medium",
+                        "Artificial Cerebrospinal Fluid (aCSF)",
+                        "Phosphate-buffered saline (PBS)",
+                        "RPMI 1640 with B27 supplement",
+                        "BPEL medium"
+                    ]
+                },
+                "recordingMedium": {
+                    "type": "string",
+                    "description": "Medium used during recording sessions. Affects cell viability and electrophysiological properties. May contain specific supplements for cardiac or neural applications. BPEL medium is commonly used for cardiomyocyte recordings.",
+                    "examples": [
+                        "Neurobasal with B27",
+                        "AMES Medium",
+                        "Artificial Cerebrospinal Fluid (aCSF)",
+                        "Phosphate-buffered saline (PBS)",
+                        "RPMI 1640 with B27 supplement",
+                        "BPEL medium"
+                    ]
+                },
+                "daysInVitro": {
+                    "type": "number",
+                    "description": "Culture age in days since plating or differentiation initiation. Critical for assessing cell maturation state and electrophysiological properties. For hiPSC-CMs, minimum 5-8 days typically required for regular spontaneous activity.",
+                    "unit": "days",
+                    "minimum": 0,
+                    "maximum": 100
+                },
+                "daysPostDifferentiation": {
+                    "type": "number",
+                    "description": "For hiPSC-CMs, the number of days post-differentiation induction when cells were plated on MEA. Critical for electrophysiological maturity, with stable beating rates typically achieved at day 30 and reduced isoproterenol responsiveness at day 60.",
+                    "unit": "days",
+                    "minimum": 0,
+                    "maximum": 100
+                },
+                "maturationStage": {
+                    "type": "string",
+                    "description": "Explicit maturation stage of the cells, critical for accurate drug response measurements. Immature cells may have different ion channel expression and drug responses compared to more mature cells. Maturation stage directly impacts conduction velocity measurements and action potential morphology.",
+                    "enum": [
+                        "early",
+                        "intermediate",
+                        "advanced",
+                        "adult-like"
+                    ],
+                    "default": "intermediate"
+                }
+            },
+            "required": [
+                "biologicalPreparation",
+                "cellOrigin"
+            ]
+        },
+        "electrode": {
+            "type": "object",
+            "description": "Electrode physical, electrical, and configuration characteristics including specialized poration methods",
+            "properties": {
+                "material": {
+                    "type": "string",
+                    "description": "Electrode material affecting impedance, biocompatibility, and signal-to-noise ratio. Common materials: platinum, gold, titanium nitride, iridium oxide, graphene. 3D fuzzy graphene (3DFG) enables intracellular recordings via optoporation.",
+                    "examples": [
+                        "platinum",
+                        "gold",
+                        "titanium nitride",
+                        "graphene (G-CVD)",
+                        "PEDOT:PSS",
+                        "3D fuzzy graphene (3DFG)"
+                    ]
+                },
+                "coatingMaterial": {
+                    "type": "string",
+                    "description": "Conductive polymer coating applied to electrode material to enhance signal amplitudes. PEDOT:PSS is commonly used for cardiomyocyte recordings to produce robust signal amplitudes.",
+                    "examples": [
+                        "PEDOT:PSS",
+                        "other conductive polymer"
+                    ]
+                },
+                "geometry": {
+                    "type": "object",
+                    "description": "Spatial configuration of electrodes",
+                    "properties": {
+                        "shape": {
+                            "type": "string",
+                            "description": "Geometric shape of individual electrodes. Affects electric field distribution and recording characteristics.",
+                            "enum": [
+                                "circular",
+                                "square",
+                                "rectangular",
+                                "hexagonal",
+                                "other"
+                            ],
+                            "default": "circular"
+                        },
+                        "size": {
+                            "type": "number",
+                            "description": "Electrode contact diameter or side length in micrometers (\u00b5m). Affects signal amplitude and single-unit resolution. For intracellular recordings, smaller electrodes (5-50 \u00b5m) are typically used.",
+                            "unit": "\u00b5m",
+                            "minimum": 5,
+                            "maximum": 500
+                        },
+                        "spacing": {
+                            "type": "number",
+                            "description": "Center-to-center distance between adjacent electrodes in micrometers (\u00b5m). Determines spatial resolution and crosstalk.",
+                            "unit": "\u00b5m",
+                            "minimum": 100,
+                            "maximum": 2000
+                        },
+                        "totalNumber": {
+                            "type": "integer",
+                            "description": "Total electrodes in the array. Defines coverage area and network analysis capability.",
+                            "minimum": 4,
+                            "maximum": 20000
+                        }
+                    },
+                    "required": [
+                        "shape",
+                        "size",
+                        "spacing",
+                        "totalNumber"
+                    ]
+                },
+                "arrayLayout": {
+                    "type": "string",
+                    "description": "Spatial arrangement pattern of the electrode array. Affects coverage and network analysis capabilities. Grid patterns are most common, but specialized layouts exist for specific applications.",
+                    "enum": [
+                        "rectangular grid",
+                        "hexagonal grid",
+                        "custom pattern",
+                        "random distribution"
+                    ],
+                    "default": "rectangular grid"
+                },
+                "arrayConfiguration": {
+                    "type": "string",
+                    "description": "Specific configuration of the electrode array (e.g., 8x8 grid). Important for spatial analysis of conduction velocity and network activity patterns. Critical for accurate measurement of wave propagation across the tissue.",
+                    "examples": [
+                        "8x8",
+                        "6x6",
+                        "4x4",
+                        "64-electrode"
+                    ]
+                },
+                "impedance": {
+                    "type": "number",
+                    "description": "Electrode impedance at 1 kHz in ohms (\u03a9). Critical for signal amplitude and noise characteristics. Measured post-fabrication. For intracellular recordings, impedance values may change after poration. Standardized to \u03a9 for consistency across measurements.",
+                    "unit": "\u03a9",
+                    "minimum": 1000,
+                    "maximum": 1000000
+                },
+                "passivationMaterial": {
+                    "type": "string",
+                    "description": "Material used for electrical passivation of electrode traces. Prevents electrical leakage and improves signal quality.",
+                    "examples": [
+                        "silicon nitride",
+                        "parylene",
+                        "SU-8"
+                    ]
+                },
+                "traceMaterial": {
+                    "type": "string",
+                    "description": "Material used for electrode traces and contacts. Affects transparency and electrical properties.",
+                    "examples": [
+                        "Indium tin oxide (ITO)",
+                        "gold",
+                        "copper"
+                    ]
+                },
+                "referenceGroundConfiguration": {
+                    "type": "object",
+                    "description": "Complete reference and ground electrode configuration",
+                    "properties": {
+                        "referenceElectrode": {
+                            "type": "object",
+                            "description": "Reference electrode configuration",
+                            "properties": {
+                                "type": {
+                                    "type": "string",
+                                    "description": "Type of reference electrode used in the recording setup.",
+                                    "enum": [
+                                        "Ag/AgCl",
+                                        "internal reference (iR)",
+                                        "chlorided silver wire",
+                                        "none"
+                                    ],
+                                    "default": "Ag/AgCl"
+                                },
+                                "position": {
+                                    "type": "string",
+                                    "description": "Physical location of the reference electrode in the recording chamber. Keeping the internal reference electrode free of cell monolayer significantly improves field potential detection.",
+                                    "examples": [
+                                        "corner of array",
+                                        "center of array",
+                                        "separate chamber",
+                                        "internal reference electrode"
+                                    ]
+                                },
+                                "impedance": {
+                                    "type": "number",
+                                    "description": "Impedance of reference electrode at 1 kHz in ohms (\u03a9).",
+                                    "unit": "\u03a9",
+                                    "minimum": 100,
+                                    "maximum": 100000
+                                }
+                            },
+                            "required": [
+                                "type"
+                            ]
+                        },
+                        "groundElectrode": {
+                            "type": "object",
+                            "description": "Ground electrode configuration",
+                            "properties": {
+                                "type": {
+                                    "type": "string",
+                                    "description": "Type of ground electrode used in the recording setup.",
+                                    "enum": [
+                                        "Ag/AgCl",
+                                        "internal ground",
+                                        "chlorided silver wire",
+                                        "none"
+                                    ],
+                                    "default": "Ag/AgCl"
+                                },
+                                "position": {
+                                    "type": "string",
+                                    "description": "Physical location of the ground electrode in the recording chamber.",
+                                    "examples": [
+                                        "corner of array",
+                                        "center of array",
+                                        "separate chamber"
+                                    ]
+                                },
+                                "configuration": {
+                                    "type": "string",
+                                    "description": "Relationship between reference and ground electrodes.",
+                                    "enum": [
+                                        "shared",
+                                        "separate",
+                                        "integrated"
+                                    ],
+                                    "default": "separate"
+                                }
+                            },
+                            "required": [
+                                "type"
+                            ]
+                        }
+                    },
+                    "required": [
+                        "referenceElectrode",
+                        "groundElectrode"
+                    ]
+                },
+                "porationMethod": {
+                    "type": "string",
+                    "description": "Method used for cell membrane poration to enable intracellular recordings. Optoporation with ultrafast pulsed laser is a novel technique for 3DFG electrodes.",
+                    "enum": [
+                        "none",
+                        "optoporation",
+                        "electroporation",
+                        "nanowire penetration",
+                        "other"
+                    ],
+                    "default": "none"
+                },
+                "optoporation": {
+                    "type": "object",
+                    "description": "Parameters for laser-based optoporation technique used with 3DFG electrodes for intracellular recordings",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "Whether optoporation is used for intracellular recordings",
+                            "default": false
+                        },
+                        "laserWavelength": {
+                            "type": "number",
+                            "description": "Wavelength of the laser used for optoporation in nanometers (nm). 1064 nm is commonly used for near-infrared applications.",
+                            "unit": "nm",
+                            "minimum": 300,
+                            "maximum": 2000
+                        },
+                        "pulseDuration": {
+                            "type": "number",
+                            "description": "Duration of individual laser pulses in picoseconds (ps). Ultrafast pulses minimize thermal effects.",
+                            "unit": "ps",
+                            "minimum": 1,
+                            "maximum": 1000
+                        },
+                        "powerDensity": {
+                            "type": "number",
+                            "description": "Laser power density at the electrode surface in watts per square millimeter (W/mm\u00b2). Critical for effective poration without cell damage.",
+                            "unit": "W/mm\u00b2",
+                            "minimum": 100,
+                            "maximum": 3000
+                        },
+                        "spotSize": {
+                            "type": "number",
+                            "description": "Diameter of the laser spot on the electrode surface in micrometers (\u00b5m). Determines localized poration area.",
+                            "unit": "\u00b5m",
+                            "minimum": 1,
+                            "maximum": 50
+                        },
+                        "repetitionRate": {
+                            "type": "number",
+                            "description": "Pulse repetition rate of the laser in hertz (Hz). Affects poration efficiency and thermal management.",
+                            "unit": "Hz",
+                            "minimum": 1,
+                            "maximum": 100000
+                        },
+                        "totalDuration": {
+                            "type": "number",
+                            "description": "Total duration of laser exposure for poration in milliseconds (ms).",
+                            "unit": "ms",
+                            "minimum": 1,
+                            "maximum": 10000
+                        }
+                    },
+                    "dependencies": {
+                        "enabled": {
+                            "oneOf": [
+                                {
+                                    "properties": {
+                                        "enabled": {
+                                            "const": false
+                                        }
+                                    }
+                                },
+                                {
+                                    "properties": {
+                                        "enabled": {
+                                            "const": true
+                                        },
+                                        "laserWavelength": {
+                                            "type": "number"
+                                        },
+                                        "pulseDuration": {
+                                            "type": "number"
+                                        },
+                                        "powerDensity": {
+                                            "type": "number"
+                                        }
+                                    },
+                                    "required": [
+                                        "laserWavelength",
+                                        "pulseDuration",
+                                        "powerDensity"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "required": [
+                "material",
+                "geometry"
+            ]
+        },
+        "acquisition": {
+            "type": "object",
+            "description": "Data acquisition system configuration with explicit distinction between hardware and software processing stages",
+            "properties": {
+                "acquisitionHardware": {
+                    "type": "string",
+                    "description": "Hardware system used for data acquisition. Required for reproducibility and system-specific considerations. Different systems have varying capabilities for electrode count, sampling rates, and signal processing.",
+                    "examples": [
+                        "Multi Channel Systems",
+                        "Axion Biosystems",
+                        "MEA2100",
+                        "MED64",
+                        "MEA Workbench"
+                    ]
+                },
+                "samplingRate": {
+                    "type": "number",
+                    "description": "Hardware sampling frequency per channel in Hertz (Hz). Must exceed Nyquist rate for target signals (e.g., >20 kHz for neural spikes, >10 kHz for cardiac field potentials). For intracellular recordings, adequate sampling is critical for capturing rapid AP phases. Cardiac recordings typically use 10 kHz sampling rate.",
+                    "unit": "Hz",
+                    "minimum": 1000,
+                    "default": 20000
+                },
+                "duration": {
+                    "type": "number",
+                    "description": "Total recording duration in seconds. For continuous recordings, specify expected maximum duration. Cardiac recordings typically require longer durations (minutes to hours) to capture stable rhythm.",
+                    "unit": "seconds",
+                    "minimum": 1
+                },
+                "activeChannels": {
+                    "type": "integer",
+                    "description": "Number of electrodes actively recording. May be less than totalNumber in the array.",
+                    "minimum": 1
+                },
+                "acquisitionSoftware": {
+                    "type": "string",
+                    "description": "Software used for data acquisition. Required for reproducibility and analysis compatibility. Different software packages offer varying features for real-time analysis and data management.",
+                    "examples": [
+                        "MC Rack",
+                        "Patchmaster",
+                        "Axograph",
+                        "MEA Workbench",
+                        "Cardio2D"
+                    ]
+                },
+                "amplification": {
+                    "type": "object",
+                    "description": "Signal conditioning parameters",
+                    "properties": {
+                        "gain": {
+                            "type": "number",
+                            "description": "Amplification factor (dimensionless). Typical range 100-10,000 for extracellular signals. For intracellular recordings, gain requirements may differ due to higher signal amplitudes.",
+                            "minimum": 10,
+                            "maximum": 50000
+                        },
+                        "totalAmplification": {
+                            "type": "number",
+                            "description": "Total amplification factor including all stages (dimensionless). Important for signal-to-noise calculations.",
+                            "minimum": 10,
+                            "maximum": 100000
+                        },
+                        "filtering": {
+                            "type": "object",
+                            "description": "Complete filtering configuration with distinction between hardware and software stages",
+                            "properties": {
+                                "hardwareFiltering": {
+                                    "type": "object",
+                                    "description": "Hardware-based filtering applied during signal acquisition",
+                                    "properties": {
+                                        "filterType": {
+                                            "type": "string",
+                                            "description": "Type of hardware filter applied (bandpass, high-pass, low-pass, notch).",
+                                            "enum": [
+                                                "bandpass",
+                                                "high-pass",
+                                                "low-pass",
+                                                "notch"
+                                            ],
+                                            "default": "bandpass"
+                                        },
+                                        "highPass": {
+                                            "type": "number",
+                                            "description": "Hardware high-pass cutoff frequency in Hertz (Hz). Removes slow drifts (<300 Hz for spikes, >1 Hz for field potentials). For cardiac applications, typically set between 1-10 Hz.",
+                                            "unit": "Hz",
+                                            "default": 200
+                                        },
+                                        "lowPass": {
+                                            "type": "number",
+                                            "description": "Hardware low-pass cutoff frequency in Hertz (Hz). Removes high-frequency noise (>3 kHz for spikes, <300 Hz for field potentials). For cardiac applications, typically set between 2-5 kHz.",
+                                            "unit": "Hz",
+                                            "default": 5000
+                                        },
+                                        "notchFrequency": {
+                                            "type": "number",
+                                            "description": "Notch filter frequency in Hertz (Hz) for removing specific interference (e.g., 50/60 Hz line noise).",
+                                            "unit": "Hz",
+                                            "minimum": 40,
+                                            "maximum": 100
+                                        }
+                                    },
+                                    "required": [
+                                        "filterType",
+                                        "highPass",
+                                        "lowPass"
+                                    ]
+                                },
+                                "softwareFiltering": {
+                                    "type": "object",
+                                    "description": "Software-based filtering applied during post-processing",
+                                    "properties": {
+                                        "filterType": {
+                                            "type": "string",
+                                            "description": "Type of software filter applied (bandpass, high-pass, low-pass, notch).",
+                                            "enum": [
+                                                "bandpass",
+                                                "high-pass",
+                                                "low-pass",
+                                                "notch",
+                                                "none"
+                                            ],
+                                            "default": "none"
+                                        },
+                                        "highPass": {
+                                            "type": "number",
+                                            "description": "Software high-pass cutoff frequency in Hertz (Hz).",
+                                            "unit": "Hz",
+                                            "minimum": 0.1
+                                        },
+                                        "lowPass": {
+                                            "type": "number",
+                                            "description": "Software low-pass cutoff frequency in Hertz (Hz).",
+                                            "unit": "Hz",
+                                            "minimum": 10
+                                        },
+                                        "notchFrequency": {
+                                            "type": "number",
+                                            "description": "Software notch filter frequency in Hertz (Hz).",
+                                            "unit": "Hz",
+                                            "minimum": 40,
+                                            "maximum": 100
+                                        }
+                                    },
+                                    "dependencies": {
+                                        "filterType": {
+                                            "oneOf": [
+                                                {
+                                                    "properties": {
+                                                        "filterType": {
+                                                            "const": "none"
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "properties": {
+                                                        "filterType": {
+                                                            "enum": [
+                                                                "bandpass",
+                                                                "high-pass",
+                                                                "low-pass"
+                                                            ]
+                                                        },
+                                                        "highPass": {
+                                                            "type": "number"
+                                                        },
+                                                        "lowPass": {
+                                                            "type": "number"
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "highPass",
+                                                        "lowPass"
+                                                    ]
+                                                },
+                                                {
+                                                    "properties": {
+                                                        "filterType": {
+                                                            "const": "notch"
+                                                        },
+                                                        "notchFrequency": {
+                                                            "type": "number"
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "notchFrequency"
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            },
+                            "required": [
+                                "hardwareFiltering"
+                            ]
+                        }
+                    },
+                    "required": [
+                        "gain",
+                        "filtering"
+                    ]
+                }
+            },
+            "required": [
+                "samplingRate",
+                "amplification"
+            ]
+        },
+        "environment": {
+            "type": "object",
+            "description": "Environmental control parameters for physiological maintenance",
+            "properties": {
+                "temperature": {
+                    "type": "number",
+                    "description": "Culture temperature in degrees Celsius (\u00b0C). Critical for cellular viability and electrophysiological properties. Cardiac applications typically require 37\u00b0C for physiological relevance.",
+                    "unit": "\u00b0C",
+                    "default": 37.0,
+                    "minimum": 20.0,
+                    "maximum": 42.0
+                },
+                "co2": {
+                    "type": "number",
+                    "description": "Carbon dioxide concentration in percentage (%) for pH buffering in bicarbonate-based media.",
+                    "unit": "%",
+                    "default": 5.0,
+                    "minimum": 0.0,
+                    "maximum": 10.0
+                },
+                "humidity": {
+                    "type": "number",
+                    "description": "Relative humidity percentage (%) to prevent media evaporation during long-term recordings.",
+                    "unit": "%",
+                    "default": 95.0,
+                    "minimum": 50.0,
+                    "maximum": 100.0
+                },
+                "perfusion": {
+                    "type": "object",
+                    "description": "Perfusion system parameters for continuous medium exchange during recordings. Important for maintaining physiological conditions during long-term experiments and drug application studies.",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "Whether active perfusion is used during recording",
+                            "default": false
+                        },
+                        "flowRate": {
+                            "type": "number",
+                            "description": "Flow rate of perfusion medium in milliliters per minute (mL/min)",
+                            "unit": "mL/min",
+                            "minimum": 0.01,
+                            "maximum": 10
+                        },
+                        "temperature": {
+                            "type": "number",
+                            "description": "Temperature of perfusion medium in degrees Celsius (\u00b0C)",
+                            "unit": "\u00b0C",
+                            "minimum": 20.0,
+                            "maximum": 42.0
+                        },
+                        "mediumComposition": {
+                            "type": "string",
+                            "description": "Composition of perfusion medium, which may differ from standard culture medium",
+                            "examples": [
+                                "Tyrode's solution",
+                                "Modified Krebs-Henseleit buffer",
+                                "Standard recording medium"
+                            ]
+                        },
+                        "o2Concentration": {
+                            "type": "number",
+                            "description": "Oxygen concentration percentage in the perfusion medium",
+                            "unit": "%",
+                            "minimum": 0.0,
+                            "maximum": 100.0
+                        },
+                        "co2Concentration": {
+                            "type": "number",
+                            "description": "Carbon dioxide concentration percentage for pH buffering in the perfusion medium",
+                            "unit": "%",
+                            "minimum": 0.0,
+                            "maximum": 10.0
+                        }
+                    },
+                    "dependencies": {
+                        "enabled": {
+                            "oneOf": [
+                                {
+                                    "properties": {
+                                        "enabled": {
+                                            "const": false
+                                        }
+                                    }
+                                },
+                                {
+                                    "properties": {
+                                        "enabled": {
+                                            "const": true
+                                        },
+                                        "flowRate": {
+                                            "type": "number"
+                                        },
+                                        "temperature": {
+                                            "type": "number"
+                                        }
+                                    },
+                                    "required": [
+                                        "flowRate",
+                                        "temperature"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                },
+                "oxygenation": {
+                    "type": "object",
+                    "description": "Oxygen supply parameters for tissue viability",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "Whether active oxygenation is used during recording",
+                            "default": false
+                        },
+                        "o2Concentration": {
+                            "type": "number",
+                            "description": "Oxygen concentration percentage in the perfusion medium",
+                            "unit": "%",
+                            "minimum": 0.0,
+                            "maximum": 100.0
+                        },
+                        "co2Concentration": {
+                            "type": "number",
+                            "description": "Carbon dioxide concentration percentage for pH buffering in the perfusion medium",
+                            "unit": "%",
+                            "minimum": 0.0,
+                            "maximum": 10.0
+                        }
+                    },
+                    "dependencies": {
+                        "enabled": {
+                            "oneOf": [
+                                {
+                                    "properties": {
+                                        "enabled": {
+                                            "const": false
+                                        }
+                                    }
+                                },
+                                {
+                                    "properties": {
+                                        "enabled": {
+                                            "const": true
+                                        },
+                                        "o2Concentration": {
+                                            "type": "number"
+                                        },
+                                        "co2Concentration": {
+                                            "type": "number"
+                                        }
+                                    },
+                                    "required": [
+                                        "o2Concentration",
+                                        "co2Concentration"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "stimulation": {
+            "type": "object",
+            "description": "Electrical, optical, or pharmacological stimulation parameters (optional for passive recordings)",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "description": "Whether stimulation is active during recording",
+                    "default": false
+                },
+                "type": {
+                    "type": "string",
+                    "description": "Stimulation modality. Required if enabled=true.",
+                    "enum": [
+                        "electrical",
+                        "optical",
+                        "pharmacological",
+                        "none"
+                    ],
+                    "default": "none"
+                },
+                "electricalParameters": {
+                    "type": "object",
+                    "description": "Parameters specific to electrical stimulation",
+                    "properties": {
+                        "currentAmplitude": {
+                            "type": "number",
+                            "description": "Electrical stimulation intensity in microamperes (\u00b5A) for current-controlled stimulation.",
+                            "unit": "\u00b5A",
+                            "minimum": 0
+                        },
+                        "voltageAmplitude": {
+                            "type": "number",
+                            "description": "Electrical stimulation intensity in millivolts (mV) for voltage-controlled stimulation.",
+                            "unit": "mV",
+                            "minimum": 0
+                        },
+                        "amplitudeType": {
+                            "type": "string",
+                            "description": "Type of electrical amplitude measurement.",
+                            "enum": [
+                                "current",
+                                "voltage"
+                            ],
+                            "default": "current"
+                        },
+                        "frequency": {
+                            "type": "number",
+                            "description": "Stimulation pulse frequency in Hertz (Hz)",
+                            "unit": "Hz",
+                            "minimum": 0.1,
+                            "maximum": 1000
+                        },
+                        "pulseWidth": {
+                            "type": "number",
+                            "description": "Duration of individual stimulation pulses in milliseconds (ms)",
+                            "unit": "ms",
+                            "minimum": 0.01,
+                            "maximum": 10
+                        },
+                        "duration": {
+                            "type": "number",
+                            "description": "Total stimulation period in seconds",
+                            "unit": "seconds",
+                            "minimum": 0.1
+                        },
+                        "pulseShape": {
+                            "type": "string",
+                            "description": "Shape of electrical stimulation pulses.",
+                            "enum": [
+                                "monophasic",
+                                "biphasic",
+                                "sinusoidal",
+                                "ramp"
+                            ],
+                            "default": "monophasic"
+                        }
+                    },
+                    "required": [
+                        "frequency",
+                        "pulseWidth",
+                        "duration"
+                    ]
+                },
+                "opticalParameters": {
+                    "type": "object",
+                    "description": "Parameters specific to optical stimulation",
+                    "properties": {
+                        "irradiance": {
+                            "type": "number",
+                            "description": "Optical power density in milliwatts per square millimeter (mW/mm\u00b2) for light stimulation.",
+                            "unit": "mW/mm\u00b2",
+                            "minimum": 0.1,
+                            "maximum": 100
+                        },
+                        "wavelength": {
+                            "type": "number",
+                            "description": "Light wavelength in nanometers (nm) for optical stimulation. Critical for photoactive materials like P3HT and for optoporation techniques.",
+                            "unit": "nm",
+                            "minimum": 300,
+                            "maximum": 1100
+                        },
+                        "frequency": {
+                            "type": "number",
+                            "description": "Stimulation pulse frequency in Hertz (Hz)",
+                            "unit": "Hz",
+                            "minimum": 0.1,
+                            "maximum": 1000
+                        },
+                        "pulseWidth": {
+                            "type": "number",
+                            "description": "Duration of individual stimulation pulses in milliseconds (ms)",
+                            "unit": "ms",
+                            "minimum": 0.01,
+                            "maximum": 10
+                        },
+                        "duration": {
+                            "type": "number",
+                            "description": "Total stimulation period in seconds",
+                            "unit": "seconds",
+                            "minimum": 0.1
+                        }
+                    },
+                    "required": [
+                        "irradiance",
+                        "wavelength",
+                        "frequency",
+                        "pulseWidth",
+                        "duration"
+                    ]
+                },
+                "pharmacologicalParameters": {
+                    "type": "object",
+                    "description": "Parameters specific to pharmacological stimulation",
+                    "properties": {
+                        "drugName": {
+                            "type": "string",
+                            "description": "Name of the pharmacological compound (for pharmacological stimulation)",
+                            "examples": [
+                                "isoproterenol",
+                                "sotalol",
+                                "E-4031",
+                                "LUF7346",
+                                "astemizole"
+                            ]
+                        },
+                        "concentration": {
+                            "type": "number",
+                            "description": "Concentration of the pharmacological compound",
+                            "unit": "context-dependent",
+                            "minimum": 0
+                        },
+                        "unit": {
+                            "type": "string",
+                            "description": "Unit of drug concentration",
+                            "examples": [
+                                "mM",
+                                "uM",
+                                "nM",
+                                "mg/mL"
+                            ]
+                        },
+                        "treatmentType": {
+                            "type": "string",
+                            "description": "Type of pharmacological treatment protocol. Critical for distinguishing between acute dose-response experiments and chronic treatment studies.",
+                            "enum": [
+                                "acute",
+                                "chronic",
+                                "washout",
+                                "baseline",
+                                "none"
+                            ],
+                            "default": "none"
+                        },
+                        "applicationMethod": {
+                            "type": "string",
+                            "description": "Method of drug application to the recording chamber.",
+                            "enum": [
+                                "bolus",
+                                "continuous perfusion",
+                                "gradient",
+                                "localized"
+                            ],
+                            "default": "bolus"
+                        },
+                        "exposureDuration": {
+                            "type": "number",
+                            "description": "Duration of drug exposure in minutes",
+                            "unit": "minutes",
+                            "minimum": 1
+                        }
+                    },
+                    "required": [
+                        "drugName",
+                        "concentration",
+                        "unit"
+                    ]
+                },
+                "stimulationProtocol": {
+                    "type": "string",
+                    "description": "Pattern of stimulation delivery (e.g., single pulse, train, ramp). For pharmacological treatments, describes the detailed drug application schedule (e.g., 'aliquots added every 10 min' for acute dose-response or '24-h continuous exposure' for chronic treatment).",
+                    "examples": [
+                        "single pulse",
+                        "pulse train",
+                        "ramp",
+                        "50 ms on, 500 ms off",
+                        "baseline, drug exposure, washout",
+                        "aliquots added every 10 min",
+                        "24-h continuous exposure"
+                    ]
+                }
+            },
+            "dependencies": {
+                "enabled": {
+                    "oneOf": [
+                        {
+                            "properties": {
+                                "enabled": {
+                                    "const": false
+                                }
+                            }
+                        },
+                        {
+                            "properties": {
+                                "enabled": {
+                                    "const": true
+                                },
+                                "type": {
+                                    "enum": [
+                                        "electrical",
+                                        "optical",
+                                        "pharmacological"
+                                    ]
+                                },
+                                "electricalParameters": {
+                                    "type": "object"
+                                },
+                                "opticalParameters": {
+                                    "type": "object"
+                                },
+                                "pharmacologicalParameters": {
+                                    "type": "object"
+                                }
+                            },
+                            "required": [
+                                "type"
+                            ],
+                            "if": {
+                                "properties": {
+                                    "type": {
+                                        "const": "electrical"
+                                    }
+                                }
+                            },
+                            "then": {
+                                "required": [
+                                    "electricalParameters"
+                                ]
+                            },
+                            "else": {
+                                "if": {
+                                    "properties": {
+                                        "type": {
+                                            "const": "optical"
+                                        }
+                                    }
+                                },
+                                "then": {
+                                    "required": [
+                                        "opticalParameters"
+                                    ]
+                                },
+                                "else": {
+                                    "required": [
+                                        "pharmacologicalParameters"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "dataProcessing": {
+            "type": "object",
+            "description": "Data processing parameters, software, and computational methods used for analysis",
+            "properties": {
+                "analysisSoftware": {
+                    "type": "string",
+                    "description": "Software used for data analysis. Required for reproducibility. Different software packages offer specialized tools for cardiac or neural MEA analysis.",
+                    "examples": [
+                        "OriginPro",
+                        "Prism",
+                        "MATLAB",
+                        "Python (custom scripts)",
+                        "Cardio2D+"
+                    ]
+                },
+                "recordingType": {
+                    "type": "string",
+                    "description": "Type of electrophysiological recording obtained. Critical for selecting appropriate analysis methods.",
+                    "enum": [
+                        "extracellular",
+                        "intracellular",
+                        "both"
+                    ],
+                    "default": "extracellular"
+                },
+                "signalType": {
+                    "type": "string",
+                    "description": "Primary signal type being analyzed. Determines appropriate analysis pipelines and metrics.",
+                    "enum": [
+                        "field_potential",
+                        "action_potential",
+                        "both"
+                    ],
+                    "default": "field_potential"
+                },
+                "spikeDetection": {
+                    "type": "object",
+                    "description": "Parameters for spike detection algorithms",
+                    "properties": {
+                        "thresholdMethod": {
+                            "type": "string",
+                            "description": "Method for determining spike detection threshold.",
+                            "enum": [
+                                "standard deviation",
+                                "absolute",
+                                "adaptive"
+                            ],
+                            "default": "standard deviation"
+                        },
+                        "thresholdValue": {
+                            "type": "number",
+                            "description": "Value used for spike detection threshold.",
+                            "unit": "context-dependent",
+                            "minimum": 0
+                        },
+                        "refractoryPeriod": {
+                            "type": "number",
+                            "description": "Minimum time between detected spikes to avoid double-counting.",
+                            "unit": "ms",
+                            "minimum": 0.1,
+                            "maximum": 100
+                        }
+                    },
+                    "required": [
+                        "thresholdMethod",
+                        "thresholdValue"
+                    ]
+                },
+                "qtCorrectionMethod": {
+                    "type": "string",
+                    "description": "Method used for QT interval correction. Important for cardiac applications where heart rate affects repolarization duration. Bazett's and Fridericia's formulas are commonly used but may not be appropriate for all hiPSC-CM lines as noted in research.",
+                    "enum": [
+                        "bazett",
+                        "fridericia",
+                        "none",
+                        "other"
+                    ]
+                },
+                "beatAnalysis": {
+                    "type": "object",
+                    "description": "Parameters for analyzing individual beats in cardiac recordings",
+                    "properties": {
+                        "beatsForAnalysis": {
+                            "type": "integer",
+                            "description": "Number of consecutive beats used for averaging measurements. Typically 10 beats are used for stable measurements.",
+                            "minimum": 3,
+                            "maximum": 100,
+                            "default": 10
+                        },
+                        "sitesForAnalysis": {
+                            "type": "integer",
+                            "description": "Number of electrode sites used for averaging measurements across the array. For NRVM and HL-1, typically 10 sites across the MEA.",
+                            "minimum": 1,
+                            "maximum": 60,
+                            "default": 10
+                        }
+                    }
+                }
+            },
+            "required": [
+                "recordingType",
+                "signalType"
+            ]
+        },
+        "outputMetrics": {
+            "type": "array",
+            "description": "Target metrics to be extracted from recordings. Specifies analysis focus during acquisition setup. Field potential duration, corrected metrics, and action potential-related metrics (derived from field potential measurements) are particularly relevant for cardiac applications. Short-term variability (STV) is critical for assessing arrhythmia risk. Conduction velocity is essential for estimating sodium current effects.",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "metric": {
+                        "type": "string",
+                        "description": "Name of the metric being extracted",
+                        "enum": [
+                            "voltage_traces",
+                            "spike_detection",
+                            "firing_rate",
+                            "field_potential",
+                            "field_potential_duration",
+                            "corrected_field_potential_duration",
+                            "activation_timing",
+                            "propagation_analysis",
+                            "synchronization_metrics",
+                            "burst_detection",
+                            "light_response_metrics",
+                            "on_off_response_ratio",
+                            "drug_response",
+                            "apd90",
+                            "apd70",
+                            "apd50",
+                            "apa",
+                            "ediast",
+                            "stv",
+                            "bvr",
+                            "conduction_velocity",
+                            "extracellular_potential",
+                            "spontaneous_beating_rate",
+                            "rate_dependency",
+                            "isoproterenol_response"
+                        ]
+                    },
+                    "unit": {
+                        "type": "string",
+                        "description": "Unit of measurement for the metric",
+                        "examples": [
+                            "ms",
+                            "cm/s",
+                            "mV",
+                            "%",
+                            "beats/min"
+                        ]
+                    },
+                    "computationMethod": {
+                        "type": "string",
+                        "description": "Description of how the metric is computed, including any specific algorithms or parameters used"
+                    },
+                    "referencePoint": {
+                        "type": "string",
+                        "description": "Reference point used for timing measurements (e.g., 'maximum dV/dt', '50% repolarization')"
+                    },
+                    "validationCriteria": {
+                        "type": "string",
+                        "description": "Criteria used to validate the metric extraction (e.g., 'SNR > 20 dB', 'consistent across 10 consecutive beats')"
+                    }
+                },
+                "required": [
+                    "metric"
+                ]
+            },
+            "default": [
+                {
+                    "metric": "voltage_traces"
+                },
+                {
+                    "metric": "spike_detection"
+                }
+            ],
+            "examples": [
+                [
+                    {
+                        "metric": "voltage_traces"
+                    },
+                    {
+                        "metric": "spike_detection"
+                    },
+                    {
+                        "metric": "propagation_analysis",
+                        "unit": "cm/s",
+                        "computationMethod": "Cross-correlation analysis with 1 ms time resolution"
+                    }
+                ],
+                [
+                    {
+                        "metric": "field_potential"
+                    },
+                    {
+                        "metric": "field_potential_duration",
+                        "unit": "ms",
+                        "computationMethod": "Time between peak negative deflection and peak of final positive deflection"
+                    },
+                    {
+                        "metric": "corrected_field_potential_duration",
+                        "unit": "ms",
+                        "computationMethod": "Bazett's formula: QTc = QT/\u221aRR"
+                    },
+                    {
+                        "metric": "synchronization_metrics",
+                        "computationMethod": "Vector strength analysis"
+                    }
+                ],
+                [
+                    {
+                        "metric": "field_potential_duration",
+                        "unit": "ms",
+                        "computationMethod": "Time between peak negative deflection and peak of final positive deflection",
+                        "referencePoint": "peak negative deflection"
+                    },
+                    {
+                        "metric": "spontaneous_beating_rate",
+                        "unit": "beats/min",
+                        "computationMethod": "Average of 10 consecutive beats"
+                    },
+                    {
+                        "metric": "rate_dependency",
+                        "computationMethod": "Relationship between spontaneous beating rate and field potential duration"
+                    },
+                    {
+                        "metric": "isoproterenol_response",
+                        "computationMethod": "Percentage change in spontaneous beating rate and field potential duration after 1 \u03bcM isoproterenol treatment"
+                    },
+                    {
+                        "metric": "conduction_velocity",
+                        "unit": "cm/s",
+                        "computationMethod": "Distance between electrodes divided by time difference of activation peaks",
+                        "validationCriteria": "Measured between electrodes at known distance"
+                    },
+                    {
+                        "metric": "extracellular_potential",
+                        "unit": "mV",
+                        "computationMethod": "Direct measurement from MEA electrodes"
+                    }
+                ]
+            ]
+        }
+    },
+    "required": [
+        "sampleType",
+        "electrode",
+        "acquisition"
+    ]
+}

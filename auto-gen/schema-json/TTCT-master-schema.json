@@ -1,0 +1,68 @@
+{
+"title": "TTCT Process Schema",
+"description": "Schema for describing the administration, scoring, and psychometric evaluation of the Torrance Tests of Creative Thinking (TTCT)",
+"type": "object",
+"properties": {
+"test_version": {
+"type": "string",
+"description": "The TTCT battery used: Verbal (6 activities assessing fluency, flexibility, and originality through written responses) or Figural (3 activities assessing fluency, originality, elaboration, abstractness of titles, resistance to premature closure, and 13 creative strengths through drawn responses). The two batteries measure different creative abilities with very low inter-correlation (r ≈ 0.06)."
+},
+"test_form": {
+"type": "string",
+"description": "The parallel form used: Form A or Form B. Each battery has two forms with different stimuli (e.g., Lines vs. Circles in Figural; Cardboard vs. Tin Cans in Verbal Unusual Uses) designed for test-retest applications while maintaining equivalent psychometric properties."
+},
+"scoring_dimensions": {
+"type": "string",
+"description": "The scoring dimensions applied. Figural Battery: five norm-referenced dimensions (Fluency, Originality, Elaboration, Abstractness of Titles, Resistance to Premature Closure) plus a Checklist of 13 Creative Strengths. Verbal Battery: three dimensions (Fluency, Flexibility, Originality). Flexibility was removed from the Figural Battery in the 1984 revision due to high correlation with Fluency."
+},
+"scoring_method": {
+"type": "string",
+"description": "The method used for scoring. Options include: norm-referenced scoring against national percentile tables (via the official Scoring and Interpreting Manual), criterion-referenced checklists for Creative Strengths, professional scoring by Scholastic Testing Service (STS), Rasch modeling, automated computational scoring using AI/NLP, and consensus scoring approaches."
+},
+"norm_version": {
+"type": "string",
+"description": "The norm edition used for score conversion. Major editions: 1966 (Research Edition), 1974, 1984 (added Abstractness of Titles, Resistance to Premature Closure, and Creative Strengths to Figural), 1990, 1998, 2008, 2017, and 2023 (Figural). Studies should specify which norm tables were used."
+},
+"sample_size": {
+"type": "integer",
+"description": "The number of participants tested. Ranges from small clinical samples (N < 30) to large-scale validation studies (N > 10,000). Sample size affects the reliability and generalizability of reported psychometric indices and normative data."
+},
+"age_grade_level": {
+"type": "string",
+"description": "The age and/or grade level of the test-takers. The TTCT covers preschool (age 5) through adulthood (age 20+). Norm tables are organized by both grade (Pre-K through 12 and adults) and by age (5-20 years). Age-appropriate administration modifications may apply for very young children."
+},
+"population_characteristics": {
+"type": "string",
+"description": "Demographic and clinical attributes of the test-taking sample, including nationality, ethnicity, socioeconomic status, giftedness identification, clinical diagnoses (e.g., ADHD, learning disabilities), and educational setting. The TTCT has been validated across diverse populations with documented minimal cultural, language, and IQ bias."
+},
+"administration_mode": {
+"type": "string",
+"description": "The mode of test administration: individual or group. Group administration is more common in educational and research contexts; individual administration is typically used in clinical settings. The mode may influence performance due to social facilitation or inhibition effects."
+},
+"administration_time": {
+"type": "string",
+"description": "Time required for test administration. Figural Battery: 30 minutes (10 minutes per activity). Verbal Battery: 45 minutes (5 minutes each for Activities 1-3; 10 minutes each for Activities 4-6). Total administration including instructions typically fits within one class period."
+},
+"language_translation": {
+"type": "string",
+"description": "Language of test administration and translation validation status. The original TTCT is in English. It has been translated and validated in over 35 languages including Arabic, Chinese, Japanese, Korean, Turkish, Persian, Spanish, Portuguese, Kiswahili, and others. Cross-cultural validation studies report translation procedures, measurement invariance, and culture-specific norm adjustments."
+},
+"scorer_qualifications": {
+"type": "string",
+"description": "Details about scorer training and inter-rater reliability. Scoring requires specialized training offered by the Torrance Center at the University of Georgia or Scholastic Testing Service. Inter-rater reliability studies report agreement rates typically >= 90%. Scorer background, cultural/linguistic differences, and understanding of scoring indices can affect reliability."
+},
+"testing_environment": {
+"type": "string",
+"description": "The physical setting in which the TTCT is administered, including classroom, laboratory, clinical office, or other contexts. Environmental factors such as noise level, seating arrangement, and psychological safety of the testing atmosphere may influence creative performance."
+},
+"warm_up_procedures": {
+"type": "string",
+"description": "Pre-test activities designed to reduce test anxiety and stimulate creative thinking before formal TTCT administration. Techniques include brainstorming exercises, SCAMPER, encounter lessons, guided visualization, inkblot activities, six thinking hats, and other warm-up strategies. The TTCT manual recommends warm-up activities to create a psychologically safe environment. This parameter is under-reported in the literature."
+},
+"composite_score": {
+"type": "string",
+"description": "Aggregate measures derived from individual scoring dimensions. The Creativity Index (CI) is a weighted composite of all norm-referenced measures and is commonly used for gifted identification cutoffs and longitudinal tracking. Alternative composites include sum of standard scores or average percentile ranks. Torrance initially cautioned against using a single composite score."
+}
+},
+"required": ["test_version", "scoring_dimensions", "scoring_method", "sample_size"]
+}

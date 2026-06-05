@@ -1,0 +1,986 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Solvent-Casting for Polymer Composites Process Schema",
+    "description": "A schema representing the solvent-casting process for fabricating polymer composite films, including material properties, process parameters, equipment, and output characteristics.",
+    "type": "object",
+    "properties": {
+        "metadata": {
+            "type": "object",
+            "description": "Additional metadata about the process.",
+            "properties": {
+                "doi": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "journal": {
+                    "type": "string"
+                },
+                "year": {
+                    "type": "string"
+                },
+                "authors": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of authors of the paper."
+                    }
+            },
+            "additionalProperties": false
+        },
+        "materials": {
+            "type": "object",
+            "description": "Properties related to the materials used in the solvent-casting process.",
+            "properties": {
+                "polymer_matrix": {
+                    "type": "array",
+                    "description": "The continuous phase polymers dissolved in the solvent.",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "description": "Name of the polymer (e.g., PVP, PABS, PVDF, PMMA)."
+                            },
+                            "molecular_weight": {
+                                "type": "object",
+                                "description": "Molecular weight of the polymer.",
+                                "properties": {
+                                    "value": {
+                                        "type": "number",
+                                        "description": "Value of the molecular weight."
+                                    },
+                                    "unit": {
+                                        "type": "string",
+                                        "description": "Unit of molecular weight (e.g., g/mol, kDa)."
+                                    }
+                                },
+                                "required": [
+                                    "value"
+                                ]
+                            },
+                            "surface_functionalization": {
+                                "type": "string",
+                                "description": "Surface modification or chemical treatment applied to the polymer (e.g., grafting, plasma treatment)."
+                            },
+                            "concentration": {
+                                "type": "object",
+                                "description": "Concentration of the polymer in the solution.",
+                                "properties": {
+                                    "value": {
+                                        "type": "number",
+                                        "description": "Value of the concentration."
+                                    },
+                                    "unit": {
+                                        "type": "string",
+                                        "description": "Unit of concentration (e.g., wt%, mg/mL, vol%)."
+                                    }
+                                },
+                                "required": [
+                                    "value",
+                                    "unit"
+                                ]
+                            },
+                            "key_properties": {
+                                "type": "array",
+                                "description": "Other information about the matrix",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "property_name": {
+                                            "type": "string",
+                                            "description": "Property name (e.g., Tg, Tm, density, curing agents)."
+                                        },
+                                        "value": {
+                                            "type": "string",
+                                            "description": "Value of the property (can be numeric, range, or descriptive)."
+                                            },
+                                        "unit": {
+                                            "type": "string",
+                                            "description": "Unit of the property."
+                                        }
+                                    },
+                                    "required": [
+                                        "property_name",
+                                        "value"
+                                    ],
+                                    "additionalProperties": false
+                                }
+                            },                           
+                            "supplier": {
+                                "type": "string",
+                                "description": "Manufacturer or supplier of the polymer."
+                            } 
+                        },
+                        "required": [
+                            "name",
+                            "concentration"
+                        ],
+                        "additionalProperties": false
+                    }
+                },
+                "dispersed_phase": {
+                    "type": "array",
+                    "description": "Fillers or reinforcing materials dispersed in the polymer solution.",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "description": "Name of the filler material (e.g., Mn0.75Fe2.25O4, ZnO, silica, carbon nanotubes)."
+                            },
+                            "size": {
+                                "type": "object",
+                                "description": "Average particle size or size distribution.",
+                                "properties": {
+                                    "value": {
+                                        "type": "string",
+                                        "description": "Value or range of the particle size (e.g., '5 nm', '20-80 nm')."
+                                    },
+                                    "unit": {
+                                        "type": "string",
+                                        "description": "Unit of particle size (e.g., nm, \u00b5m)."
+                                    }
+                                },
+                                "required": [
+                                    "value",
+                                    "unit"
+                                ]
+                            },
+                            "concentration": {
+                                "type": "object",
+                                "description": "Concentration of the filler in the solution.",
+                                "properties": {
+                                    "value": {
+                                        "type": "number",
+                                        "description": "Value of the concentration."
+                                    },
+                                    "unit": {
+                                        "type": "string",
+                                        "description": "Unit of concentration (e.g., wt%, mg/mL, vol%)."
+                                    }
+                                },
+                                "required": [
+                                    "value",
+                                    "unit"
+                                ]
+                            },
+                            "surface_functionalization": {
+                                "type": "string",
+                                "description": "Description of surface treatment to improve compatibility (e.g., silane coupling, surfactant coating)."
+                            },
+                            "supplier": {
+                                "type": "string",
+                                "description": "Manufacturer or supplier of the filler."
+                            },
+                            "specific_surface_area": {
+                                "type": "object",
+                                "description": "Specific surface area of the filler particles.",
+                                "properties": {
+                                    "value": {
+                                        "type": "number",
+                                        "description": "Value of the specific surface area."
+                                    },
+                                    "unit": {
+                                        "type": "string",
+                                        "description": "Unit of specific surface area (e.g., m\u00b2/g)."
+                                    }
+                                },
+                                "required": [
+                                    "value",
+                                    "unit"
+                                ]
+                            },
+                            "crystallite_size": {
+                                "type": "object",
+                                "description": "Crystallite size of the filler material.",
+                                "properties": {
+                                    "value": {
+                                        "type": "number",
+                                        "description": "Value of the crystallite size."
+                                    },
+                                    "unit": {
+                                        "type": "string",
+                                        "description": "Unit of crystallite size (e.g., nm)."
+                                    }
+                                },
+                                "required": [
+                                    "value",
+                                    "unit"
+                                ]
+                            }
+                        },
+                            "key_properties": {
+                                "type": "array",
+                                "description": "Other information about the dispersed_phase",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "property_name": {
+                                            "type": "string",
+                                            "description": "Property name (e.g., aspect ratio, shape / morphology)."
+                                        },
+                                        "value": {
+                                            "type": "string",
+                                            "description": "Value of the property (can be numeric, range, or descriptive)."
+                                            },
+                                        "unit": {
+                                            "type": "string",
+                                            "description": "Unit of the property."
+                                        }
+                                    },
+                                    "required": [
+                                        "property_name",
+                                        "value"
+                                    ],
+                                    "additionalProperties": false
+                                }
+                            },                   
+                            "supplier": {
+                                "type": "string",
+                                "description": "Manufacturer or supplier of the polymer."
+                            } 
+                        },                        
+                        "required": [
+                            "name",
+                            "concentration"
+                        ],
+                        "additionalProperties": false
+                    }
+                },
+                "solvent_system": {
+                    "type": "object",
+                    "description": "Solvent(s) used to dissolve the polymer and disperse the fillers.",
+                    "properties": {
+                        "solvents": {
+                            "type": "array",
+                            "description": "List of solvents used in the system.",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "description": "Name of the solvent (e.g., DMF, acetone, toluene)."
+                                    },
+                                    "boiling_point": {
+                                        "type": "object",
+                                        "description": "Boiling point of the solvent.",
+                                        "properties": {
+                                            "value": {
+                                                "type": "number",
+                                                "description": "Value of the boiling point."
+                                            },
+                                            "unit": {
+                                                "type": "string",
+                                                "description": "Unit of boiling point (e.g., \u00b0C, K)."
+                                            }
+                                        },
+                                        "required": [
+                                            "value"
+                                        ]
+                                    },
+                                    "ratio": {
+                                        "type": "object",
+                                        "description": "Volume or weight ratio of the solvent in the mixture.",
+                                        "properties": {
+                                            "value": {
+                                                "type": "number",
+                                                "description": "Value of the ratio."
+                                            },
+                                            "unit": {
+                                                "type": "string",
+                                                "description": "Unit of ratio (e.g., v/v, w/w)."
+                                            }
+                                        },
+                                        "required": [
+                                            "value"
+                                        ]
+                                    },
+                                    "supplier": {
+                                        "type": "string",
+                                        "description": "Manufacturer or supplier of the solvent."
+                                    }
+                                },
+                                "required": [
+                                    "name"
+                                ],
+                                "additionalProperties": false
+                            }
+                        },
+                        "total_amount": {
+                            "type": "object",
+                            "description": "Total amount of solvent used in the system.",
+                            "properties": {
+                                "value": {
+                                    "type": "number",
+                                    "description": "Value of the total amount."
+                                },
+                                "unit": {
+                                    "type": "string",
+                                    "description": "Unit of total amount (e.g., mL, L)."
+                                }
+                            },
+                            "required": [
+                                "value",
+                                "unit"
+                            ]
+                        }
+                    },
+                    "required": [
+                        "solvents"
+                    ],
+                    "additionalProperties": false
+                },
+                "substrate": {
+                    "type": "object",
+                    "description": "Substrate onto which the film is cast.",
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "description": "Type of substrate (e.g., silicon wafer, glass, aluminum-coated silicon)."
+                        },
+                        "pre_treatment": {
+                            "type": "string",
+                            "description": "Pre-treatment applied to the substrate (e.g., plasma cleaning, UV ozone, drying)."
+                        },
+                        "dimensions": {
+                            "type": "object",
+                            "description": "Dimensions of the substrate.",
+                            "properties": {
+                                "length": {
+                                    "type": "object",
+                                    "description": "Length of the substrate.",
+                                    "properties": {
+                                        "value": {
+                                            "type": "number",
+                                            "description": "Value of the length."
+                                        },
+                                        "unit": {
+                                            "type": "string",
+                                            "description": "Unit of length (e.g., mm, cm)."
+                                        }
+                                    },
+                                    "required": [
+                                        "value",
+                                        "unit"
+                                    ]
+                                },
+                                "width": {
+                                    "type": "object",
+                                    "description": "Width of the substrate.",
+                                    "properties": {
+                                        "value": {
+                                            "type": "number",
+                                            "description": "Value of the width."
+                                        },
+                                        "unit": {
+                                            "type": "string",
+                                            "description": "Unit of width (e.g., mm, cm)."
+                                        }
+                                    },
+                                    "required": [
+                                        "value",
+                                        "unit"
+                                    ]
+                                },
+                                "thickness": {
+                                    "type": "object",
+                                    "description": "Thickness of the substrate.",
+                                    "properties": {
+                                        "value": {
+                                            "type": "number",
+                                            "description": "Value of the thickness."
+                                        },
+                                        "unit": {
+                                            "type": "string",
+                                            "description": "Unit of thickness (e.g., \u00b5m, mm)."
+                                        }
+                                    },
+                                    "required": [
+                                        "value",
+                                        "unit"
+                                    ]
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    },
+                    "required": [
+                        "type"
+                    ],
+                    "additionalProperties": false
+            },
+            "required": [
+                "polymer_matrix",
+                "dispersed_phase",
+                "solvent_system",
+                "substrate"
+            ],
+            "additionalProperties": false
+        },
+        "process_parameters": {
+            "type": "object",
+            "description": "Parameters related to the solvent-casting process, organized into major categories.",
+            "properties": {
+                "solution_preparation": {
+                    "type": "object",
+                    "description": "Polymer dissolution and solution preparation.",
+                    "properties": {
+                        "temperature": {
+                            "type": "object",
+                            "description": "Temperature during solution preparation.",
+                            "properties": {
+                                "value": {
+                                    "type": "number",
+                                    "description": "Value of the temperature."
+                                },
+                                "unit": {
+                                    "type": "string",
+                                    "description": "Unit of temperature (e.g., \u00b0C, K)."
+                                }
+                            },
+                            "required": [
+                                "value",
+                                "unit"
+                            ]
+                        },
+                        "duration": {
+                            "type": "object",
+                            "description": "Duration of solution preparation.",
+                            "properties": {
+                                "value": {
+                                    "type": "number",
+                                    "description": "Value of the duration."
+                                },
+                                "unit": {
+                                    "type": "string",
+                                    "description": "Unit of duration (e.g., min, h)."
+                                }
+                            },
+                            "required": [
+                                "value",
+                                "unit"
+                            ]
+                        },
+                        "method": {
+                            "type": "string",
+                            "description": "Method used for solution preparation (e.g., magnetic stirring, heating)."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "dispersion_mixing": {
+                    "type": "object",
+                    "description": "Filler dispersion and mixing techniques (e.g., sonication, shear mixing).",
+                    "properties": {
+                        "method": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Dispersion techniques applied (e.g., sonication, high-shear mixing)."
+                        },
+                        "duration": {
+                            "type": "object",
+                            "description": "Duration of the dispersion process.",
+                            "properties": {
+                                "value": {
+                                    "type": "number",
+                                    "description": "Value of the duration."
+                                },
+                                "unit": {
+                                    "type": "string",
+                                    "description": "Unit of duration (e.g., min, h)."
+                                }
+                            },
+                            "required": [
+                                "value",
+                                "unit"
+                            ]
+                        },
+                        "power": {
+                            "type": "object",
+                            "description": "Power input for sonication or high-shear mixing.",
+                            "properties": {
+                                "value": {
+                                    "type": "number",
+                                    "description": "Value of the power."
+                                },
+                                "unit": {
+                                    "type": "string",
+                                    "description": "Unit of power (e.g., W, %)."
+                                }
+                            },
+                            "required": [
+                                "value"
+                            ]
+                        },
+                        "temperature": {
+                            "type": "object",
+                            "description": "Temperature during dispersion.",
+                            "properties": {
+                                "value": {
+                                    "type": "number",
+                                    "description": "Value of the temperature."
+                                },
+                                "unit": {
+                                    "type": "string",
+                                    "description": "Unit of temperature (e.g., \u00b0C, K)."
+                                }
+                            },
+                            "required": [
+                                "value",
+                                "unit"
+                            ]
+                        },
+                        "degassing": {
+                            "type": "object",
+                            "description": "Degassing process to remove entrapped air.",
+                            "properties": {
+                                "method": {
+                                    "type": "string",
+                                    "description": "Method used for degassing (e.g., vacuum, centrifugation)."
+                                },
+                                "duration": {
+                                    "type": "object",
+                                    "properties": {
+                                        "value": {
+                                            "type": "number",
+                                            "description": "Value of the degassing duration."
+                                        },
+                                        "unit": {
+                                            "type": "string",
+                                            "description": "Unit of duration (e.g., min, h)."
+                                        }
+                                    },
+                                    "required": [
+                                        "value",
+                                        "unit"
+                                    ]
+                                },
+                                "pressure": {
+                                    "type": "object",
+                                    "properties": {
+                                        "value": {
+                                            "type": "number",
+                                            "description": "Value of the pressure during degassing."
+                                        },
+                                        "unit": {
+                                            "type": "string",
+                                            "description": "Unit of pressure (e.g., mbar, Pa)."
+                                        }
+                                    },
+                                    "required": [
+                                        "value",
+                                        "unit"
+                                    ]
+                                }
+                            },
+                            "required": [
+                                "method"
+                            ]
+                        }
+                    },
+                    "required": [
+                        "method"
+                    ],
+                    "additionalProperties": false
+                },
+                "casting_deposition": {
+                    "type": "object",
+                    "description": "Film formation methods (e.g., spin coating, drop casting, doctor blading).",
+                    "properties": {
+                        "method_name": {
+                            "type": "string",
+                            "description": "Casting method (e.g., spin coating, doctor blade, drop casting)."
+                        },
+                        "parameters": {
+                            "type": "array",
+                            "description": "Method-dependent parameters, each with name, value, and unit.",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "description": "Parameter name (e.g., spin_speed, spin_time, blade_gap)."
+                                    },
+                                    "value": {
+                                        "type": "number",
+                                        "description": "Parameter value."
+                                    },
+                                    "unit": {
+                                        "type": "string",
+                                        "description": "Unit of the parameter (e.g., RPM, seconds, \u00b5m)."
+                                    }
+                                },
+                                "required": [
+                                    "name",
+                                    "value",
+                                    "unit"
+                                ],
+                                "additionalProperties": false
+                            }
+                        }
+                    },
+                    "required": [
+                        "method_name"
+                    ],
+                    "additionalProperties": false
+                },
+                "solvent_removal_drying": {
+                    "type": "object",
+                    "description": "Solvent evaporation and drying conditions.",
+                    "properties": {
+                        "multi_step_drying": {
+                            "type": "array",
+                            "description": "Multiple drying steps with varying conditions.",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "step": {
+                                        "type": "integer",
+                                        "description": "Step number in the drying process."
+                                    },
+                                    "temperature": {
+                                        "type": "object",
+                                        "properties": {
+                                            "value": {
+                                                "type": "number",
+                                                "description": "Value of the temperature for this step."
+                                            },
+                                            "unit": {
+                                                "type": "string",
+                                                "description": "Unit of temperature (e.g., \u00b0C, K)."
+                                            }
+                                        },
+                                        "required": [
+                                            "value",
+                                            "unit"
+                                        ]
+                                    },
+                                    "duration": {
+                                        "type": "object",
+                                        "properties": {
+                                            "value": {
+                                                "type": "number",
+                                                "description": "Value of the duration for this step."
+                                            },
+                                            "unit": {
+                                                "type": "string",
+                                                "description": "Unit of duration (e.g., min, h)."
+                                            }
+                                        },
+                                        "required": [
+                                            "value",
+                                            "unit"
+                                        ]
+                                    },
+                                    "atmosphere": {
+                                        "type": "string",
+                                        "description": "Atmosphere during this drying step (e.g., air, nitrogen, vacuum)."
+                                    }
+                                },
+                                "required": [
+                                    "step",
+                                    "temperature",
+                                    "duration"
+                                ]
+                            }
+                        }
+                    },
+                    "required": [
+                        "multi_step_drying"
+                    ],
+                    "additionalProperties": false
+                },
+                "post_treatment": {
+                    "type": "object",
+                    "description": "Post-processing steps such as annealing or curing.",
+                    "properties": {
+                        "multi_step_processing": {
+                            "type": "array",
+                            "description": "Multiple post-treatment steps with varying conditions.",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "method": {
+                                        "type": "string",
+                                        "description": "Post-treatment method (e.g., annealing, curing)."
+                                    },
+                                    "temperature": {
+                                        "type": "object",
+                                        "properties": {
+                                            "value": {
+                                                "type": "number",
+                                                "description": "Value of the heating temperature."
+                                            },
+                                            "unit": {
+                                                "type": "string",
+                                                "description": "Unit of temperature (e.g., \u00b0C, K)."
+                                            }
+                                        },
+                                        "required": [
+                                            "value",
+                                            "unit"
+                                        ]
+                                    },
+                                    "duration": {
+                                        "type": "object",
+                                        "properties": {
+                                            "value": {
+                                                "type": "number",
+                                                "description": "Value of the heating duration."
+                                            },
+                                            "unit": {
+                                                "type": "string",
+                                                "description": "Unit of duration (e.g., min, h)."
+                                            }
+                                        },
+                                        "required": [
+                                            "value",
+                                            "unit"
+                                        ]
+                                    },
+                                    "ramp_rate": {
+                                        "type": "object",
+                                        "description": "Heating ramp rate.",
+                                        "properties": {
+                                            "value": {
+                                                "type": "number",
+                                                "description": "Value of the ramp rate."
+                                            },
+                                            "unit": {
+                                                "type": "string",
+                                                "description": "Unit of ramp rate (e.g., \u00b0C/min)."
+                                            }
+                                        },
+                                        "required": [
+                                            "value",
+                                            "unit"
+                                        ]
+                                    },
+                                    "atmosphere": {
+                                        "type": "string",
+                                        "description": "Atmosphere during post-treatment (e.g., air, nitrogen, vacuum)."
+                                    },
+                                    "parameters": {
+                                        "type": "array",
+                                        "description": "Additional method-specific parameters.",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "name": {
+                                                    "type": "string",
+                                                    "description": "Parameter name."
+                                                },
+                                                "value": {
+                                                    "type": [
+                                                        "number",
+                                                        "string"
+                                                    ],
+                                                    "description": "Parameter value."
+                                                },
+                                                "unit": {
+                                                    "type": "string",
+                                                    "description": "Unit of the parameter."
+                                                }
+                                            },
+                                            "required": [
+                                                "name",
+                                                "value"
+                                            ]
+                                        }
+                                    }
+                                },
+                                "required": [
+                                    "method"
+                                ]
+                            }
+                        }
+                    },
+                    "required": [
+                        "multi_step_processing"
+                    ],
+                    "additionalProperties": false
+                },
+                "ambient_conditions": {
+                    "type": "object",
+                    "description": "Environmental conditions during casting.",
+                    "properties": {
+                        "temperature": {
+                            "type": "object",
+                            "description": "Ambient temperature.",
+                            "properties": {
+                                "value": {
+                                    "type": "number",
+                                    "description": "Value of the temperature."
+                                },
+                                "unit": {
+                                    "type": "string",
+                                    "description": "Unit of temperature (e.g., \u00b0C, K)."
+                                }
+                            },
+                            "required": [
+                                "value",
+                                "unit"
+                            ]
+                        },
+                        "humidity": {
+                            "type": "object",
+                            "description": "Relative humidity.",
+                            "properties": {
+                                "value": {
+                                    "type": "number",
+                                    "description": "Value of the relative humidity.",
+                                    "maximum": 100
+                                },
+                                "unit": {
+                                    "type": "string",
+                                    "description": "Unit of relative humidity (%)."
+                                }
+                            },
+                            "required": [
+                                "value",
+                                "unit"
+                            ]
+                        },
+                        "controlled": {
+                            "type": "boolean",
+                            "description": "Whether ambient conditions were controlled (true/false).",
+                            "default": false
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "required": [
+                "solution_preparation",
+                "dispersion_mixing",
+                "casting_deposition",
+                "solvent_removal_drying",
+                "post_treatment"
+            ],
+            "additionalProperties": false
+        },
+        "output_characteristics": {
+            "type": "object",
+            "description": "Properties of the resulting composite film.",
+            "properties": {
+                "film_thickness": {
+                    "type": "object",
+                    "description": "Final thickness of the composite film.",
+                    "properties": {
+                        "value": {
+                            "type": "number",
+                            "description": "Value of the film thickness."
+                        },
+                        "unit": {
+                            "type": "string",
+                            "description": "Unit of film thickness (e.g., nm, \u00b5m)."
+                        }
+                    },
+                    "required": [
+                        "value",
+                        "unit"
+                    ]
+                },
+                "film_uniformity": {
+                    "type": "string",
+                    "description": "Qualitative assessment of film uniformity (e.g., uniform, non-uniform, defects present)."
+                },
+                "defects": {
+                    "type": "array",
+                    "description": "List of observed defects (e.g., cracks, pinholes, agglomerates).",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "particle_dispersion": {
+                    "type": "string",
+                    "description": "Qualitative assessment of filler dispersion (e.g., homogeneous, agglomerated)."
+                },
+                "key_properties": {
+                    "type": "array",
+                    "description": "Generalized properties of the film, extracted from literature or experiments.",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "property_name": {
+                                "type": "string",
+                                "description": "Property name (e.g., Young's modulus, tensile strength, piezoelectric coefficient, band_gap_energy, refractive_index, optical_conductivity, electrical_conductivity, saturation_magnetization, remanent_magnetization, coercivity)."
+                            },
+                            "value": {
+                                "type": "number",
+                                "description": "Value of the property."
+                            },
+                            "unit": {
+                                "type": "string",
+                                "description": "Unit of the property (e.g., GPa, MPa, pC/N, eV, S/cm, emu/g, T)."
+                            },
+                            "test_method": {
+                                "type": "string",
+                                "description": "Method used to measure the property (e.g., tensile test, DMA, UV-Vis spectroscopy, VSM)."
+                            }
+                        },
+                        "required": [
+                            "property_name",
+                            "value"
+                        ],
+                        "additionalProperties": false
+                    }
+                },
+                "film_characterization_techniques": {
+                    "type": "array",
+                    "description": "List of characterization techniques used to analyze the film (e.g., SEM, XRD, AFM, TEM, FTIR, UV-Vis, VSM).",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": [
+                "film_thickness",
+                "key_properties"
+            ],
+            "additionalProperties": false
+        },
+        "equipment": {
+            "type": "array",
+            "description": "List of all equipment used for both fabrication and characterization, linked to process steps.",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Name or type of equipment (e.g., spin coater, ultrasonic probe, AFM, XRD, VSM)."
+                    },
+                    "model": {
+                        "type": "string",
+                        "description": "Model number or brand of the equipment."
+                    },
+                    "manufacturer": {
+                        "type": "string",
+                        "description": "Manufacturer of the equipment."
+                    },
+                    "associated_process": {
+                        "type": "string",
+                        "description": "Process step associated with this equipment (e.g., solution_preparation, casting_deposition, characterization)."
+                    }
+                },
+                "required": [
+                    "name",
+                    "associated_process"
+                ],
+                "additionalProperties": false
+            }
+        }
+    },
+    "required": [
+        "materials",
+        "process_parameters",
+        "output_characteristics",
+        "equipment"
+    ],
+    "additionalProperties": false
+}

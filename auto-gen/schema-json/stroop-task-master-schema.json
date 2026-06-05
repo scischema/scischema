@@ -1,0 +1,325 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Stroop Task Process Schema",
+  "type": "object",
+
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "experiment_id": { "type": "string" },
+        "variant": {
+          "type": "string",
+          "enum": [
+            "Standard",
+            "Emotional",
+            "Numerical",
+            "Spatial",
+            "Bilingual",
+            "Clinical",
+            "Emotional_Clinical"
+          ]
+        },
+        "sample": {
+          "type": "object",
+          "properties": {
+            "age_range": {
+              "type": "object",
+              "properties": {
+                "min": { "type": "number" },
+                "max": { "type": "number" }
+              },
+              "required": ["min", "max"]
+            },
+            "sample_size": {
+              "type": "integer",
+              "minimum": 20
+            },
+            "clinical_population": { "type": "boolean" },
+            "practice": {
+              "type": "object",
+              "properties": {
+                "duration_days": { "type": "integer" },
+                "monitored": { "type": "boolean" }
+              }
+            }
+          }
+        }
+      },
+      "required": ["variant"]
+    },
+
+    "stimuli": {
+      "type": "object",
+      "properties": {
+        "colors": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["red", "blue", "green", "yellow", "black", "white"]
+          },
+          "minItems": 3,
+          "maxItems": 6
+        },
+        "conditions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["congruent", "incongruent", "neutral", "emotional"]
+          }
+        },
+        "words": {
+          "type": "object",
+          "properties": {
+            "neutral": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "emotional": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      },
+      "required": ["colors"]
+    },
+
+    "task": {
+      "type": "object",
+      "properties": {
+        "response": {
+          "type": "object",
+          "properties": {
+            "modality": {
+              "type": "string",
+              "enum": ["verbal", "manual"]
+            },
+            "mapping": {
+              "type": "string",
+              "enum": ["name_color", "read_word"]
+            },
+            "keys": {
+              "type": "object",
+              "additionalProperties": { "type": "string" }
+            }
+          },
+          "required": ["modality", "mapping"]
+        }
+      }
+    },
+
+    "timing": {
+      "type": "object",
+      "properties": {
+        "stimulus": {
+          "type": "object",
+          "properties": {
+            "min": { "type": "integer", "minimum": 500 },
+            "max": { "type": "integer", "maximum": 2000 }
+          },
+          "required": ["min", "max"]
+        },
+        "iti": {
+          "type": "object",
+          "properties": {
+            "min": { "type": "integer", "minimum": 500 },
+            "max": { "type": "integer", "maximum": 1500 }
+          },
+          "required": ["min", "max"]
+        }
+      },
+      "required": ["stimulus", "iti"]
+    },
+
+    "design": {
+      "type": "object",
+      "properties": {
+        "trials": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "randomization": {
+          "type": "string",
+          "enum": ["randomized", "counterbalanced"]
+        }
+      }
+    },
+
+    "instruments": {
+      "type": "object",
+      "properties": {
+        "software": {
+          "type": "string",
+          "enum": ["PsychoPy", "E-Prime", "MATLAB_Psychtoolbox", "Other"]
+        },
+        "device": {
+          "type": "string",
+          "enum": ["keyboard", "response_pad"]
+        },
+        "voice": { "type": "boolean" },
+        "rt_precision": {
+          "type": "string",
+          "enum": ["millisecond"]
+        },
+        "display_calibrated": { "type": "boolean" }
+      },
+      "required": ["software", "device"]
+    },
+
+    "behavior": {
+      "type": "object",
+      "properties": {
+        "reaction_times": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": { "type": "number", "minimum": 0 }
+          }
+        },
+        "error_rates": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100
+          }
+        },
+        "interference": {
+          "type": "object",
+          "properties": {
+            "standard": { "type": "number" },
+            "emotional": { "type": "number" }
+          }
+        }
+      },
+      "required": ["reaction_times", "error_rates"]
+    },
+
+    "neuroimaging": {
+      "type": "object",
+      "properties": {
+        "modality": {
+          "type": "string",
+          "enum": ["EEG", "fMRI", "None"]
+        },
+        "eeg": {
+          "type": "object",
+          "properties": {
+            "channels": { "type": "integer", "minimum": 32, "maximum": 128 },
+            "sampling_rate": { "type": "integer", "minimum": 500 },
+            "impedance": {
+              "type": "object",
+              "properties": {
+                "max": { "type": "number", "minimum": 5, "maximum": 10 }
+              },
+              "required": ["max"]
+            },
+            "reference": {
+              "type": "string",
+              "enum": ["linked_mastoids", "average"]
+            },
+            "events": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["stimulus_onset", "response_onset", "accuracy"]
+              }
+            }
+          }
+        },
+        "fmri": {
+          "type": "object",
+          "properties": {
+            "scanner": { "type": "string", "enum": ["3T"] },
+            "tr": { "type": "integer", "minimum": 2000, "maximum": 2500 },
+            "te": { "type": "integer", "minimum": 20, "maximum": 50 },
+            "voxel": {
+              "type": "object",
+              "properties": {
+                "x": { "type": "number", "minimum": 2, "maximum": 3 },
+                "y": { "type": "number", "minimum": 2, "maximum": 3 },
+                "z": { "type": "number", "minimum": 2, "maximum": 3 }
+              },
+              "required": ["x", "y", "z"]
+            },
+            "design": {
+              "type": "string",
+              "enum": ["event_related", "block"]
+            }
+          }
+        }
+      },
+      "required": ["modality"]
+    },
+
+    "model": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["drift_diffusion", "conflict_monitoring", "None"]
+        },
+        "parameters": {
+          "type": "object",
+          "additionalProperties": { "type": "number" }
+        }
+      }
+    },
+
+    "analysis": {
+      "type": "object",
+      "properties": {
+        "outliers": {
+          "type": "object",
+          "properties": {
+            "sd": { "type": "number", "minimum": 1 },
+            "min_rt": { "type": "integer", "minimum": 200 },
+            "max_rt": { "type": "integer", "minimum": 2000 }
+          }
+        },
+        "accuracy_adjusted": { "type": "boolean" },
+        "method": {
+          "type": "string",
+          "enum": ["within_subject_anova", "mixed_effects", "other"]
+        }
+      },
+      "required": ["outliers"]
+    },
+
+    "clinical": {
+      "type": "object",
+      "properties": {
+        "diagnosis": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "ADHD",
+              "depression",
+              "schizophrenia",
+              "frontal_lobe_dysfunction",
+              "aging"
+            ]
+          }
+        },
+        "coupling": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  },
+
+  "required": [
+    "metadata",
+    "stimuli",
+    "task",
+    "timing",
+    "instruments",
+    "behavior"
+  ]
+}

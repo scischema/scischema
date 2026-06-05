@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>SciSchema — Neutrino Event Reconstruction</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="icon" type="image/png" href="/assets/logo.png">
+  <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+  <header>
+    <a class="logo" href="/">
+      <img src="/assets/logo.png" alt="SciSchema Logo">
+      <span>SciSchema</span>
+    </a>
+    <nav>
+      <a href="/docs/">Docs</a>
+      <a href="/schemas/">Schemas</a>
+      <a href="/about/">About</a>
+      <a href="https://github.com/scischema">GitHub</a>
+    </nav>
+  </header>
+
+  <main class="schema-page">
+    <p class="schema-breadcrumb">
+      <a href="/schemas/">Schemas</a> ›
+      Physics ›
+      Neutrino Event Reconstruction
+    </p>
+
+    <section class="schema-hero">
+      <h1>Neutrino Event Reconstruction</h1>
+      <p class="schema-subtitle">A SciSchema.org Process Schema</p>
+
+      <p class="schema-meta">
+        Domain: Physics<br>
+        Schema: Neutrino Event Reconstruction Master Schema
+      </p>
+
+      <p class="schema-description">
+        Neutrino event reconstruction transforms detector signals into estimates of particle interactions and physical quantities.
+      </p>
+    </section>
+
+    <section class="schema-section">
+      <h2>Properties from Neutrino Event Reconstruction</h2>
+
+      <p class="schema-description">
+        The table below lists the top-level properties of this master schema.
+        Each property may contain more detailed nested fields in the JSON Schema representation.
+      </p>
+
+      <table class="schema-table">
+        <thead>
+          <tr>
+            <th>Property</th>
+            <th>Expected Type</th>
+            <th>Description</th>
+            <th>Required</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>detector_geometry</td>
+            <td>Object</td>
+            <td>Physical configuration of the detector.</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>input_data_and_detector_models</td>
+            <td>Object</td>
+            <td></td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>reconstruction_algorithms</td>
+            <td>Object</td>
+            <td></td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>calibration_strategy</td>
+            <td>Object</td>
+            <td></td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>machine_learning_configuration</td>
+            <td>Object</td>
+            <td></td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>performance_validation</td>
+            <td>Object</td>
+            <td></td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>trigger_and_event_selection</td>
+            <td>Object</td>
+            <td></td>
+            <td>Yes</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="schema-download">
+        <h2>Machine-readable schema representations</h2>
+
+        <p>
+          This schema is available in two machine-readable representations:
+          as an ORKG template, which can be exported as SHACL, and as a JSON Schema
+          document for download and reuse.
+        </p>
+
+        <ul>
+          <li>
+            <span>ORKG template / SHACL representation — forthcoming</span>
+          </li>
+          <li>
+            <a href="master-schema.json">Download master-schema.json</a>
+            <span> — JSON Schema representation</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <a href="/terms/">Terms and conditions</a>
+    <span>•</span>
+    <span>SciSchema</span>
+    <span>•</span>
+    <span>V0.1.0</span>
+    <span>|</span>
+    <span>2026-06-04</span>
+  </footer>
+</body>
+</html>

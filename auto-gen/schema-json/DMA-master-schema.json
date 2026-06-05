@@ -1,0 +1,1530 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://example.com/schemas/dma-saos-ideal/final",
+    "title": "DMA / SAOS experiment record (stable interchange schema)",
+    "description": "Stable DMA / SAOS interchange schema with segmented canonical measurement tables, optional raw-signal supplements, optional external URIs for large datasets, interfacial support, and compact QC metadata.",
+    "type": "object",
+    "additionalProperties": false,
+    "definitions": {
+        "conditioning_step": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "method"
+            ],
+            "properties": {
+                "method": {
+                    "type": "string",
+                    "enum": [
+                        "drying",
+                        "annealing",
+                        "solvent_removal",
+                        "dialysis",
+                        "none",
+                        "other"
+                    ]
+                },
+                "temperature_c": {
+                    "type": "number"
+                },
+                "duration_h": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "atmosphere": {
+                    "type": "string"
+                },
+                "notes": {
+                    "type": "string"
+                }
+            }
+        },
+        "uncertainty": {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "Optional 1-sigma or reported half-width uncertainties using the same units as the parent fields.",
+            "properties": {
+                "torque_n_m": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "phase_angle_deg": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "phase_angle_rad": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "storage_modulus_pa": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "loss_modulus_pa": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "complex_modulus_pa": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "complex_viscosity_pa_s": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "tan_delta": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "interfacial_shear_storage_modulus_mn_m": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "interfacial_shear_loss_modulus_mn_m": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "interfacial_dilatational_storage_modulus_mn_m": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "interfacial_dilatational_loss_modulus_mn_m": {
+                    "type": "number",
+                    "minimum": 0
+                }
+            }
+        },
+        "measurement_point": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "angular_frequency_rad_s",
+                "temperature_c"
+            ],
+            "properties": {
+                "point_index": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "time_s": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "angular_frequency_rad_s": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "frequency_hz": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "temperature_c": {
+                    "type": "number"
+                },
+                "torque_n_m": {
+                    "type": "number"
+                },
+                "phase_angle_deg": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 90
+                },
+                "phase_angle_rad": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 3.14159265359
+                },
+                "storage_modulus_pa": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "loss_modulus_pa": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "complex_modulus_pa": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "complex_viscosity_pa_s": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "tan_delta": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "interfacial_shear_storage_modulus_mn_m": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "interfacial_shear_loss_modulus_mn_m": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "interfacial_dilatational_storage_modulus_mn_m": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "interfacial_dilatational_loss_modulus_mn_m": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "run_id": {
+                    "type": "string"
+                },
+                "uncertainty": {
+                    "$ref": "#/definitions/uncertainty"
+                }
+            },
+            "allOf": [
+                {
+                    "anyOf": [
+                        {
+                            "required": [
+                                "storage_modulus_pa",
+                                "loss_modulus_pa"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "interfacial_shear_storage_modulus_mn_m",
+                                "interfacial_shear_loss_modulus_mn_m"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "interfacial_dilatational_storage_modulus_mn_m",
+                                "interfacial_dilatational_loss_modulus_mn_m"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "master_curve_point": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "reduced_angular_frequency_rad_s"
+            ],
+            "properties": {
+                "reduced_angular_frequency_rad_s": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "storage_modulus_pa": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "loss_modulus_pa": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "complex_viscosity_pa_s": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "tan_delta": {
+                    "type": "number",
+                    "minimum": 0
+                }
+            }
+        }
+    },
+    "required": [
+        "schema_version",
+        "experiment_mode",
+        "metadata",
+        "sample",
+        "instrument",
+        "segments"
+    ],
+    "properties": {
+        "schema_version": {
+            "type": "string",
+            "const": "1.0.0",
+            "description": "Stable external contract version."
+        },
+        "experiment_mode": {
+            "type": "string",
+            "enum": [
+                "saos_rheometer",
+                "bulk_dma",
+                "interfacial_shear"
+            ],
+            "description": "High-level experimental modality used to route parsing, UI defaults, and validation expectations."
+        },
+        "metadata": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "experiment_id",
+                "started_at"
+            ],
+            "properties": {
+                "experiment_id": {
+                    "type": "string",
+                    "description": "Unique record identifier (UUID, LIMS key, or lab code)."
+                },
+                "started_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "ISO 8601 experiment start time."
+                },
+                "ended_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "ISO 8601 experiment end time, if known."
+                },
+                "operator": {
+                    "type": "string"
+                },
+                "institution": {
+                    "type": "string"
+                },
+                "experiment_location": {
+                    "type": "string"
+                },
+                "replicate_group_id": {
+                    "type": "string",
+                    "description": "Shared identifier for nominally replicated records."
+                },
+                "run_id": {
+                    "type": "string",
+                    "description": "Instrument or session sub-run identifier."
+                },
+                "instrument_software": {
+                    "type": "string"
+                },
+                "analysis_software_version": {
+                    "type": "string"
+                },
+                "export_source": {
+                    "type": "string",
+                    "description": "Human-readable export source such as manual_entry, vendor_csv, or parquet_bundle."
+                },
+                "notes": {
+                    "type": "string"
+                }
+            }
+        },
+        "sample": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "sample_id",
+                "geometry"
+            ],
+            "properties": {
+                "sample_id": {
+                    "type": "string"
+                },
+                "material": {
+                    "type": "string",
+                    "description": "Short material identifier or specimen name."
+                },
+                "material_description": {
+                    "type": "string",
+                    "description": "Longer free-text description of polymer, blend, filler, lot, or specimen history."
+                },
+                "chemical_composition": {
+                    "type": "string"
+                },
+                "material_state": {
+                    "type": "string",
+                    "enum": [
+                        "solid",
+                        "melt",
+                        "gel",
+                        "solution",
+                        "other"
+                    ]
+                },
+                "geometry": {
+                    "description": "Shape-coupled geometry. The branch determines which dimensional fields are valid.",
+                    "oneOf": [
+                        {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                                "shape",
+                                "dimensions_mm"
+                            ],
+                            "properties": {
+                                "shape": {
+                                    "const": "disk"
+                                },
+                                "dimensions_mm": {
+                                    "type": "object",
+                                    "additionalProperties": false,
+                                    "required": [
+                                        "diameter_mm",
+                                        "thickness_mm"
+                                    ],
+                                    "properties": {
+                                        "diameter_mm": {
+                                            "type": "number",
+                                            "exclusiveMinimum": 0
+                                        },
+                                        "thickness_mm": {
+                                            "type": "number",
+                                            "exclusiveMinimum": 0
+                                        }
+                                    }
+                                },
+                                "strain_uniformity": {
+                                    "type": "string",
+                                    "enum": [
+                                        "uniform",
+                                        "non_uniform",
+                                        "unknown"
+                                    ],
+                                    "description": "Expected strain uniformity in the loaded geometry."
+                                },
+                                "edge_treatment": {
+                                    "type": "string",
+                                    "enum": [
+                                        "smooth",
+                                        "serrated",
+                                        "sanded",
+                                        "adhesive",
+                                        "other",
+                                        "unknown"
+                                    ],
+                                    "description": "Slip mitigation or edge preparation."
+                                },
+                                "notes": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                                "shape",
+                                "dimensions_mm"
+                            ],
+                            "properties": {
+                                "shape": {
+                                    "const": "film"
+                                },
+                                "dimensions_mm": {
+                                    "description": "Film specimens may be circular (punched disk) or rectangular strips.",
+                                    "oneOf": [
+                                        {
+                                            "type": "object",
+                                            "additionalProperties": false,
+                                            "required": [
+                                                "diameter_mm",
+                                                "thickness_mm"
+                                            ],
+                                            "properties": {
+                                                "diameter_mm": {
+                                                    "type": "number",
+                                                    "exclusiveMinimum": 0
+                                                },
+                                                "thickness_mm": {
+                                                    "type": "number",
+                                                    "exclusiveMinimum": 0
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "type": "object",
+                                            "additionalProperties": false,
+                                            "required": [
+                                                "length_mm",
+                                                "width_mm",
+                                                "thickness_mm"
+                                            ],
+                                            "properties": {
+                                                "length_mm": {
+                                                    "type": "number",
+                                                    "exclusiveMinimum": 0
+                                                },
+                                                "width_mm": {
+                                                    "type": "number",
+                                                    "exclusiveMinimum": 0
+                                                },
+                                                "thickness_mm": {
+                                                    "type": "number",
+                                                    "exclusiveMinimum": 0
+                                                }
+                                            }
+                                        }
+                                    ]
+                                },
+                                "strain_uniformity": {
+                                    "type": "string",
+                                    "enum": [
+                                        "uniform",
+                                        "non_uniform",
+                                        "unknown"
+                                    ],
+                                    "description": "Expected strain uniformity in the loaded geometry."
+                                },
+                                "edge_treatment": {
+                                    "type": "string",
+                                    "enum": [
+                                        "smooth",
+                                        "serrated",
+                                        "sanded",
+                                        "adhesive",
+                                        "other",
+                                        "unknown"
+                                    ],
+                                    "description": "Slip mitigation or edge preparation."
+                                },
+                                "notes": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                                "shape",
+                                "dimensions_mm"
+                            ],
+                            "properties": {
+                                "shape": {
+                                    "const": "rectangular_bar"
+                                },
+                                "dimensions_mm": {
+                                    "type": "object",
+                                    "additionalProperties": false,
+                                    "required": [
+                                        "length_mm",
+                                        "width_mm",
+                                        "thickness_mm"
+                                    ],
+                                    "properties": {
+                                        "length_mm": {
+                                            "type": "number",
+                                            "exclusiveMinimum": 0
+                                        },
+                                        "width_mm": {
+                                            "type": "number",
+                                            "exclusiveMinimum": 0
+                                        },
+                                        "thickness_mm": {
+                                            "type": "number",
+                                            "exclusiveMinimum": 0
+                                        }
+                                    }
+                                },
+                                "strain_uniformity": {
+                                    "type": "string",
+                                    "enum": [
+                                        "uniform",
+                                        "non_uniform",
+                                        "unknown"
+                                    ],
+                                    "description": "Expected strain uniformity in the loaded geometry."
+                                },
+                                "edge_treatment": {
+                                    "type": "string",
+                                    "enum": [
+                                        "smooth",
+                                        "serrated",
+                                        "sanded",
+                                        "adhesive",
+                                        "other",
+                                        "unknown"
+                                    ],
+                                    "description": "Slip mitigation or edge preparation."
+                                },
+                                "notes": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                                "shape",
+                                "interface_type",
+                                "dimensions_mm"
+                            ],
+                            "properties": {
+                                "shape": {
+                                    "const": "bubble"
+                                },
+                                "interface_type": {
+                                    "type": "string",
+                                    "enum": [
+                                        "air_water",
+                                        "liquid_liquid",
+                                        "other"
+                                    ]
+                                },
+                                "dimensions_mm": {
+                                    "type": "object",
+                                    "additionalProperties": false,
+                                    "required": [
+                                        "radius_curvature_mm"
+                                    ],
+                                    "properties": {
+                                        "radius_curvature_mm": {
+                                            "type": "number",
+                                            "exclusiveMinimum": 0
+                                        },
+                                        "thickness_mm": {
+                                            "type": "number",
+                                            "exclusiveMinimum": 0
+                                        }
+                                    }
+                                },
+                                "strain_uniformity": {
+                                    "type": "string",
+                                    "enum": [
+                                        "uniform",
+                                        "non_uniform",
+                                        "unknown"
+                                    ],
+                                    "description": "Expected strain uniformity in the loaded geometry."
+                                },
+                                "edge_treatment": {
+                                    "type": "string",
+                                    "enum": [
+                                        "smooth",
+                                        "serrated",
+                                        "sanded",
+                                        "adhesive",
+                                        "other",
+                                        "unknown"
+                                    ],
+                                    "description": "Slip mitigation or edge preparation."
+                                },
+                                "notes": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                                "shape",
+                                "interface_type"
+                            ],
+                            "properties": {
+                                "shape": {
+                                    "const": "planar_interface"
+                                },
+                                "interface_type": {
+                                    "type": "string",
+                                    "enum": [
+                                        "air_water",
+                                        "liquid_liquid",
+                                        "solid_liquid",
+                                        "other"
+                                    ]
+                                },
+                                "dimensions_mm": {
+                                    "type": "object",
+                                    "description": "Optional characteristic dimensions for probe, trough, or film extent.",
+                                    "additionalProperties": true
+                                },
+                                "strain_uniformity": {
+                                    "type": "string",
+                                    "enum": [
+                                        "uniform",
+                                        "non_uniform",
+                                        "unknown"
+                                    ],
+                                    "description": "Expected strain uniformity in the loaded geometry."
+                                },
+                                "edge_treatment": {
+                                    "type": "string",
+                                    "enum": [
+                                        "smooth",
+                                        "serrated",
+                                        "sanded",
+                                        "adhesive",
+                                        "other",
+                                        "unknown"
+                                    ],
+                                    "description": "Slip mitigation or edge preparation."
+                                },
+                                "notes": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                                "shape",
+                                "dimensions_mm"
+                            ],
+                            "properties": {
+                                "shape": {
+                                    "const": "other"
+                                },
+                                "dimensions_mm": {
+                                    "type": "object",
+                                    "additionalProperties": true
+                                },
+                                "strain_uniformity": {
+                                    "type": "string",
+                                    "enum": [
+                                        "uniform",
+                                        "non_uniform",
+                                        "unknown"
+                                    ],
+                                    "description": "Expected strain uniformity in the loaded geometry."
+                                },
+                                "edge_treatment": {
+                                    "type": "string",
+                                    "enum": [
+                                        "smooth",
+                                        "serrated",
+                                        "sanded",
+                                        "adhesive",
+                                        "other",
+                                        "unknown"
+                                    ],
+                                    "description": "Slip mitigation or edge preparation."
+                                },
+                                "notes": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    ]
+                },
+                "conditioning_steps": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/conditioning_step"
+                    },
+                    "description": "Structured sample conditioning history."
+                },
+                "reference_transitions": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "description": "Reference thermal transitions supplied from DSC, literature, or prior characterization.",
+                    "properties": {
+                        "Tg_c": {
+                            "type": "number"
+                        },
+                        "Tm_c": {
+                            "type": "number"
+                        }
+                    }
+                },
+                "molecular_characteristics": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "description": "Optional polymer metadata useful for correlation studies, not required for a valid interchange record.",
+                    "properties": {
+                        "mw_g_mol": {
+                            "type": "number",
+                            "minimum": 0
+                        },
+                        "mn_g_mol": {
+                            "type": "number",
+                            "minimum": 0
+                        },
+                        "dispersity_mw_over_mn": {
+                            "type": "number",
+                            "minimum": 0
+                        },
+                        "long_chain_branching": {
+                            "type": "string",
+                            "enum": [
+                                "none",
+                                "low",
+                                "medium",
+                                "high",
+                                "unknown"
+                            ]
+                        },
+                        "melt_flow_index_g_per_10_min": {
+                            "type": "number",
+                            "minimum": 0
+                        }
+                    }
+                },
+                "notes": {
+                    "type": "string"
+                }
+            }
+        },
+        "instrument": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "type",
+                "fixture",
+                "temperature_control"
+            ],
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "controlled_strain_rheometer",
+                        "controlled_stress_rheometer",
+                        "dma_oscillatory",
+                        "interfacial_rheometer",
+                        "other"
+                    ]
+                },
+                "manufacturer": {
+                    "type": "string"
+                },
+                "model": {
+                    "type": "string"
+                },
+                "serial_number": {
+                    "type": "string"
+                },
+                "fixture": {
+                    "type": "string",
+                    "enum": [
+                        "parallel_plate",
+                        "cone_and_plate",
+                        "torsion",
+                        "single_cantilever",
+                        "dual_cantilever",
+                        "three_point_bend",
+                        "tension",
+                        "double_wall_ring",
+                        "bubble_needle",
+                        "other"
+                    ]
+                },
+                "primary_deformation": {
+                    "type": "string",
+                    "enum": [
+                        "shear",
+                        "dilatational",
+                        "combined",
+                        "unknown"
+                    ]
+                },
+                "temperature_control": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                        "method"
+                    ],
+                    "properties": {
+                        "method": {
+                            "type": "string",
+                            "enum": [
+                                "peltier",
+                                "convection_oven",
+                                "liquid_cooling",
+                                "circulating_bath",
+                                "liquid_nitrogen",
+                                "other"
+                            ]
+                        },
+                        "range_c": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "properties": {
+                                "min": {
+                                    "type": "number"
+                                },
+                                "max": {
+                                    "type": "number"
+                                }
+                            }
+                        },
+                        "accuracy_c": {
+                            "type": "number",
+                            "minimum": 0
+                        },
+                        "stabilization_time_min": {
+                            "type": "number",
+                            "minimum": 0
+                        }
+                    }
+                },
+                "angular_frequency_range_rad_s": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "min": {
+                            "type": "number",
+                            "minimum": 0
+                        },
+                        "max": {
+                            "type": "number",
+                            "minimum": 0
+                        }
+                    }
+                },
+                "strain_resolution_percent": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "torque_transducer": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "range_description": {
+                            "type": "string"
+                        },
+                        "resolution_n_m": {
+                            "type": "number",
+                            "exclusiveMinimum": 0
+                        }
+                    }
+                },
+                "data_acquisition": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "oscillations_per_point": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "points_per_decade": {
+                            "type": "integer",
+                            "minimum": 1
+                        }
+                    }
+                },
+                "notes": {
+                    "type": "string"
+                }
+            }
+        },
+        "segments": {
+            "type": "array",
+            "minItems": 1,
+            "description": "Ordered protocol/data segments. Use one segment for a simple single-protocol experiment.",
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                    "segment_id",
+                    "protocol",
+                    "datasets"
+                ],
+                "properties": {
+                    "segment_id": {
+                        "type": "string"
+                    },
+                    "label": {
+                        "type": "string"
+                    },
+                    "run_id": {
+                        "type": "string"
+                    },
+                    "segment_started_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "segment_ended_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "protocol": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                            "strain",
+                            "oscillation",
+                            "temperature_program",
+                            "contact"
+                        ],
+                        "properties": {
+                            "strain": {
+                                "type": "object",
+                                "additionalProperties": false,
+                                "required": [
+                                    "amplitude_percent"
+                                ],
+                                "properties": {
+                                    "amplitude_percent": {
+                                        "type": "number",
+                                        "exclusiveMinimum": 0,
+                                        "maximum": 100
+                                    },
+                                    "linear_viscoelastic_verified": {
+                                        "type": "boolean"
+                                    },
+                                    "strain_sweep": {
+                                        "type": "object",
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "performed": {
+                                                "type": "boolean"
+                                            },
+                                            "max_strain_percent_tested": {
+                                                "type": "number",
+                                                "exclusiveMinimum": 0,
+                                                "maximum": 100
+                                            },
+                                            "moduli_independent_of_strain": {
+                                                "type": "boolean"
+                                            }
+                                        }
+                                    },
+                                    "notes": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "oscillation": {
+                                "type": "object",
+                                "additionalProperties": false,
+                                "required": [
+                                    "kind"
+                                ],
+                                "properties": {
+                                    "kind": {
+                                        "type": "string",
+                                        "enum": [
+                                            "single_frequency",
+                                            "frequency_sweep"
+                                        ]
+                                    },
+                                    "frequency_unit": {
+                                        "type": "string",
+                                        "enum": [
+                                            "rad_s",
+                                            "hz"
+                                        ]
+                                    },
+                                    "single": {
+                                        "type": "object",
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "angular_frequency_rad_s": {
+                                                "type": "number",
+                                                "exclusiveMinimum": 0
+                                            },
+                                            "frequency_hz": {
+                                                "type": "number",
+                                                "exclusiveMinimum": 0
+                                            }
+                                        }
+                                    },
+                                    "sweep": {
+                                        "type": "object",
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "spacing": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "logarithmic",
+                                                    "linear",
+                                                    "custom"
+                                                ]
+                                            },
+                                            "angular_frequency_rad_s": {
+                                                "type": "object",
+                                                "additionalProperties": false,
+                                                "required": [
+                                                    "min",
+                                                    "max"
+                                                ],
+                                                "properties": {
+                                                    "min": {
+                                                        "type": "number",
+                                                        "minimum": 0
+                                                    },
+                                                    "max": {
+                                                        "type": "number",
+                                                        "minimum": 0
+                                                    }
+                                                }
+                                            },
+                                            "frequency_hz": {
+                                                "type": "object",
+                                                "additionalProperties": false,
+                                                "required": [
+                                                    "min",
+                                                    "max"
+                                                ],
+                                                "properties": {
+                                                    "min": {
+                                                        "type": "number",
+                                                        "minimum": 0
+                                                    },
+                                                    "max": {
+                                                        "type": "number",
+                                                        "minimum": 0
+                                                    }
+                                                }
+                                            },
+                                            "points": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "number",
+                                                    "minimum": 0
+                                                }
+                                            },
+                                            "point_count": {
+                                                "type": "integer",
+                                                "minimum": 2
+                                            },
+                                            "points_per_decade": {
+                                                "type": "integer",
+                                                "minimum": 1
+                                            }
+                                        }
+                                    }
+                                },
+                                "allOf": [
+                                    {
+                                        "if": {
+                                            "properties": {
+                                                "kind": {
+                                                    "const": "single_frequency"
+                                                }
+                                            }
+                                        },
+                                        "then": {
+                                            "required": [
+                                                "single"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "if": {
+                                            "properties": {
+                                                "kind": {
+                                                    "const": "frequency_sweep"
+                                                }
+                                            }
+                                        },
+                                        "then": {
+                                            "required": [
+                                                "sweep"
+                                            ]
+                                        }
+                                    }
+                                ]
+                            },
+                            "temperature_program": {
+                                "type": "object",
+                                "additionalProperties": false,
+                                "required": [
+                                    "mode"
+                                ],
+                                "properties": {
+                                    "mode": {
+                                        "type": "string",
+                                        "enum": [
+                                            "isothermal",
+                                            "ramp",
+                                            "multi_step",
+                                            "other"
+                                        ]
+                                    },
+                                    "isothermal_temperature_c": {
+                                        "type": "number"
+                                    },
+                                    "ramp_rate_c_per_min": {
+                                        "type": "number",
+                                        "exclusiveMinimum": 0
+                                    },
+                                    "temperature_range_c": {
+                                        "type": "object",
+                                        "additionalProperties": false,
+                                        "required": [
+                                            "min",
+                                            "max"
+                                        ],
+                                        "properties": {
+                                            "min": {
+                                                "type": "number"
+                                            },
+                                            "max": {
+                                                "type": "number"
+                                            }
+                                        }
+                                    },
+                                    "temperature_points_c": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "number"
+                                        }
+                                    },
+                                    "isothermal_holds": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "additionalProperties": false,
+                                            "required": [
+                                                "temperature_c",
+                                                "duration_min"
+                                            ],
+                                            "properties": {
+                                                "temperature_c": {
+                                                    "type": "number"
+                                                },
+                                                "duration_min": {
+                                                    "type": "number",
+                                                    "minimum": 0
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "notes": {
+                                        "type": "string"
+                                    }
+                                },
+                                "allOf": [
+                                    {
+                                        "if": {
+                                            "properties": {
+                                                "mode": {
+                                                    "const": "isothermal"
+                                                }
+                                            }
+                                        },
+                                        "then": {
+                                            "required": [
+                                                "isothermal_temperature_c"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "if": {
+                                            "properties": {
+                                                "mode": {
+                                                    "const": "ramp"
+                                                }
+                                            }
+                                        },
+                                        "then": {
+                                            "required": [
+                                                "ramp_rate_c_per_min",
+                                                "temperature_range_c"
+                                            ]
+                                        }
+                                    }
+                                ]
+                            },
+                            "contact": {
+                                "type": "object",
+                                "additionalProperties": false,
+                                "required": [
+                                    "gap_mm"
+                                ],
+                                "properties": {
+                                    "gap_mm": {
+                                        "type": "number",
+                                        "exclusiveMinimum": 0
+                                    },
+                                    "normal_force_n": {
+                                        "type": "number"
+                                    },
+                                    "normal_force_monitored": {
+                                        "type": "boolean"
+                                    },
+                                    "automatic_gap_compensation": {
+                                        "type": "boolean"
+                                    },
+                                    "notes": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "deformation_type": {
+                                "type": "string",
+                                "enum": [
+                                    "shear",
+                                    "dilatational",
+                                    "combined",
+                                    "unknown"
+                                ]
+                            },
+                            "signal_conventions": {
+                                "type": "object",
+                                "additionalProperties": false,
+                                "properties": {
+                                    "phase_angle_unit": {
+                                        "type": "string",
+                                        "enum": [
+                                            "degrees",
+                                            "radians"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "datasets": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                            "measurement_points": {
+                                "type": "array",
+                                "minItems": 0,
+                                "items": {
+                                    "$ref": "#/definitions/measurement_point"
+                                }
+                            },
+                            "raw_signals": {
+                                "type": "object",
+                                "additionalProperties": false,
+                                "description": "Optional raw time-series supplement. Parallel array lengths are not enforced by Draft 07.",
+                                "properties": {
+                                    "time_s": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "number",
+                                            "minimum": 0
+                                        }
+                                    },
+                                    "torque_n_m": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "number"
+                                        }
+                                    },
+                                    "phase_angle_deg": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "number"
+                                        }
+                                    },
+                                    "phase_angle_rad": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "number"
+                                        }
+                                    },
+                                    "temperature_c": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            },
+                            "derived_summary": {
+                                "type": "object",
+                                "additionalProperties": false,
+                                "properties": {
+                                    "reported_glass_transition_c": {
+                                        "type": "number"
+                                    },
+                                    "tan_delta_peak": {
+                                        "type": "object",
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "temperature_c": {
+                                                "type": "number"
+                                            },
+                                            "angular_frequency_rad_s": {
+                                                "type": "number",
+                                                "minimum": 0
+                                            },
+                                            "frequency_hz": {
+                                                "type": "number",
+                                                "minimum": 0
+                                            }
+                                        }
+                                    },
+                                    "crossover_frequency_rad_s": {
+                                        "type": "number",
+                                        "minimum": 0
+                                    },
+                                    "crossover_modulus_pa": {
+                                        "type": "number",
+                                        "minimum": 0
+                                    }
+                                }
+                            },
+                            "external_series_uri": {
+                                "type": "string",
+                                "format": "uri"
+                            }
+                        },
+                        "allOf": [
+                            {
+                                "anyOf": [
+                                    {
+                                        "required": [
+                                            "measurement_points"
+                                        ],
+                                        "properties": {
+                                            "measurement_points": {
+                                                "type": "array",
+                                                "minItems": 1
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "required": [
+                                            "external_series_uri"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        "time_temperature_superposition": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "applied"
+            ],
+            "properties": {
+                "applied": {
+                    "type": "boolean"
+                },
+                "reference_temperature_c": {
+                    "type": "number"
+                },
+                "shift_factor_kind": {
+                    "type": "string",
+                    "enum": [
+                        "linear_a_t",
+                        "log_a_t"
+                    ],
+                    "description": "How shift factor values are encoded to prevent ambiguity across tools."
+                },
+                "shift_factors": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                            "temperature_c",
+                            "value"
+                        ],
+                        "properties": {
+                            "temperature_c": {
+                                "type": "number"
+                            },
+                            "value": {
+                                "type": "number",
+                                "description": "Shift factor value; interpret using shift_factor_kind."
+                            }
+                        }
+                    }
+                },
+                "master_curve_points": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/master_curve_point"
+                    }
+                },
+                "activation_energy_kj_mol": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "extended_angular_frequency_rad_s": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                        "min",
+                        "max"
+                    ],
+                    "properties": {
+                        "min": {
+                            "type": "number",
+                            "minimum": 0
+                        },
+                        "max": {
+                            "type": "number",
+                            "minimum": 0
+                        }
+                    }
+                },
+                "shift_model": {
+                    "type": "string",
+                    "enum": [
+                        "wlf",
+                        "arrhenius",
+                        "manual",
+                        "unknown"
+                    ]
+                },
+                "cox_merz_consistent": {
+                    "type": "boolean"
+                },
+                "notes": {
+                    "type": "string"
+                }
+            },
+            "allOf": [
+                {
+                    "if": {
+                        "properties": {
+                            "applied": {
+                                "const": true
+                            }
+                        }
+                    },
+                    "then": {
+                        "required": [
+                            "reference_temperature_c",
+                            "shift_factor_kind",
+                            "shift_factors"
+                        ]
+                    }
+                }
+            ]
+        },
+        "data_quality": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "linear_viscoelastic_verified": {
+                    "type": "boolean"
+                },
+                "time_temperature_superposition_valid": {
+                    "type": "boolean"
+                },
+                "edge_slip_suspected": {
+                    "type": "boolean"
+                },
+                "cox_merz_validated": {
+                    "type": "boolean"
+                },
+                "raw_derived_arrays_aligned": {
+                    "type": "boolean"
+                },
+                "overall_quality_score": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "notes": {
+                    "type": "string"
+                }
+            }
+        },
+        "interpretation": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "summary": {
+                    "type": "string"
+                },
+                "notable_features": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "extensions": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Namespaced lab- or domain-specific payloads outside the stable core contract."
+        }
+    }
+}

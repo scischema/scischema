@@ -1,0 +1,344 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Neutrino Event Reconstruction Master Schema",
+  "description": "Schema for neutrino event reconstruction in liquid scintillator detectors.",
+  "type": "object",
+  "properties": {
+    "detector_geometry": {
+      "type": "object",
+      "description": "Physical configuration of the detector.",
+      "properties": {
+        "detector_radius": {"type": "number", "unit": "cm"},
+        "detector_height": {"type": "number", "unit": "cm"},
+        "inner_vessel_radius": {"type": "number", "unit": "cm"},
+        "outer_vessel_radius": {"type": "number", "unit": "cm"},
+        "pmt_count": {"type": "integer"},
+        "pmt_coverage": {"type": "number", "minimum": 0, "maximum": 1},
+        "pmt_positions": {
+          "type": "array",
+          "items": {"type": "object", "properties": {
+            "pmt_id": {"type": "integer"},
+            "x": {"type": "number", "unit": "cm"},
+            "y": {"type": "number", "unit": "cm"},
+            "z": {"type": "number", "unit": "cm"}
+          }}
+        },
+        "fiducial_volume": {
+          "type": "object",
+          "properties": {
+            "fiducial_radius": {"type": "number", "unit": "cm"},
+            "fiducial_height": {"type": "number", "unit": "cm"},
+            "boundary_distance_cut": {"type": "number", "unit": "cm"},
+            "vertex_reconstruction_quality_cut": {"type": "string"},
+            "position_dependent_resolution_variation": {"type": "number", "unit": "percentage"}
+          }
+        }
+      },
+      "required": ["pmt_count", "pmt_coverage", "fiducial_volume"]
+    },
+    "input_data_and_detector_models": {
+      "type": "object",
+      "properties": {
+        "input_data_format": {
+          "type": "object",
+          "description": "PMT hit information after electronics calibration.",
+          "properties": {
+            "format": {"type": "string", "description": "e.g., ROOT, HDF5, NPY."},
+            "hit_time": {"type": "array", "items": {"type": "number"}, "unit": "ns"},
+            "hit_charge": {"type": "array", "items": {"type": "number"}, "unit": "PE"},
+            "pmt_id": {"type": "array", "items": {"type": "integer"}},
+            "first_hit_time": {"type": "number", "unit": "ns"},
+            "total_nhits": {"type": "integer"}
+          },
+          "required": ["format", "hit_time", "hit_charge", "pmt_id"]
+        },
+        "detector_optical_model": {
+          "type": "object",
+          "description": "Photon lifecycle in the scintillator.",
+          "properties": {
+            "scintillation_yield": {"type": "number", "unit": "photons/MeV"},
+            "scintillation_time_profile": {"type": "object", "properties": {
+              "fast_decay_constant": {"type": "number", "unit": "ns"},
+              "slow_decay_constant": {"type": "number", "unit": "ns"}
+            }},
+            "cherenkov_yield": {"type": "number", "unit": "photons/MeV"},
+            "absorption_length": {"type": "number", "unit": "cm"},
+            "re_emission_probability": {"type": "number", "minimum": 0, "maximum": 1},
+            "rayleigh_scattering_length": {"type": "number", "unit": "cm"},
+            "refractive_index": {"type": "number"},
+            "effective_refractive_index": {"type": "number", "description": "For detectable wavelength range, used in directionality."},
+            "group_velocity_correction": {"type": "number", "unit": "ns/m"}
+          }
+        },
+        "pmt_response_model": {
+          "type": "object",
+          "properties": {
+            "quantum_efficiency": {"type": "number", "minimum": 0, "maximum": 1},
+            "transit_time_spread": {"type": "number", "unit": "ns"},
+            "dark_noise_rate": {"type": "number", "unit": "Hz"},
+            "single_photoelectron_resolution": {"type": "number"},
+            "afterpulsing_probability": {"type": "number", "minimum": 0, "maximum": 1},
+            "pmt_type": {"type": "string", "description": "e.g., 20-inch NNVT, Hamamatsu R7081."}
+          }
+        },
+        "background_model": {
+          "type": "object",
+          "properties": {
+            "accidental_coincidences_rate": {"type": "number", "unit": "Hz"},
+            "accidental_components": {"type": "array", "items": {"type": "string"}, "description": "e.g., 210Bi, 210Po, 85Kr, 40K."},
+            "correlated_background_rate": {"type": "number", "unit": "Hz"},
+            "correlated_backgrounds": {"type": "array", "items": {"type": "object", "properties": {
+              "isotope": {"type": "string"},
+              "rate": {"type": "number", "unit": "Hz"},
+              "energy_spectrum": {"type": "string"}
+            }}},
+            "cosmogenic_isotopes": {"type": "array", "items": {"type": "string"}, "description": "e.g., 9Li, 8He."}
+          }
+        },
+        "detector_technology": {
+          "type": "object",
+          "properties": {
+            "multi_zone_design": {"type": "object", "properties": {
+              "target_vessel_radius": {"type": "number", "unit": "cm"},
+              "buffer_vessel_radius": {"type": "number", "unit": "cm"},
+              "outer_vessel_radius": {"type": "number", "unit": "cm"},
+              "target_material": {"type": "string"}
+            }},
+            "gadolinium_doping": {"type": "object", "properties": {
+              "gd_concentration": {"type": "number", "unit": "g/L"},
+              "neutron_capture_efficiency": {"type": "number", "minimum": 0, "maximum": 1},
+              "neutron_capture_time": {"type": "number", "unit": "microseconds"}
+            }},
+            "muon_veto_system": {"type": "object", "properties": {
+              "veto_type": {"type": "string"},
+              "muon_detection_efficiency": {"type": "number", "minimum": 0, "maximum": 1}
+            }}
+          }
+        }
+      }
+    },
+    "reconstruction_algorithms": {
+      "type": "object",
+      "properties": {
+        "vertex_reconstruction_algorithm": {
+          "type": "object",
+          "properties": {
+            "algorithm_type": {"type": "string", "description": "e.g., CCA, time-likelihood, charge-time-likelihood, deep learning, maximum-likelihood."},
+            "likelihood_function_definition": {"type": "string"},
+            "minimization_algorithm": {"type": "string", "description": "e.g., Minuit, BFGS."},
+            "neural_network_architecture": {"type": "string", "description": "Reference to ml_configuration.network_architecture."},
+            "loss_function_type": {"type": "string"}
+          }
+        },
+        "energy_reconstruction_algorithm": {
+          "type": "object",
+          "properties": {
+            "non_linearity_correction_model": {"type": "object", "properties": {
+              "birks_constant": {"type": "number", "unit": "mm/MeV"},
+              "cherenkov_contribution": {"type": "number", "minimum": 0, "maximum": 1}
+            }},
+            "uniformity_correction_map": {"type": "object", "properties": {
+              "map_type": {"type": "string"},
+              "coordinate_system": {"type": "string"},
+              "resolution": {"type": "array", "items": {"type": "number"}, "unit": "cm"}
+            }},
+            "total_charge_summation": {"type": "string"},
+            "machine_learning_regressor": {"type": "string"},
+            "energy_scale_calibration_method": {"type": "string"}
+          }
+        },
+        "direction_reconstruction_algorithm": {
+          "type": "object",
+          "properties": {
+            "cherenkov_scintillation_separation_method": {"type": "string"},
+            "hit_order": {"type": "integer"},
+            "directional_angle": {"type": "array", "items": {"type": "number"}},
+            "cherenkov_group_velocity_correction": {"type": "number", "unit": "ns/m"},
+            "time_of_flight_correction": {"type": "boolean"},
+            "hit_time_likelihood_function": {"type": "string"},
+            "angular_pdf_model": {"type": "string"},
+            "cos_theta_cherenkov_angle": {"type": "number", "minimum": -1, "maximum": 1},
+            "correlated_integrated_directionality": {"type": "object", "description": "CID method.", "properties": {
+              "enabled": {"type": "boolean"},
+              "nth_hit_cut": {"type": "integer"},
+              "angular_binning": {"type": "integer"}
+            }}
+          }
+        },
+        "particle_identification": {
+          "type": "object",
+          "properties": {
+            "pulse_shape_discriminator": {"type": "string"},
+            "topology_features": {"type": "array", "items": {"type": "string"}},
+            "classifier_type": {"type": "string", "description": "e.g., BDT, CNN, GNN, DNN, Transformer."},
+            "alpha_beta_separation_power": {"type": "number"},
+            "pid_rejection_ratio": {"type": "number"}
+          }
+        },
+        "convolutional_visual_network": {
+          "type": "object",
+          "description": "NOvA-style CVN for event classification.",
+          "properties": {
+            "input_views": {"type": "array", "items": {"type": "string"}, "description": "e.g., XZ, YZ."},
+            "convolutional_layers": {"type": "array", "items": {"type": "object", "properties": {
+              "kernel_size": {"type": "string"},
+              "stride": {"type": "integer"},
+              "type": {"type": "string"}
+            }}},
+            "pooling_layers": {"type": "array", "items": {"type": "object", "properties": {
+              "type": {"type": "string"},
+              "kernel_size": {"type": "string"},
+              "stride": {"type": "integer"}
+            }}},
+            "dropout_rate": {"type": "number", "minimum": 0, "maximum": 1},
+            "siamese_style": {"type": "boolean"},
+            "output_classes": {"type": "integer"},
+            "framework": {"type": "string", "description": "e.g., TensorFlow, PyTorch."}
+          }
+        }
+      }
+    },
+    "calibration_strategy": {
+      "type": "object",
+      "properties": {
+        "calibration_source_types": {"type": "array", "items": {"type": "string"}, "description": "e.g., 60Co, AmBe, laser, LED."},
+        "deployment_positions": {"type": "array", "items": {"type": "string"}},
+        "calibration_frequency": {"type": "string"},
+        "spallation_neutron_usage": {"type": "boolean"},
+        "energy_anchor_points": {"type": "array", "items": {"type": "number"}, "unit": "MeV"},
+        "cherenkov_calibration": {"type": "object", "properties": {
+          "gamma_sources_used": {"type": "array", "items": {"type": "string"}, "description": "e.g., 54Mn, 40K."},
+          "group_velocity_correction_measured": {"type": "number", "unit": "ns/m"}
+        }}
+      }
+    },
+    "machine_learning_configuration": {
+      "type": "object",
+      "properties": {
+        "network_architecture": {
+          "type": "object",
+          "properties": {
+            "architecture_type": {"type": "string", "description": "e.g., DNN, CNN, GNN, Transformer, point-cloud net."},
+            "number_of_layers": {"type": "integer"},
+            "number_of_parameters": {"type": "integer"},
+            "input_representation": {"type": "string", "description": "e.g., PMT map, graph, point cloud, hit-time-charge tensor."},
+            "residual_connections": {"type": "boolean"}
+          }
+        },
+        "training_configuration": {
+          "type": "object",
+          "properties": {
+            "optimizer": {"type": "string"},
+            "learning_rate_schedule": {"type": "string"},
+            "batch_size": {"type": "integer"},
+            "number_of_epochs": {"type": "integer"},
+            "train_validation_test_split": {"type": "object", "properties": {
+              "train": {"type": "number"},
+              "validation": {"type": "number"},
+              "test": {"type": "number"}
+            }},
+            "data_augmentation_techniques": {"type": "array", "items": {"type": "string"}},
+            "loss_function": {"type": "string"},
+            "regularization_techniques": {"type": "object", "properties": {
+              "weight_decay": {"type": "number"},
+              "label_smoothing": {"type": "number"},
+              "dropout_rate": {"type": "number"}
+            }}
+          }
+        },
+        "simulation_and_training_dataset": {
+          "type": "object",
+          "properties": {
+            "monte_carlo_generator": {"type": "string", "description": "e.g., Geant4, RAT, SNiPER."},
+            "physics_process_list": {"type": "array", "items": {"type": "string"}},
+            "training_sample_size": {"type": "integer"},
+            "energy_range": {"type": "object", "properties": {
+              "min": {"type": "number", "unit": "MeV"},
+              "max": {"type": "number", "unit": "MeV"}
+            }},
+            "vertex_distribution": {"type": "string"},
+            "detector_conditions_modeled": {"type": "array", "items": {"type": "string"}},
+            "semi_supervised_learning": {"type": "object", "properties": {
+              "enabled": {"type": "boolean"},
+              "pseudo_label_source": {"type": "string"},
+              "additional_data_size": {"type": "integer"}
+            }}
+          }
+        }
+      }
+    },
+    "performance_validation": {
+      "type": "object",
+      "properties": {
+        "reconstruction_performance_metrics": {
+          "type": "object",
+          "properties": {
+            "vertex_resolution_RMS": {"type": "number", "unit": "cm"},
+            "vertex_bias": {"type": "number", "unit": "cm"},
+            "energy_resolution": {"type": "number", "unit": "percentage", "description": "sigma_E/E."},
+            "energy_scale_residual_non_linearity": {"type": "number", "unit": "percentage"},
+            "angular_resolution": {"type": "number", "unit": "degrees"},
+            "pid_rejection_ratio": {"type": "number"},
+            "classification_efficiency": {"type": "number", "minimum": 0, "maximum": 1}
+          }
+        },
+        "systematic_uncertainties": {
+          "type": "object",
+          "properties": {
+            "energy_scale_uncertainty": {"type": "number", "unit": "percentage"},
+            "vertex_reconstruction_uncertainty": {"type": "number", "unit": "cm"},
+            "direction_reconstruction_uncertainty": {"type": "number", "unit": "degrees"},
+            "background_subtraction_uncertainty": {"type": "number", "unit": "percentage"},
+            "background_model_uncertainty": {"type": "number", "unit": "percentage"},
+            "detector_response_uncertainty": {"type": "number", "unit": "percentage"},
+            "fiducial_volume_uncertainty": {"type": "number", "unit": "percentage"},
+            "reactor_flux_uncertainty": {"type": "number", "unit": "percentage"},
+            "group_velocity_correction_uncertainty": {"type": "number", "unit": "ns/m"},
+            "position_reconstruction_bias": {"type": "number", "unit": "cm"}
+          }
+        },
+        "ibd_performance_metrics": {
+          "type": "object",
+          "description": "Inverse beta decay specific metrics.",
+          "properties": {
+            "neutron_detection_efficiency": {"type": "number", "minimum": 0, "maximum": 1},
+            "positron_detection_efficiency": {"type": "number", "minimum": 0, "maximum": 1},
+            "coincidence_window": {"type": "number", "unit": "microseconds"},
+            "prompt_delayed_distance_cut": {"type": "number", "unit": "cm"}
+          }
+        }
+      }
+    },
+    "trigger_and_event_selection": {
+      "type": "object",
+      "properties": {
+        "trigger_threshold": {"type": "number", "unit": "PE"},
+        "event_selection_criteria": {
+          "type": "object",
+          "properties": {
+            "energy_range": {"type": "object", "properties": {
+              "min": {"type": "number", "unit": "MeV"},
+              "max": {"type": "number", "unit": "MeV"}
+            }},
+            "fiducial_volume_cut": {"type": "string"},
+            "pulse_shape_discrimination": {"type": "boolean"},
+            "multiplicity_cut": {"type": "integer"},
+            "cvn_selection": {"type": "object", "properties": {
+              "cvn_classifier_threshold": {"type": "number", "minimum": 0, "maximum": 1},
+              "cvn_pid_threshold": {"type": "number", "minimum": 0, "maximum": 1}
+            }}
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "detector_geometry",
+    "input_data_and_detector_models",
+    "reconstruction_algorithms",
+    "calibration_strategy",
+    "machine_learning_configuration",
+    "performance_validation",
+    "trigger_and_event_selection"
+  ]
+}

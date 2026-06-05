@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>SciSchema — Fatigue Testing of Metallic Materials</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="icon" type="image/png" href="/assets/logo.png">
+  <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+  <header>
+    <a class="logo" href="/">
+      <img src="/assets/logo.png" alt="SciSchema Logo">
+      <span>SciSchema</span>
+    </a>
+    <nav>
+      <a href="/docs/">Docs</a>
+      <a href="/schemas/">Schemas</a>
+      <a href="/about/">About</a>
+      <a href="https://github.com/scischema">GitHub</a>
+    </nav>
+  </header>
+
+  <main class="schema-page">
+    <p class="schema-breadcrumb">
+      <a href="/schemas/">Schemas</a> ›
+      Materials &amp; Chemistry ›
+      Fatigue Testing of Metallic Materials
+    </p>
+
+    <section class="schema-hero">
+      <h1>Fatigue Testing of Metallic Materials</h1>
+      <p class="schema-subtitle">A SciSchema.org Process Schema</p>
+
+      <p class="schema-meta">
+        Domain: Materials &amp; Chemistry<br>
+        Schema: Fatigue Testing of Metallic Materials
+      </p>
+
+      <p class="schema-description">
+        Fatigue testing is a destructive mechanical testing process in which a metallic specimen is subjected to repeated cyclic loading until failure occurs.
+      </p>
+    </section>
+
+    <section class="schema-section">
+      <h2>Properties from Fatigue Testing of Metallic Materials</h2>
+
+      <p class="schema-description">
+        The table below lists the top-level properties of this master schema.
+        Each property may contain more detailed nested fields in the JSON Schema representation.
+      </p>
+
+      <table class="schema-table">
+        <thead>
+          <tr>
+            <th>Property</th>
+            <th>Expected Type</th>
+            <th>Description</th>
+            <th>Required</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>material</td>
+            <td>Object</td>
+            <td>Details of the metallic material being tested.</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>specimenGeometry</td>
+            <td>Object</td>
+            <td>Physical dimensions and shape of the test specimen, conforming to standards such as ASTM E466 or ISO 1099.</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>loadingType</td>
+            <td>String</td>
+            <td>Mode of mechanical loading applied during the test.</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>loadingParameters</td>
+            <td>Object</td>
+            <td>Parameters defining the loading conditions applied during testing. One of stressAmplitude or strainAmplitude applies depending on the test control type.</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>testEnvironment</td>
+            <td>Object</td>
+            <td>Environmental conditions during the test that may influence crack initiation and propagation.</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>equipment</td>
+            <td>Object</td>
+            <td>Details of the testing equipment and standards used.</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>outputs</td>
+            <td>Object</td>
+            <td>Results and outputs from the fatigue test.</td>
+            <td>Yes</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="schema-download">
+        <h2>Machine-readable schema representations</h2>
+
+        <p>
+          This schema is available in two machine-readable representations:
+          as an ORKG template, which can be exported as SHACL, and as a JSON Schema
+          document for download and reuse.
+        </p>
+
+        <ul>
+          <li>
+            <a href="https://orkg.org/templates/R1643108">View template in ORKG</a>
+            <span> — ORKG template / SHACL representation</span>
+          </li>
+          <li>
+            <a href="master-schema.json">Download master-schema.json</a>
+            <span> — JSON Schema representation</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <a href="/terms/">Terms and conditions</a>
+    <span>•</span>
+    <span>SciSchema</span>
+    <span>•</span>
+    <span>V0.1.0</span>
+    <span>|</span>
+    <span>2026-06-04</span>
+  </footer>
+</body>
+</html>

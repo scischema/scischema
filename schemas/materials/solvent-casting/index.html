@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>SciSchema — Solvent Casting for Polymer Composites</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="icon" type="image/png" href="/assets/logo.png">
+  <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+  <header>
+    <a class="logo" href="/">
+      <img src="/assets/logo.png" alt="SciSchema Logo">
+      <span>SciSchema</span>
+    </a>
+    <nav>
+      <a href="/docs/">Docs</a>
+      <a href="/schemas/">Schemas</a>
+      <a href="/about/">About</a>
+      <a href="https://github.com/scischema">GitHub</a>
+    </nav>
+  </header>
+
+  <main class="schema-page">
+    <p class="schema-breadcrumb">
+      <a href="/schemas/">Schemas</a> ›
+      Materials &amp; Chemistry ›
+      Solvent Casting for Polymer Composites
+    </p>
+
+    <section class="schema-hero">
+      <h1>Solvent Casting for Polymer Composites</h1>
+      <p class="schema-subtitle">A SciSchema.org Process Schema</p>
+
+      <p class="schema-meta">
+        Domain: Materials &amp; Chemistry<br>
+        Schema: Solvent-Casting for Polymer Composites Process Schema
+      </p>
+
+      <p class="schema-description">
+        Solvent casting for polymer composites is a fabrication process in which a polymer is dissolved in a suitable solvent and cast into a solid composite film.
+      </p>
+    </section>
+
+    <section class="schema-section">
+      <h2>Properties from Solvent Casting for Polymer Composites</h2>
+
+      <p class="schema-description">
+        The table below lists the top-level properties of this master schema.
+        Each property may contain more detailed nested fields in the JSON Schema representation.
+      </p>
+
+      <table class="schema-table">
+        <thead>
+          <tr>
+            <th>Property</th>
+            <th>Expected Type</th>
+            <th>Description</th>
+            <th>Required</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>metadata</td>
+            <td>Object</td>
+            <td>Additional metadata about the process.</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td>materials</td>
+            <td>Object</td>
+            <td>Properties related to the materials used in the solvent-casting process.</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>process_parameters</td>
+            <td>Object</td>
+            <td>Parameters related to the solvent-casting process, organized into major categories.</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>output_characteristics</td>
+            <td>Object</td>
+            <td>Properties of the resulting composite film.</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>equipment</td>
+            <td>Array</td>
+            <td>List of all equipment used for both fabrication and characterization, linked to process steps.</td>
+            <td>Yes</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="schema-download">
+        <h2>Machine-readable schema representations</h2>
+
+        <p>
+          This schema is available in two machine-readable representations:
+          as an ORKG template, which can be exported as SHACL, and as a JSON Schema
+          document for download and reuse.
+        </p>
+
+        <ul>
+          <li>
+            <span>ORKG template / SHACL representation — forthcoming</span>
+          </li>
+          <li>
+            <a href="master-schema.json">Download master-schema.json</a>
+            <span> — JSON Schema representation</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <a href="/terms/">Terms and conditions</a>
+    <span>•</span>
+    <span>SciSchema</span>
+    <span>•</span>
+    <span>V0.1.0</span>
+    <span>|</span>
+    <span>2026-06-04</span>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>SciSchema — Metal-Organic Cage Synthesis</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="icon" type="image/png" href="/assets/logo.png">
+  <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+  <header>
+    <a class="logo" href="/">
+      <img src="/assets/logo.png" alt="SciSchema Logo">
+      <span>SciSchema</span>
+    </a>
+    <nav>
+      <a href="/docs/">Docs</a>
+      <a href="/schemas/">Schemas</a>
+      <a href="/about/">About</a>
+      <a href="https://github.com/scischema">GitHub</a>
+    </nav>
+  </header>
+
+  <main class="schema-page">
+    <p class="schema-breadcrumb">
+      <a href="/schemas/">Schemas</a> ›
+      Materials &amp; Chemistry ›
+      Metal-Organic Cage Synthesis
+    </p>
+
+    <section class="schema-hero">
+      <h1>Metal-Organic Cage Synthesis</h1>
+      <p class="schema-subtitle">A SciSchema.org Process Schema</p>
+
+      <p class="schema-meta">
+        Domain: Materials &amp; Chemistry<br>
+        Schema: Metal-Organic Cages (MOC) Synthesis Process Schema
+      </p>
+
+      <p class="schema-description">
+        Metal-organic cages are synthesized through coordination-driven self-assembly of metal ions and organic ligands.
+      </p>
+    </section>
+
+    <section class="schema-section">
+      <h2>Properties from Metal-Organic Cage Synthesis</h2>
+
+      <p class="schema-description">
+        The table below lists the top-level properties of this master schema.
+        Each property may contain more detailed nested fields in the JSON Schema representation.
+      </p>
+
+      <table class="schema-table">
+        <thead>
+          <tr>
+            <th>Property</th>
+            <th>Expected Type</th>
+            <th>Description</th>
+            <th>Required</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>cage_identity</td>
+            <td>Object</td>
+            <td>The identity and structural details of the Metal-Organic Cage (MOC) being synthesized.</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>synthesis_procedure</td>
+            <td>Object</td>
+            <td>The protocol for synthesising the MOC, including chemical components, process parameters, and reaction details.</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td>characterisation</td>
+            <td>Object</td>
+            <td>The methods and results used to characterise the synthesised MOC.</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>host_guest_properties</td>
+            <td>Object</td>
+            <td>The host-guest properties and applications of the synthesized MOC, including the types of guests trapped and their properties.</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>other_properties</td>
+            <td>Object</td>
+            <td>Other properties of the MOC that do not fit into the above categories but are relevant to its characterisation and functionality.</td>
+            <td>Yes</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="schema-download">
+        <h2>Machine-readable schema representations</h2>
+
+        <p>
+          This schema is available in two machine-readable representations:
+          as an ORKG template, which can be exported as SHACL, and as a JSON Schema
+          document for download and reuse.
+        </p>
+
+        <ul>
+          <li>
+            <span>ORKG template / SHACL representation — forthcoming</span>
+          </li>
+          <li>
+            <a href="master-schema.json">Download master-schema.json</a>
+            <span> — JSON Schema representation</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <a href="/terms/">Terms and conditions</a>
+    <span>•</span>
+    <span>SciSchema</span>
+    <span>•</span>
+    <span>V0.1.0</span>
+    <span>|</span>
+    <span>2026-06-04</span>
+  </footer>
+</body>
+</html>

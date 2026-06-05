@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>SciSchema — Catalytic Pyrolysis of Mixed Plastic Waste</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="icon" type="image/png" href="/assets/logo.png">
+  <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+  <header>
+    <a class="logo" href="/">
+      <img src="/assets/logo.png" alt="SciSchema Logo">
+      <span>SciSchema</span>
+    </a>
+    <nav>
+      <a href="/docs/">Docs</a>
+      <a href="/schemas/">Schemas</a>
+      <a href="/about/">About</a>
+      <a href="https://github.com/scischema">GitHub</a>
+    </nav>
+  </header>
+
+  <main class="schema-page">
+    <p class="schema-breadcrumb">
+      <a href="/schemas/">Schemas</a> ›
+      Materials &amp; Chemistry ›
+      Catalytic Pyrolysis of Mixed Plastic Waste
+    </p>
+
+    <section class="schema-hero">
+      <h1>Catalytic Pyrolysis of Mixed Plastic Waste</h1>
+      <p class="schema-subtitle">A SciSchema.org Process Schema</p>
+
+      <p class="schema-meta">
+        Domain: Materials &amp; Chemistry<br>
+        Schema: Catalytic Pyrolysis of Mixed Plastic Waste Process Schema
+      </p>
+
+      <p class="schema-description">
+        Catalytic pyrolysis is a thermal recycling process that breaks down plastic waste into valuable fuels and chemicals using heat and catalysts.
+      </p>
+    </section>
+
+    <section class="schema-section">
+      <h2>Properties from Catalytic Pyrolysis of Mixed Plastic Waste</h2>
+
+      <p class="schema-description">
+        The table below lists the top-level properties of this master schema.
+        Each property may contain more detailed nested fields in the JSON Schema representation.
+      </p>
+
+      <table class="schema-table">
+        <thead>
+          <tr>
+            <th>Property</th>
+            <th>Expected Type</th>
+            <th>Description</th>
+            <th>Required</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>metadata</td>
+            <td>Object</td>
+            <td>Bibliographic and experimental metadata.</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>feedstock</td>
+            <td>Object</td>
+            <td>Input plastic waste characteristics determining degradation mechanisms and product distribution.</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>catalyst</td>
+            <td>Object</td>
+            <td>Catalyst properties and lifecycle parameters.</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>reactor</td>
+            <td>Object</td>
+            <td>Reactor configuration and physical parameters.</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td>process_conditions</td>
+            <td>Object</td>
+            <td>Operational parameters of the pyrolysis process.</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>experimental_setup</td>
+            <td>Object</td>
+            <td>Experimental design parameters.</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td>yields</td>
+            <td>Object</td>
+            <td>Product yield distribution from the pyrolysis process.</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>product_composition</td>
+            <td>Object</td>
+            <td>Chemical composition and quality metrics of each product fraction.</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td>analytical_characterisation</td>
+            <td>Object</td>
+            <td>Analytical characterization methods applied to feedstock, products, and catalyst. Three-level structure reflecting how characterization is reported in catalytic pyrolysis literature.</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>performance_metrics</td>
+            <td>Object</td>
+            <td>Key performance indicators of the overall pyrolysis process.</td>
+            <td>No</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="schema-download">
+        <h2>Machine-readable schema representations</h2>
+
+        <p>
+          This schema is available in two machine-readable representations:
+          as an ORKG template, which can be exported as SHACL, and as a JSON Schema
+          document for download and reuse.
+        </p>
+
+        <ul>
+          <li>
+            <a href="https://orkg.org/templates/R1642000">View template in ORKG</a>
+            <span> — ORKG template / SHACL representation</span>
+          </li>
+          <li>
+            <a href="master-schema.json">Download master-schema.json</a>
+            <span> — JSON Schema representation</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <a href="/terms/">Terms and conditions</a>
+    <span>•</span>
+    <span>SciSchema</span>
+    <span>•</span>
+    <span>V0.1.0</span>
+    <span>|</span>
+    <span>2026-06-04</span>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,283 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Catalytic Pyrolysis of Mixed Plastic Waste Process Schema",
+  "description": "Master standard schema combining the strongest elements from 12 model outputs across 3 stages. Primary structure from qwen3-235b-a22b, with targeted additions from qwen3-30b-a3b-instruct-2507, mistralai-Ministral-3-8B-Reasoning-2512, mistral-large-3-675b-instruct-2512, and Qwen-Qwen3-4B-Instruct-2507.",
+  "type": "object",
+  "required": ["feedstock", "catalyst", "process_conditions", "yields", "analytical_characterisation", "metadata"],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "description": "Bibliographic and experimental metadata.",
+      "required": ["study_id", "author"],
+      "properties": {
+        "study_id": {"type": "string", "description": "Unique identifier for the study."},
+        "author": {"type": "string", "description": "Name(s) of the researcher(s)."},
+        "doi": {"type": "string", "description": "Digital Object Identifier for the publication."},
+        "research_institution": {"type": "string", "description": "Institution where the research was conducted."},
+        "publication_year": {"type": "integer", "description": "Year of publication."}
+      }
+    },
+    "feedstock": {
+      "type": "object",
+      "description": "Input plastic waste characteristics determining degradation mechanisms and product distribution.",
+      "required": ["type", "composition"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Primary category of polymeric material used as input.",
+          "enum": ["PE", "PP", "PS", "PET", "PVC", "LDPE", "HDPE", "EPS", "HIPS", "MLP", "mixed", "other"]
+        },
+        "composition": {
+          "type": "object",
+          "description": "Relative proportions of polymer types in input stream (sum must equal 1.0). Required when type is mixed.",
+          "additionalProperties": {"type": "number", "minimum": 0, "maximum": 1}
+        },
+        "moisture_content": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Moisture content of feedstock as weight percentage."
+        },
+        "particle_size": {
+          "type": "object",
+          "description": "Particle size of feedstock after preprocessing.",
+          "properties": {
+            "value": {"type": "number", "minimum": 0, "description": "Particle size value in mm."},
+            "unit": {"type": "string", "enum": ["mm", "cm"], "default": "mm"}
+          }
+        },
+        "preprocessing": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["mechanical sorting", "shredding", "dry-washing", "drying", "size reduction", "other"]
+          },
+          "description": "Feedstock pretreatment steps applied before pyrolysis."
+        },
+        "contaminants": {
+          "type": "object",
+          "description": "Contaminant content of the feedstock, critical for real mixed plastic waste containing PVC and multilayer packaging.",
+          "properties": {
+            "chlorine_content_ppm": {"type": "number", "minimum": 0, "description": "Chlorine content in parts per million (ppm)."},
+            "heavy_metals_ppm": {"type": "number", "minimum": 0, "description": "Total heavy metals content in parts per million (ppm)."}
+          }
+        }
+      }
+    },
+    "catalyst": {
+      "type": "object",
+      "description": "Catalyst properties and lifecycle parameters.",
+      "required": ["type", "ratio"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Catalytic material applied.",
+          "enum": ["zeolites", "FCC", "metal-supported", "HZSM-5", "Y-zeolite", "Al-MCM-41", "other"]
+        },
+        "subtype": {
+          "type": "string",
+          "description": "Specific catalyst subtype or commercial designation (e.g., HZSM-5, Y-zeolite, Al-MCM-41)."
+        },
+        "ratio": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Mass ratio between catalyst and plastic feedstock."
+        },
+        "activation_method": {
+          "type": "string",
+          "description": "Method used to activate or prepare the catalyst before use (e.g., calcination temperature and duration)."
+        },
+        "reusability_cycles": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of times the catalyst can be reused before significant deactivation."
+        },
+        "deactivation_mechanism": {
+          "type": "string",
+          "description": "Primary mechanism of catalyst deactivation (e.g., coking, sintering, poisoning)."
+        },
+        "coke_formation_rate": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Rate of coke deposition on catalyst surface (wt% per cycle or per hour)."
+        }
+      }
+    },
+    "reactor": {
+      "type": "object",
+      "description": "Reactor configuration and physical parameters.",
+      "required": ["configuration"],
+      "properties": {
+        "configuration": {
+          "type": "string",
+          "description": "Design and operational setup of the reactor.",
+          "enum": ["fixed-bed", "fluidized-bed", "spouted-bed", "microwave", "rotary-kiln", "batch", "semi-batch", "other"]
+        },
+        "scale": {
+          "type": "string",
+          "description": "Operational scale of the reactor.",
+          "enum": ["laboratory", "pilot", "demonstration", "industrial"]
+        },
+        "volume": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Reactor volume in mL or L."
+        },
+        "pressure": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Operating pressure in bar or atm."
+        },
+        "inert_gas_flow_rate": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Flow rate of inert gas in mL/min."
+        }
+      }
+    },
+    "process_conditions": {
+      "type": "object",
+      "description": "Operational parameters of the pyrolysis process.",
+      "required": ["temperature", "heating_rate", "residence_time", "atmosphere"],
+      "properties": {
+        "temperature": {
+          "type": "number",
+          "minimum": 250,
+          "maximum": 900,
+          "description": "Pyrolysis temperature in degrees Celsius."
+        },
+        "heating_rate": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Rate of temperature increase in degrees Celsius per minute."
+        },
+        "residence_time": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Duration the feedstock remains in reaction conditions in minutes."
+        },
+        "atmosphere": {
+          "type": "string",
+          "description": "Gaseous environment in reactor.",
+          "enum": ["nitrogen", "argon", "hydrogen", "steam", "inert", "other"]
+        },
+        "carrier_gas": {
+          "type": "object",
+          "description": "Carrier gas type and flow rate.",
+          "required": ["type", "flow_rate"],
+          "properties": {
+            "type": {"type": "string", "enum": ["nitrogen", "argon", "hydrogen", "steam"]},
+            "flow_rate": {"type": "number", "minimum": 0, "description": "Volumetric flow rate in mL/min."}
+          }
+        }
+      }
+    },
+    "experimental_setup": {
+      "type": "object",
+      "description": "Experimental design parameters.",
+      "properties": {
+        "scale": {
+          "type": "string",
+          "enum": ["laboratory", "pilot", "demonstration", "industrial"]
+        },
+        "number_of_replicates": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Number of experimental repetitions."
+        },
+        "validation_method": {
+          "type": "string",
+          "description": "Approach for process verification (optional, rarely reported in literature)."
+        }
+      }
+    },
+    "yields": {
+      "type": "object",
+      "description": "Product yield distribution from the pyrolysis process.",
+      "required": ["liquid", "gas", "char"],
+      "properties": {
+        "liquid": {"type": "number", "minimum": 0, "maximum": 100, "description": "Liquid product yield as weight percentage of feedstock."},
+        "gas": {"type": "number", "minimum": 0, "maximum": 100, "description": "Gas product yield as weight percentage of feedstock."},
+        "char": {"type": "number", "minimum": 0, "maximum": 100, "description": "Solid residue yield as weight percentage of feedstock."},
+        "mass_balance_closure": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Sum of all product yields as percentage. Values below 95% or above 105% should be flagged. Critical for experimental validation."
+        }
+      }
+    },
+    "product_composition": {
+      "type": "object",
+      "description": "Chemical composition and quality metrics of each product fraction.",
+      "properties": {
+        "liquid": {
+          "type": "object",
+          "properties": {
+            "aliphatics_pct": {"type": "number", "minimum": 0, "maximum": 100, "description": "Aliphatic hydrocarbon content as weight percentage."},
+            "aromatics_pct": {"type": "number", "minimum": 0, "maximum": 100, "description": "Aromatic hydrocarbon content as weight percentage."},
+            "oxygenates_pct": {"type": "number", "minimum": 0, "maximum": 100, "description": "Oxygenated compound content as weight percentage."}
+          }
+        },
+        "liquid_quality": {
+          "type": "object",
+          "description": "Quality metrics of the liquid product relevant for fuel or chemical applications.",
+          "properties": {
+            "hhv_mj_per_kg": {"type": "number", "minimum": 0, "maximum": 50, "description": "Higher heating value in MJ/kg (typically 37-45 MJ/kg for pyrolysis oils)."},
+            "chlorine_ppm": {"type": "number", "minimum": 0, "description": "Chlorine content in liquid product in ppm."},
+            "density_g_per_ml": {"type": "number", "minimum": 0, "description": "Density of liquid oil in g/mL."},
+            "viscosity_cst": {"type": "number", "minimum": 0, "description": "Kinematic viscosity in centistokes (cSt)."}
+          }
+        },
+        "gas": {
+          "type": "object",
+          "properties": {
+            "methane_pct": {"type": "number", "minimum": 0, "maximum": 100, "description": "Methane content as volume percentage."},
+            "hydrogen_pct": {"type": "number", "minimum": 0, "maximum": 100, "description": "Hydrogen content as volume percentage."},
+            "co2_pct": {"type": "number", "minimum": 0, "maximum": 100, "description": "CO2 content as volume percentage."},
+            "co_pct": {"type": "number", "minimum": 0, "maximum": 100, "description": "CO content as volume percentage."},
+            "c2_c4_pct": {"type": "number", "minimum": 0, "maximum": 100, "description": "C2-C4 hydrocarbon content as volume percentage."}
+          }
+        },
+        "char": {
+          "type": "object",
+          "properties": {
+            "carbon_content_pct": {"type": "number", "minimum": 0, "maximum": 100, "description": "Carbon content of char as weight percentage."},
+            "ash_content_pct": {"type": "number", "minimum": 0, "maximum": 100, "description": "Ash content of char as weight percentage."},
+            "catalyst_content_pct": {"type": "number", "minimum": 0, "maximum": 100, "description": "Residual catalyst content in char as weight percentage."}
+          }
+        }
+      }
+    },
+    "analytical_characterisation": {
+      "type": "object",
+      "description": "Analytical characterization methods applied to feedstock, products, and catalyst. Three-level structure reflecting how characterization is reported in catalytic pyrolysis literature.",
+      "properties": {
+        "feedstock_analysis": {
+          "type": "array",
+          "items": {"type": "string", "enum": ["TGA", "FTIR", "DSC", "XRD", "SEM", "elemental analysis", "proximate analysis", "other"]},
+          "description": "Analytical methods used for feedstock characterization."
+        },
+        "product_analysis": {
+          "type": "array",
+          "items": {"type": "string", "enum": ["GC-MS", "FTIR", "TGA", "NMR", "HPLC", "GC-FID", "SIMDIS", "ICP-MS", "bomb calorimetry", "other"]},
+          "description": "Analytical methods used for product characterization."
+        },
+        "catalyst_analysis": {
+          "type": "array",
+          "items": {"type": "string", "enum": ["BET", "XRD", "SEM-EDX", "TGA", "NH3-TPD", "Py-FTIR", "TEM", "ICP-OES", "other"]},
+          "description": "Analytical methods used for catalyst characterization (fresh and spent)."
+        }
+      }
+    },
+    "performance_metrics": {
+      "type": "object",
+      "description": "Key performance indicators of the overall pyrolysis process.",
+      "properties": {
+        "conversion_efficiency_percent": {"type": "number", "minimum": 0, "maximum": 100, "description": "Percentage of feedstock converted into products."},
+        "energy_efficiency": {"type": "number", "minimum": 0, "description": "Ratio of energy output to energy input for the process."},
+        "catalyst_lifetime": {"type": "number", "minimum": 0, "description": "Estimated catalyst lifetime in hours or cycles."}
+      }
+    }
+  }
+}

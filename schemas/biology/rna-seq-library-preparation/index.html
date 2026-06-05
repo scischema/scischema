@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>SciSchema — Bulk RNA-seq Library Preparation and Sequencing</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="icon" type="image/png" href="/assets/logo.png">
+  <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+  <header>
+    <a class="logo" href="/">
+      <img src="/assets/logo.png" alt="SciSchema Logo">
+      <span>SciSchema</span>
+    </a>
+    <nav>
+      <a href="/docs/">Docs</a>
+      <a href="/schemas/">Schemas</a>
+      <a href="/about/">About</a>
+      <a href="https://github.com/scischema">GitHub</a>
+    </nav>
+  </header>
+
+  <main class="schema-page">
+    <p class="schema-breadcrumb">
+      <a href="/schemas/">Schemas</a> ›
+      Biology &amp; Biotechnology ›
+      Bulk RNA-seq Library Preparation and Sequencing
+    </p>
+
+    <section class="schema-hero">
+      <h1>Bulk RNA-seq Library Preparation and Sequencing</h1>
+      <p class="schema-subtitle">A SciSchema.org Process Schema</p>
+
+      <p class="schema-meta">
+        Domain: Biology &amp; Biotechnology<br>
+        Schema: Bulk RNA-seq Library Preparation and Sequencing Process
+      </p>
+
+      <p class="schema-description">
+        RNA sequencing library preparation is the process used to turn RNA from biological samples into a form that can be read by sequencing machines.
+      </p>
+    </section>
+
+    <section class="schema-section">
+      <h2>Properties from Bulk RNA-seq Library Preparation and Sequencing</h2>
+
+      <p class="schema-description">
+        The table below lists the top-level properties of this master schema.
+        Each property may contain more detailed nested fields in the JSON Schema representation.
+      </p>
+
+      <table class="schema-table">
+        <thead>
+          <tr>
+            <th>Property</th>
+            <th>Expected Type</th>
+            <th>Description</th>
+            <th>Required</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>sample</td>
+            <td>Object</td>
+            <td>Biological sample identity and source information.</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>rna_extraction</td>
+            <td>Object</td>
+            <td>RNA isolation methodology. Quality assessment handled exclusively in quality_control block.</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>rna_input</td>
+            <td>Object</td>
+            <td>RNA input quantity for library preparation — separated from extraction as an independent workflow stage.</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>quality_control</td>
+            <td>Object</td>
+            <td>Comprehensive QC metrics spanning post-extraction RNA assessment and post-library-prep library assessment. Both sub-blocks required.</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>library_preparation</td>
+            <td>Object</td>
+            <td>Complete library construction workflow. Transcript enrichment nested here as an intrinsic construction step.</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>sequencing</td>
+            <td>Object</td>
+            <td></td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>primary_data_processing</td>
+            <td>Object</td>
+            <td>Computational analysis workflow. All required fields mandatory for FAIR reproducibility.</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>experimental_design</td>
+            <td>Object</td>
+            <td></td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>metadata</td>
+            <td>Object</td>
+            <td>Study-level metadata for FAIR compliance and public repository submission.</td>
+            <td>Yes</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="schema-download">
+        <h2>Machine-readable schema representations</h2>
+
+        <p>
+          This schema is available in two machine-readable representations:
+          as an ORKG template, which can be exported as SHACL, and as a JSON Schema
+          document for download and reuse.
+        </p>
+
+        <ul>
+          <li>
+            <a href="https://orkg.org/templates/R1644668">View template in ORKG</a>
+            <span> — ORKG template / SHACL representation</span>
+          </li>
+          <li>
+            <a href="master-schema.json">Download master-schema.json</a>
+            <span> — JSON Schema representation</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <a href="/terms/">Terms and conditions</a>
+    <span>•</span>
+    <span>SciSchema</span>
+    <span>•</span>
+    <span>V0.1.0</span>
+    <span>|</span>
+    <span>2026-06-04</span>
+  </footer>
+</body>
+</html>

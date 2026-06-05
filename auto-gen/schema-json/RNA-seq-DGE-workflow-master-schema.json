@@ -1,0 +1,205 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "RNA-Seq Differential Gene Expression Analysis Workflow",
+    "type": "object",
+    "properties": {
+        "biological_source_material": {
+            "type": "object",
+            "properties": {
+                "organism": { "type": "string" },
+                "tissue_or_cell_type": { "type": "string" },
+                "treatment_condition": { "type": "string" },
+                "biological_replicates": { "type": "integer", "minimum": 3 },
+                "sample_collection_protocol": { "type": "string" }
+            },
+            "required": ["organism", "tissue_or_cell_type", "treatment_condition", "biological_replicates"]
+        },
+        "rna_extraction_and_quality_metrics": {
+            "type": "object",
+            "properties": {
+                "protocol": { "type": "string" },
+                "rin": { "type": "number", "minimum": 0, "maximum": 10 },
+                "concentration": { "type": "number", "minimum": 0, "description": "ng/µL" },
+                "a260_280_ratio": { "type": "number" },
+                "quantification_method": { "type": "string" }
+            },
+            "required": ["protocol", "rin", "concentration"]
+        },
+        "library_preparation_protocol": {
+            "type": "object",
+            "properties": {
+                "method": { "type": "string" },
+                "strandedness": {
+                    "type": "string",
+                    "enum": ["forward", "reverse", "unstranded"]
+                },
+                "fragmentation_strategy": { "type": "string" },
+                "amplification_cycles": { "type": "integer", "minimum": 0 },
+                "umi_details": {
+                    "type": "object",
+                    "description": "Only applicable when UMIs are used.",
+                    "properties": {
+                        "umi_length": { "type": "integer", "minimum": 4 },
+                        "umi_position": { "type": "string", "enum": ["5_prime", "3_prime", "internal"] },
+                        "deduplication_method": {
+                            "type": "string",
+                            "enum": ["unique", "percentile", "cluster", "adjacency", "directional"]
+                        }
+                    },
+                    "required": ["umi_length", "umi_position", "deduplication_method"]
+                }
+            },
+            "required": ["method", "strandedness", "fragmentation_strategy", "amplification_cycles"]
+        },
+        "sequencing_platform_and_configuration": {
+            "type": "object",
+            "properties": {
+                "platform": { "type": "string" },
+                "read_length": { "type": "integer", "minimum": 36 },
+                "read_type": { "type": "string", "enum": ["single-end", "paired-end"] },
+                "sequencing_depth": { "type": "number", "minimum": 10, "description": "Millions of reads per sample." }
+            },
+            "required": ["platform", "read_length", "read_type", "sequencing_depth"]
+        },
+        "raw_data_quality_control": {
+            "type": "object",
+            "properties": {
+                "adapter_trimming": { "type": "string" },
+                "quality_filtering": { "type": "string" },
+                "qc_assessment_tool": { "type": "string" }
+            },
+            "required": ["adapter_trimming", "quality_filtering", "qc_assessment_tool"]
+        },
+        "read_alignment": {
+            "type": "object",
+            "properties": {
+                "tool": { "type": "string" },
+                "genome_assembly": { "type": "string" },
+                "annotation_source": { "type": "string" },
+                "annotation_version": { "type": "string" },
+                "alignment_rate": { "type": "number", "minimum": 0, "maximum": 1 }
+            },
+            "required": ["tool", "genome_assembly", "annotation_source", "annotation_version"]
+        },
+        "expression_quantification": {
+            "type": "object",
+            "properties": {
+                "level": { "type": "string", "enum": ["gene", "transcript"] },
+                "count_summarization_method": { "type": "string" },
+                "normalization_aware": { "type": "boolean" },
+                "low_count_filtering": {
+                    "type": "object",
+                    "properties": {
+                        "min_counts_per_sample": { "type": "integer", "minimum": 0 },
+                        "min_samples_with_min_counts": { "type": "integer", "minimum": 1 },
+                        "tool": { "type": "string" }
+                    }
+                }
+            },
+            "required": ["level", "count_summarization_method"]
+        },
+        "normalization_method": {
+            "type": "object",
+            "description": "Between-sample normalization. RPKM/FPKM not appropriate for DGE.",
+            "properties": {
+                "method": {
+                    "type": "string",
+                    "enum": ["median_of_ratios", "TMM", "upper_quartile", "RUV", "other"]
+                },
+                "tool": { "type": "string" }
+            },
+            "required": ["method", "tool"]
+        },
+        "statistical_analysis": {
+            "type": "object",
+            "properties": {
+                "model_framework": { "type": "string" },
+                "design_formula": { "type": "string" },
+                "covariates": { "type": "array", "items": { "type": "string" } },
+                "dispersion_estimation": {
+                    "type": "string",
+                    "enum": ["common", "trended", "per_gene", "local"]
+                },
+                "batch_correction": {
+                    "type": "object",
+                    "properties": {
+                        "applied": { "type": "boolean" },
+                        "method": {
+                            "type": "string",
+                            "enum": ["ComBat", "limma_removeBatchEffect", "SVA", "RUV", "none"]
+                        },
+                        "batch_variable": { "type": "string" }
+                    }
+                },
+                "multiple_testing_correction": {
+                    "type": "string",
+                    "enum": ["Benjamini-Hochberg", "Bonferroni", "Holm", "Storey_q_value"]
+                },
+                "significance_thresholds": {
+                    "type": "object",
+                    "properties": {
+                        "adjusted_pvalue_threshold": { "type": "number", "minimum": 0, "maximum": 1 },
+                        "log2_fold_change_threshold": { "type": "number", "minimum": 0 }
+                    },
+                    "required": ["adjusted_pvalue_threshold", "log2_fold_change_threshold"]
+                }
+            },
+            "required": ["model_framework", "design_formula", "multiple_testing_correction", "significance_thresholds"]
+        },
+        "output_artifacts": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": ["type", "path"],
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "normalized_count_matrix",
+                            "differential_expression_table",
+                            "ma_plot",
+                            "volcano_plot",
+                            "pathway_enrichment_results",
+                            "qc_report",
+                            "gene_expression_heatmap",
+                            "other"
+                        ]
+                    },
+                    "path": { "type": "string" },
+                    "format": { "type": "string", "enum": ["csv", "tsv", "pdf", "png", "html", "rds", "h5"] }
+                }
+            },
+            "minItems": 1
+        },
+        "reproducibility_metadata": {
+            "type": "object",
+            "properties": {
+                "software_versions": {
+                    "type": "object",
+                    "additionalProperties": { "type": "string" }
+                },
+                "workflow_engine": {
+                    "type": "string",
+                    "enum": ["Snakemake", "Nextflow", "CWL", "WDL", "Galaxy", "other"]
+                },
+                "computational_environment": { "type": "string" },
+                "random_seed": { "type": "integer" },
+                "parameter_settings": { "type": "object", "additionalProperties": true }
+            },
+            "required": ["software_versions", "workflow_engine", "computational_environment"]
+        }
+    },
+    "required": [
+        "biological_source_material",
+        "rna_extraction_and_quality_metrics",
+        "library_preparation_protocol",
+        "sequencing_platform_and_configuration",
+        "raw_data_quality_control",
+        "read_alignment",
+        "expression_quantification",
+        "normalization_method",
+        "statistical_analysis",
+        "output_artifacts",
+        "reproducibility_metadata"
+    ]
+}

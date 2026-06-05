@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>SciSchema — RNA-Seq Differential Gene Expression Analysis Workflow</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="icon" type="image/png" href="/assets/logo.png">
+  <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+  <header>
+    <a class="logo" href="/">
+      <img src="/assets/logo.png" alt="SciSchema Logo">
+      <span>SciSchema</span>
+    </a>
+    <nav>
+      <a href="/docs/">Docs</a>
+      <a href="/schemas/">Schemas</a>
+      <a href="/about/">About</a>
+      <a href="https://github.com/scischema">GitHub</a>
+    </nav>
+  </header>
+
+  <main class="schema-page">
+    <p class="schema-breadcrumb">
+      <a href="/schemas/">Schemas</a> ›
+      Biology &amp; Biotechnology ›
+      RNA-Seq Differential Gene Expression Analysis Workflow
+    </p>
+
+    <section class="schema-hero">
+      <h1>RNA-Seq Differential Gene Expression Analysis Workflow</h1>
+      <p class="schema-subtitle">A SciSchema.org Process Schema</p>
+
+      <p class="schema-meta">
+        Domain: Biology &amp; Biotechnology<br>
+        Schema: RNA-Seq Differential Gene Expression Analysis Workflow
+      </p>
+
+      <p class="schema-description">
+        RNA-Seq differential gene expression analysis is a computational workflow used to quantify and compare gene activity across biological conditions.
+      </p>
+    </section>
+
+    <section class="schema-section">
+      <h2>Properties from RNA-Seq Differential Gene Expression Analysis Workflow</h2>
+
+      <p class="schema-description">
+        The table below lists the top-level properties of this master schema.
+        Each property may contain more detailed nested fields in the JSON Schema representation.
+      </p>
+
+      <table class="schema-table">
+        <thead>
+          <tr>
+            <th>Property</th>
+            <th>Expected Type</th>
+            <th>Description</th>
+            <th>Required</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>biological_source_material</td>
+            <td>Object</td>
+            <td></td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>rna_extraction_and_quality_metrics</td>
+            <td>Object</td>
+            <td></td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>library_preparation_protocol</td>
+            <td>Object</td>
+            <td></td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>sequencing_platform_and_configuration</td>
+            <td>Object</td>
+            <td></td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>raw_data_quality_control</td>
+            <td>Object</td>
+            <td></td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>read_alignment</td>
+            <td>Object</td>
+            <td></td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>expression_quantification</td>
+            <td>Object</td>
+            <td></td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>normalization_method</td>
+            <td>Object</td>
+            <td>Between-sample normalization. RPKM/FPKM not appropriate for DGE.</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>statistical_analysis</td>
+            <td>Object</td>
+            <td></td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>output_artifacts</td>
+            <td>Array</td>
+            <td></td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>reproducibility_metadata</td>
+            <td>Object</td>
+            <td></td>
+            <td>Yes</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="schema-download">
+        <h2>Machine-readable schema representations</h2>
+
+        <p>
+          This schema is available in two machine-readable representations:
+          as an ORKG template, which can be exported as SHACL, and as a JSON Schema
+          document for download and reuse.
+        </p>
+
+        <ul>
+          <li>
+            <span>ORKG template / SHACL representation — forthcoming</span>
+          </li>
+          <li>
+            <a href="master-schema.json">Download master-schema.json</a>
+            <span> — JSON Schema representation</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <a href="/terms/">Terms and conditions</a>
+    <span>•</span>
+    <span>SciSchema</span>
+    <span>•</span>
+    <span>V0.1.0</span>
+    <span>|</span>
+    <span>2026-06-04</span>
+  </footer>
+</body>
+</html>

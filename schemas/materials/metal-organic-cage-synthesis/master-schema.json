@@ -1,0 +1,991 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Metal-Organic Cages (MOC) Synthesis Process Schema",
+    "description": "A comprehensive JSON schema representing the synthesis process of Metal-Organic Cages (MOCs), including reactants, process parameters, characterization, and host-guest properties.",
+    "type": "object",
+    "required": [
+        "cage_identity",
+        "synthesis_protocol",
+        "characterisation",
+        "host_guest_properties",
+        "other_properties",
+        "applications"
+    ],
+    "properties": {
+        "cage_identity": {
+            "type": "object",
+            "description": "The identity and structural details of the Metal-Organic Cage (MOC) being synthesized.",
+            "required": [
+                "moc_type",
+                "topology",
+                "coordination_geometry"
+            ],
+            "properties": {
+                "moc_type": {
+                    "type": "object",
+                    "description": "The type of Metal-Organic Cage (MOC) being synthesized, defined by its chemical formula and stoichiometry.",
+                    "required": [
+                        "metal_ions",
+                        "ligands",
+                        "counter_ions",
+                        "stoichiometry"
+                    ],
+                    "properties": {
+                        "metal_ions": {
+                            "type": "array",
+                            "description": "Array of metal ions used in the synthesis. Each entry should include the metal symbol, oxidation state, and source (e.g., salt).",
+                            "items": {
+                                "type": "object",
+                                "required": [
+                                    "symbol",
+                                    "oxidation_state",
+                                    "source"
+                                ],
+                                "properties": {
+                                    "symbol": {
+                                        "type": "string",
+                                        "description": "The chemical symbol of the metal ion (e.g., 'Fe', 'Cu').",
+                                        "minLength": 1,
+                                        "maxLength": 2
+                                    },
+                                    "oxidation_state": {
+                                        "type": "integer",
+                                        "description": "The oxidation state of the metal ion (e.g., +2, +3).",
+                                        "minimum": -8,
+                                        "maximum": 8
+                                    },
+                                    "source": {
+                                        "type": "string",
+                                        "description": "The source of the metal ion, typically a salt (e.g., 'FeCl3', 'Cu(NO3)2').",
+                                        "minLength": 1
+                                    }
+                                }
+                            }
+                        },
+                        "ligands": {
+                            "type": "array",
+                            "description": "Array of ligands used in the synthesis. Each entry should include the ligand name, formula, and source (e.g., commercially purchased or pre-synthesized).",
+                            "items": {
+                                "type": "object",
+                                "required": [
+                                    "name",
+                                    "formula",
+                                    "source"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "description": "The name of the ligand as appears in the text (e.g., 'H2Bpy', 'TCPP').",
+                                        "minLength": 1
+                                    },
+                                    "formula": {
+                                        "type": "string",
+                                        "description": "The chemical formula of the ligand (e.g., 'C10H8N2', 'C8H4N4O4').",
+                                        "minLength": 1
+                                    },
+                                    "source": {
+                                        "type": "string",
+                                        "description": "The source of the ligand, indicating whether it is commercially available or pre-synthesized (e.g., 'Commercial', 'Pre-synthesized', 'In-situ').",
+                                        "enum": [
+                                            "Commercial",
+                                            "Pre-synthesized",
+                                            "In-situ"
+                                        ],
+                                        "default": "Commercial"
+                                    }
+                                }
+                            }
+                        },
+                        "counter_ions": {
+                            "type": "array",
+                            "description": "Array of counter ions used for charge balancing. Each entry should include the counter ion name and formula.",
+                            "items": {
+                                "type": "object",
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "description": "The name of the counter ion (e.g., 'Cl-', 'PF6-').",
+                                        "minLength": 1
+                                    }
+                                }
+                            }
+                        },
+                        "stoichiometry": {
+                            "type": "object",
+                            "description": "The absolute stoichiometric ratios of metal ions, ligands, and counter ions in the MOC.",
+                            "required": [
+                                "metal_to_ligand",
+                                "cage_to_counter_ion"
+                            ],
+                            "properties": {
+                                "metal_to_ligand": {
+                                    "type": "string",
+                                    "description": "The absolute ratio of metal ions to ligands (e.g., '8:16').",
+                                    "pattern": "^[0-9]+:[0-9]+$"
+                                },
+                                "cage_to_counter_ion": {
+                                    "type": "string",
+                                    "description": "The absolute ratio of cage complexes to counter ions (e.g., '1:2').",
+                                    "pattern": "^[0-9]+:[0-9]+$"
+                                }
+                            }
+                        }
+                    }
+                },
+                "topology": {
+                    "type": "string",
+                    "description": "The topological type of the MOC (e.g., 'hexagonal prism', 'truncated tetrahedron', 'cube', 'octanuclear cuneane', 'pentagonal prism', 'trigonal prism', 'bicapped square antiprism', 'gyrobifastigium','square orthobicupola').",
+                    "enum": [
+                        "hexagonal prism",
+                        "truncated tetrahedron",
+                        "cube",
+                        "octanuclear cuneane",
+                        "pentagonal prism",
+                        "trigonal prism",
+                        "bicapped square antiprism",
+                        "gyrobifastigium",
+                        "square orthobicupola",
+                        "other"
+                    ]
+                },
+                "coordination_geometry": {
+                    "type": "string",
+                    "description": "The coordination geometry of the metal ions in the MOC (e.g., 'octahedral', 'tetrahedral','square planar').",
+                    "enum": [
+                        "octahedral",
+                        "tetrahedral",
+                        "square planar",
+                        "trigonal bipyramidal",
+                        "square antiprismatic",
+                        "distorted square pyramidal",
+                        "other"
+                    ]
+                }
+            }
+        },
+        "synthesis_procedure": {
+            "type": "object",
+            "description": "The protocol for synthesising the MOC, including chemical components, process parameters, and reaction details.",
+            "required": [
+                "chemical_components",
+                "process_parameters",
+                "reaction_details"
+            ],
+            "properties": {
+                "chemical_components": {
+                    "type": "object",
+                    "description": "The chemical components used in the synthesis, including metal sources, ligands, counter ion sources, and other components.",
+                    "required": [
+                        "metal_sources",
+                        "ligands",
+                        "counter_ion_sources",
+                        "other_components"
+                    ],
+                    "properties": {
+                        "metal_sources": {
+                            "type": "array",
+                            "description": "Array of metal ion sources (salts) used in the synthesis.",
+                            "items": {
+                                "type": "object",
+                                "required": [
+                                    "name",
+                                    "concentration",
+                                    "unit",
+                                    "synthesis_details"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "description": "The name of the metal salt (e.g., 'FeCl3', 'Cu(NO3)2').",
+                                        "minLength": 1
+                                    },
+                                    "concentration": {
+                                        "type": "number",
+                                        "description": "The concentration of the metal salt in the solution (e.g., molarity).",
+                                        "minimum": 0
+                                    },
+                                    "unit": {
+                                        "type": "string",
+                                        "description": "The unit of concentration (e.g., 'M','mol/L').",
+                                        "enum": [
+                                            "M",
+                                            "mol/L",
+                                            "g/L",
+                                            "mg/mL",
+                                            "mmol/L",
+                                            "µmol/L",
+                                            "other"
+                                        ],
+                                        "default": "M"
+                                    },
+                                    "synthesis_details": {
+                                        "type": "object",
+                                        "description": "Details of the synthesis or purification of the metal source if it is not commercially available.",
+                                        "properties": {
+                                            "method": {
+                                                "type": "string",
+                                                "description": "The method used to synthesize or purify the metal source (e.g., 'precipitation','recrystallization', 'ion exchange').",
+                                                "minLength": 1
+                                            },
+                                            "yield": {
+                                                "type": "number",
+                                                "description": "The yield of the metal source synthesis or purification as a percentage.",
+                                                "minimum": 0,
+                                                "maximum": 100
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "ligands": {
+                            "type": "array",
+                            "description": "Array of ligands used in the synthesis, including their names, concentrations, and units.",
+                            "items": {
+                                "type": "object",
+                                "required": [
+                                    "name",
+                                    "concentration",
+                                    "unit",
+                                    "synthesis_details"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "description": "The name of the ligand (e.g., 'H2Bpy', 'TCPP').",
+                                        "minLength": 1
+                                    },
+                                    "concentration": {
+                                        "type": "number",
+                                        "description": "The concentration of the ligand in the solution (e.g., molarity).",
+                                        "minimum": 0
+                                    },
+                                    "unit": {
+                                        "type": "string",
+                                        "description": "The unit of concentration (e.g., 'M','mol/L').",
+                                        "enum": [
+                                            "M",
+                                            "mol/L",
+                                            "g/L",
+                                            "mg/mL",
+                                            "mmol/L",
+                                            "µmol/L",
+                                            "other"
+                                        ],
+                                        "default": "M"
+                                    },
+                                    "synthesis_details": {
+                                        "type": "object",
+                                        "description": "Details of the synthesis of the ligand if it is not commercially available.",
+                                        "properties": {
+                                            "method": {
+                                                "type": "string",
+                                                "description": "The method used to synthesize the ligand (e.g., 'condensation','reduction','substitution').",
+                                                "minLength": 1
+                                            },
+                                            "yield": {
+                                                "type": "number",
+                                                "description": "The yield of the ligand synthesis as a percentage.",
+                                                "minimum": 0,
+                                                "maximum": 100
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "counter_ion_sources": {
+                            "type": "array",
+                            "description": "Array of counter ion sources used for charge balancing.",
+                            "items": {
+                                "type": "object",
+                                "required": [
+                                    "name",
+                                    "concentration",
+                                    "unit"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "description": "The name of the counter ion source (e.g., 'NaCl', 'NH4PF6').",
+                                        "minLength": 1
+                                    },
+                                    "concentration": {
+                                        "type": "number",
+                                        "description": "The concentration of the counter ion source in the solution (e.g., molarity).",
+                                        "minimum": 0
+                                    },
+                                    "unit": {
+                                        "type": "string",
+                                        "description": "The unit of concentration (e.g., 'M','mol/L').",
+                                        "enum": [
+                                            "M",
+                                            "mol/L",
+                                            "g/L",
+                                            "mg/mL",
+                                            "mmol/L",
+                                            "µmol/L",
+                                            "other"
+                                        ],
+                                        "default": "M"
+                                    }
+                                }
+                            }
+                        },
+                        "other_components": {
+                            "type": "array",
+                            "description": "Array of other components used in the synthesis.",
+                            "items": {
+                                "type": "object",
+                                "required": [
+                                    "name",
+                                    "concentration",
+                                    "unit"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "description": "The name of the other component (e.g., 'HCl', 'NaOH').",
+                                        "minLength": 1
+                                    },
+                                    "concentration": {
+                                        "type": "number",
+                                        "description": "The concentration of the other component in the solution (e.g., molarity).",
+                                        "minimum": 0
+                                    },
+                                    "unit": {
+                                        "type": "string",
+                                        "description": "The unit of concentration (e.g., 'M','mol/L').",
+                                        "enum": [
+                                            "M",
+                                            "mol/L",
+                                            "g/L",
+                                            "mg/mL",
+                                            "mmol/L",
+                                            "µmol/L",
+                                            "other"
+                                        ],
+                                        "default": "M"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "process_parameters": {
+                    "type": "object",
+                    "description": "The process parameters and steps involved in the synthesis of the MOC, including solvent, temperature, pressure, atmosphere, and time.",
+                    "required": [
+                        "solvent",
+                        "temperature",
+                        "pressure",
+                        "atmosphere",
+                        "time",
+                        "steps"
+                    ],
+                    "properties": {
+                        "solvent": {
+                            "type": "object",
+                            "description": "The solvent used in the synthesis, including its name, volume, and type.",
+                            "required": [
+                                "name",
+                                "volume",
+                                "type"
+                            ],
+                            "properties": {
+                                "name": {
+                                    "type": "string",
+                                    "description": "The name of the solvent (e.g., 'DMF', 'THF', 'H2O').",
+                                    "minLength": 1
+                                },
+                                "volume": {
+                                    "type": "number",
+                                    "description": "The volume of the solvent used in the synthesis (e.g., liters).",
+                                    "minimum": 0
+                                },
+                                "type": {
+                                    "type": "string",
+                                    "description": "The type of solvent (e.g., 'polar aprotic', 'polar protic', 'non-polar').",
+                                    "enum": [
+                                        "polar aprotic",
+                                        "polar protic",
+                                        "non-polar",
+                                        "mixed"
+                                    ],
+                                    "default": "polar aprotic"
+                                }
+                            }
+                        },
+                        "temperature": {
+                            "type": "object",
+                            "description": "The temperature conditions during the synthesis.",
+                            "required": [
+                                "initial",
+                                "final",
+                                "unit"
+                            ],
+                            "properties": {
+                                "initial": {
+                                    "type": "number",
+                                    "description": "The initial temperature in Celsius.",
+                                    "minimum": -273.15,
+                                    "maximum": 1000
+                                },
+                                "final": {
+                                    "type": "number",
+                                    "description": "The final temperature in Celsius.",
+                                    "minimum": -273.15,
+                                    "maximum": 1000
+                                },
+                                "unit": {
+                                    "type": "string",
+                                    "description": "The unit of temperature (e.g., 'C', 'K').",
+                                    "enum": [
+                                        "C",
+                                        "K"
+                                    ],
+                                    "default": "C"
+                                }
+                            }
+                        },
+                        "pressure": {
+                            "type": "object",
+                            "description": "The pressure conditions during the synthesis.",
+                            "required": [
+                                "value",
+                                "unit"
+                            ],
+                            "properties": {
+                                "value": {
+                                    "type": "number",
+                                    "description": "The pressure value in Pascals.",
+                                    "minimum": 0
+                                },
+                                "unit": {
+                                    "type": "string",
+                                    "description": "The unit of pressure (e.g., 'Pa', 'atm', 'bar').",
+                                    "enum": [
+                                        "Pa",
+                                        "atm",
+                                        "bar"
+                                    ],
+                                    "default": "Pa"
+                                }
+                            }
+                        },
+                        "atmosphere": {
+                            "type": "string",
+                            "description": "The atmospheric conditions during the synthesis (e.g., 'air', 'inert gas', 'N2').",
+                            "enum": [
+                                "air",
+                                "inert gas",
+                                "N2"
+                            ],
+                            "default": "air"
+                        },
+                        "time": {
+                            "type": "object",
+                            "description": "The duration of each step in the synthesis process.",
+                            "required": [
+                                "duration",
+                                "unit"
+                            ],
+                            "properties": {
+                                "duration": {
+                                    "type": "number",
+                                    "description": "The duration of the process step (e.g., hours, minutes).",
+                                    "minimum": 0
+                                },
+                                "unit": {
+                                    "type": "string",
+                                    "description": "The unit of time (e.g., 'h','min','s').",
+                                    "enum": [
+                                        "h",
+                                        "min",
+                                        "s",
+                                        "d"
+                                    ],
+                                    "default": "h"
+                                }
+                            }
+                        },
+                        "steps": {
+                            "type": "array",
+                            "description": "The sequence of steps involved in the synthesis process. Each step includes actions like mixing, heating, cooling, or filtration.",
+                            "items": {
+                                "type": "object",
+                                "required": [
+                                    "action",
+                                    "temperature",
+                                    "time"
+                                ],
+                                "properties": {
+                                    "action": {
+                                        "type": "string",
+                                        "description": "The action performed in the step (e.g.,'mix', 'heat', 'cool', 'filter', 'evaporate','sonicate', 'centrifuge', 'dry').",
+                                        "enum": [
+                                            "mix",
+                                            "heat",
+                                            "cool",
+                                            "filter",
+                                            "evaporate",
+                                            "sonicate",
+                                            "centrifuge",
+                                            "dry"
+                                        ],
+                                        "default": "mix"
+                                    },
+                                    "temperature": {
+                                        "type": "object",
+                                        "description": "The temperature conditions for this specific step.",
+                                        "required": [
+                                            "value",
+                                            "unit"
+                                        ],
+                                        "properties": {
+                                            "value": {
+                                                "type": "number",
+                                                "description": "The temperature value in Celsius.",
+                                                "minimum": -273.15,
+                                                "maximum": 1000
+                                            },
+                                            "unit": {
+                                                "type": "string",
+                                                "description": "The unit of temperature (e.g., 'C', 'K').",
+                                                "enum": [
+                                                    "C",
+                                                    "K"
+                                                ],
+                                                "default": "C"
+                                            }
+                                        }
+                                    },
+                                    "time": {
+                                        "type": "object",
+                                        "description": "The duration of the step.",
+                                        "required": [
+                                            "duration",
+                                            "unit"
+                                        ],
+                                        "properties": {
+                                            "duration": {
+                                                "type": "number",
+                                                "description": "The duration of the step (e.g., hours, minutes).",
+                                                "minimum": 0
+                                            },
+                                            "unit": {
+                                                "type": "string",
+                                                "description": "The unit of time (e.g., 'h','min','s').",
+                                                "enum": [
+                                                    "h",
+                                                    "min",
+                                                    "s",
+                                                    "d"
+                                                ],
+                                                "default": "h"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "reaction_details": {
+                    "type": "object",
+                    "description": "Additional details about the reaction, including scale, yield, and purification methods.",
+                    "required": [
+                        "scale",
+                        "yield",
+                        "purification_method"
+                    ],
+                    "properties": {
+                        "scale": {
+                            "type": "object",
+                            "description": "The scale of the reaction, including the amount of metal ions used and the volume of the solvent.",
+                            "required": [
+                                "metal_amount",
+                                "solvent_volume"
+                            ],
+                            "properties": {
+                                "metal_amount": {
+                                    "type": "number",
+                                    "description": "The amount of metal ions used in the reaction (e.g., in millimoles).",
+                                    "minimum": 0
+                                },
+                                "solvent_volume": {
+                                    "type": "number",
+                                    "description": "The volume of the solvent used in the reaction (e.g., in liters).",
+                                    "minimum": 0
+                                }
+                            }
+                        },
+                        "yield": {
+                            "type": "number",
+                            "description": "The yield of the MOC synthesis as a percentage.",
+                            "minimum": 0,
+                            "maximum": 100
+                        },
+                        "purification_method": {
+                            "type": "string",
+                            "description": "The method used to purify the synthesized MOC (e.g., 'filtration','recrystallization', 'chromatography', 'crystallisation', etc).",
+                            "minLength": 1
+                        }
+                    }
+                }
+            }
+        },
+        "characterisation": {
+            "type": "object",
+            "description": "The methods and results used to characterise the synthesised MOC.",
+            "required": [
+                "methods",
+                "results"
+            ],
+            "properties": {
+                "methods": {
+                    "type": "array",
+                    "description": "Array of characterisation methods used (e.g., NMR, mass-spectroscopy, PXRD, IR, DOSY).",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "name"
+                        ],
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "description": "The name of the characterisation method (e.g., 'NMR', 'PXRD').",
+                                "minLength": 1
+                            }
+                        }
+                    }
+                },
+                "results": {
+                    "type": "object",
+                    "description": "The results obtained from the characterisation methods.",
+                    "properties": {
+                        "nmr": {
+                            "type": "object",
+                            "description": "NMR spectroscopy results, including chemical shifts and integration values.",
+                            "properties": {
+                                "chemical_shifts": {
+                                    "type": "array",
+                                    "description": "Array of chemical shift values in ppm.",
+                                    "items": {
+                                        "type": "number",
+                                        "minimum": -300,
+                                        "maximum": 300
+                                    }
+                                },
+                                "integration_values": {
+                                    "type": "array",
+                                    "description": "Array of integration values corresponding to the chemical shifts.",
+                                    "items": {
+                                        "type": "number",
+                                        "minimum": 0
+                                    }
+                                }
+                            }
+                        },
+                        "mass_spectrometry": {
+                            "type": "object",
+                            "description": "Mass spectrometry results, including m/z values and intensities.",
+                            "properties": {
+                                "m_z_values": {
+                                    "type": "array",
+                                    "description": "Array of m/z values.",
+                                    "items": {
+                                        "type": "number",
+                                        "minimum": 0
+                                    }
+                                },
+                                "intensities": {
+                                    "type": "array",
+                                    "description": "Array of intensities corresponding to the m/z values.",
+                                    "items": {
+                                        "type": "number",
+                                        "minimum": 0
+                                    }
+                                }
+                            }
+                        },
+                        "pxrd": {
+                            "type": "object",
+                            "description": "Powder X-ray diffraction results, including 2\u03b8 values and intensities.",
+                            "properties": {
+                                "two_theta_values": {
+                                    "type": "array",
+                                    "description": "Array of 2\u03b8 values in degrees.",
+                                    "items": {
+                                        "type": "number",
+                                        "minimum": 0,
+                                        "maximum": 180
+                                    }
+                                },
+                                "intensities": {
+                                    "type": "array",
+                                    "description": "Array of intensities corresponding to the 2\u03b8 values.",
+                                    "items": {
+                                        "type": "number",
+                                        "minimum": 0
+                                    }
+                                }
+                            }
+                        },
+                        "ir": {
+                            "type": "object",
+                            "description": "Infrared spectroscopy results, including wavenumber values and intensities.",
+                            "properties": {
+                                "wavenumbers": {
+                                    "type": "array",
+                                    "description": "Array of wavenumber values in cm^-1.",
+                                    "items": {
+                                        "type": "number",
+                                        "minimum": 0,
+                                        "maximum": 4000
+                                    }
+                                },
+                                "intensities": {
+                                    "type": "array",
+                                    "description": "Array of intensities corresponding to the wavenumbers.",
+                                    "items": {
+                                        "type": "number",
+                                        "minimum": 0
+                                    }
+                                }
+                            }
+                        },
+                        "dosy": {
+                            "type": "object",
+                            "description": "Diffusion-ordered spectroscopy results, including diffusion coefficients and temperatures.",
+                            "properties": {
+                                "diffusion_coefficients": {
+                                    "type": "array",
+                                    "description": "Array of diffusion coefficients in m^2/s.",
+                                    "items": {
+                                        "type": "number",
+                                        "minimum": 0
+                                    }
+                                },
+                                "temperatures": {
+                                    "type": "array",
+                                    "description": "Array of temperatures in Kelvin at which measurements were taken.",
+                                    "items": {
+                                        "type": "number",
+                                        "minimum": -273.15,
+                                        "maximum": 1000
+                                    }
+                                }
+                            }
+                        },
+                        "others": {
+                            "type": "object",
+                            "description": "Other characterization methods and their results.",
+                            "properties": {
+                                "method": {
+                                    "type": "string",
+                                    "description": "The name of the other characterization method.",
+                                    "minLength": 1
+                                },
+                                "results": {
+                                    "type": "object",
+                                    "description": "The results obtained from the other characterization method.",
+                                    "additionalProperties": true
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "host_guest_properties": {
+            "type": "object",
+            "description": "The host-guest properties and applications of the synthesized MOC, including the types of guests trapped and their properties.",
+            "required": [
+                "guests",
+                "properties"
+            ],
+            "properties": {
+                "guests": {
+                    "type": "array",
+                    "description": "Array of guests trapped within the MOC. Each entry includes the guest name, type, and properties.",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "name",
+                            "type"
+                        ],
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "description": "The name of the guest molecule (e.g., 'CO2', 'H2O', 'N2').",
+                                "minLength": 1
+                            },
+                            "type": {
+                                "type": "string",
+                                "description": "The type of guest (e.g., 'gas', 'liquid','small molecule').",
+                                "enum": [
+                                    "gas",
+                                    "liquid",
+                                    "small molecule"
+                                ],
+                                "default": "gas"
+                            },
+                            "properties": {
+                                "type": "object",
+                                "description": "Properties of the guest, such as solubility, diffusion rate, or binding affinity.",
+                                "properties": {
+                                    "solubility": {
+                                        "type": "number",
+                                        "description": "The solubility of the guest in the MOC (e.g., mol/L).",
+                                        "minimum": 0
+                                    },
+                                    "diffusion_rate": {
+                                        "type": "number",
+                                        "description": "The diffusion rate of the guest within the MOC (e.g., m^2/s).",
+                                        "minimum": 0
+                                    },
+                                    "binding_affinity": {
+                                        "type": "number",
+                                        "description": "The binding affinity of the guest to the MOC (e.g., kJ/mol).",
+                                        "minimum": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "properties": {
+                    "type": "object",
+                    "description": "Additional properties of the MOC, such as stability, conductivity, and adsorption capacity.",
+                    "properties": {
+                        "stability": {
+                            "type": "object",
+                            "description": "The stability of the MOC under various conditions.",
+                            "properties": {
+                                "thermal_stability": {
+                                    "type": "number",
+                                    "description": "The temperature at which the MOC starts to decompose (e.g., in Celsius).",
+                                    "minimum": 0
+                                },
+                                "chemical_stability": {
+                                    "type": "string",
+                                    "description": "The chemical stability of the MOC, indicating its resistance to acids, bases, or other chemicals (e.g.,'stable in pH 1-14', 'degrades in strong acids').",
+                                    "minLength": 1
+                                }
+                            }
+                        },
+                        "conductivity": {
+                            "type": "object",
+                            "description": "The electrical conductivity of the MOC.",
+                            "properties": {
+                                "type": {
+                                    "type": "string",
+                                    "description": "The type of conductivity (e.g., 'ionic', 'electronic').",
+                                    "enum": [
+                                        "ionic",
+                                        "electronic"
+                                    ],
+                                    "default": "ionic"
+                                },
+                                "value": {
+                                    "type": "number",
+                                    "description": "The conductivity value in Siemens per meter (S/m).",
+                                    "minimum": 0
+                                }
+                            }
+                        },
+                        "adsorption_capacity": {
+                            "type": "object",
+                            "description": "The surface coverage of the MOC for specific guests.",
+                            "properties": {
+                                "capacity": {
+                                    "type": "number",
+                                    "description": "The surface coverage of the MOC for specific guests in m^2/ g.",
+                                    "minimum": 0
+                                },
+                                "unit": {
+                                    "type": "string",
+                                    "description": "The unit of surface coverage (e.g.,'m^2/g', 'cm^2/g').",
+                                    "enum": [
+                                        "m^2/g",
+                                        "cm^2/g",
+                                        "L/g"
+                                    ],
+                                    "default": "m^2/g"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "other_properties": {
+            "type": "object",
+            "description": "Other properties of the MOC that do not fit into the above categories but are relevant to its characterisation and functionality.",
+            "properties": {
+                "cavity_size": {
+                    "type": "number",
+                    "description": "The size of the cavity within the MOC (e.g., in angstroms).",
+                    "minimum": 0
+                },
+                "chiroptical_properties": {
+                    "type": "object",
+                    "description": "Chiroptical properties of the MOC, including circular dichroism (CD) and circularly polarized luminescence (CPL).",
+                    "properties": {
+                        "circular_dichroism": {
+                            "type": "object",
+                            "description": "Circular dichroism (CD) spectrum data, including wavelengths and intensities.",
+                            "properties": {
+                                "wavelengths": {
+                                    "type": "array",
+                                    "description": "Array of wavelengths in nm.",
+                                    "items": {
+                                        "type": "number",
+                                        "minimum": 190,
+                                        "maximum": 800
+                                    }
+                                }
+                            }
+                        }
+                            }
+                        }
+                    }
+                }
+                        },
+                        "applications": {
+                            "type": "array",
+                            "description": "Array of applications for the synthesized MOC, such as gas storage, catalysis, or drug delivery.",
+                            "items": {
+                                "type": "object",
+                                "required": [
+                                    "application_type",
+                                    "description"
+                                ],
+                                "properties": {
+                                    "application_type": {
+                                        "type": "string",
+                                        "description": "The type of application (e.g., 'gas storage', 'catalysis', 'transaport','bioimaging, other).",
+                                        "enum": [
+                                            "gas storage",
+                                            "catalysis",
+                                            "drug delivery",
+                                            "sensing",
+                                            "separation",
+                                            "bioimaging",
+                                            "other"
+                                        ],
+                                        "default": "gas storage"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "description": "A detailed description of how the MOC is used in this application and its performance.",
+                                        "minLength": 1
+                                    }
+                                }
+                            }
+                    }
+                } 

@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>SciSchema — Multi-Electrode Array (MEA) Recordings</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="icon" type="image/png" href="/assets/logo.png">
+  <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+  <header>
+    <a class="logo" href="/">
+      <img src="/assets/logo.png" alt="SciSchema Logo">
+      <span>SciSchema</span>
+    </a>
+    <nav>
+      <a href="/docs/">Docs</a>
+      <a href="/schemas/">Schemas</a>
+      <a href="/about/">About</a>
+      <a href="https://github.com/scischema">GitHub</a>
+    </nav>
+  </header>
+
+  <main class="schema-page">
+    <p class="schema-breadcrumb">
+      <a href="/schemas/">Schemas</a> ›
+      Imaging &amp; Measurement ›
+      Multi-Electrode Array (MEA) Recordings
+    </p>
+
+    <section class="schema-hero">
+      <h1>Multi-Electrode Array (MEA) Recordings</h1>
+      <p class="schema-subtitle">A SciSchema.org Process Schema</p>
+
+      <p class="schema-meta">
+        Domain: Imaging &amp; Measurement<br>
+        Schema: MEA Recordings Process Schema
+      </p>
+
+      <p class="schema-description">
+        Multi-electrode array recordings are used to measure the electrical activity of cells using a grid of microelectrodes.
+      </p>
+    </section>
+
+    <section class="schema-section">
+      <h2>Properties from Multi-Electrode Array (MEA) Recordings</h2>
+
+      <p class="schema-description">
+        The table below lists the top-level properties of this master schema.
+        Each property may contain more detailed nested fields in the JSON Schema representation.
+      </p>
+
+      <table class="schema-table">
+        <thead>
+          <tr>
+            <th>Property</th>
+            <th>Expected Type</th>
+            <th>Description</th>
+            <th>Required</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>sampleType</td>
+            <td>Object</td>
+            <td>Biological preparation characteristics, culture conditions, and maturation status</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>electrode</td>
+            <td>Object</td>
+            <td>Electrode physical, electrical, and configuration characteristics including specialized poration methods</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>acquisition</td>
+            <td>Object</td>
+            <td>Data acquisition system configuration with explicit distinction between hardware and software processing stages</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>environment</td>
+            <td>Object</td>
+            <td>Environmental control parameters for physiological maintenance</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td>stimulation</td>
+            <td>Object</td>
+            <td>Electrical, optical, or pharmacological stimulation parameters (optional for passive recordings)</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td>dataProcessing</td>
+            <td>Object</td>
+            <td>Data processing parameters, software, and computational methods used for analysis</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td>outputMetrics</td>
+            <td>Array</td>
+            <td>Target metrics to be extracted from recordings. Specifies analysis focus during acquisition setup. Field potential duration, corrected metrics, and action potential-related metrics (derived from field potential measurements) are particularly relevant for cardiac applications. Short-term variability (STV) is critical for assessing arrhythmia risk. Conduction velocity is essential for estimating sodium current effects.</td>
+            <td>No</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="schema-download">
+        <h2>Machine-readable schema representations</h2>
+
+        <p>
+          This schema is available in two machine-readable representations:
+          as an ORKG template, which can be exported as SHACL, and as a JSON Schema
+          document for download and reuse.
+        </p>
+
+        <ul>
+          <li>
+            <span>ORKG template / SHACL representation — forthcoming</span>
+          </li>
+          <li>
+            <a href="master-schema.json">Download master-schema.json</a>
+            <span> — JSON Schema representation</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <a href="/terms/">Terms and conditions</a>
+    <span>•</span>
+    <span>SciSchema</span>
+    <span>•</span>
+    <span>V0.1.0</span>
+    <span>|</span>
+    <span>2026-06-04</span>
+  </footer>
+</body>
+</html>

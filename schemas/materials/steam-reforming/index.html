@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>SciSchema — Steam Reforming</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="icon" type="image/png" href="/assets/logo.png">
+  <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+  <header>
+    <a class="logo" href="/">
+      <img src="/assets/logo.png" alt="SciSchema Logo">
+      <span>SciSchema</span>
+    </a>
+    <nav>
+      <a href="/docs/">Docs</a>
+      <a href="/schemas/">Schemas</a>
+      <a href="/about/">About</a>
+      <a href="https://github.com/scischema">GitHub</a>
+    </nav>
+  </header>
+
+  <main class="schema-page">
+    <p class="schema-breadcrumb">
+      <a href="/schemas/">Schemas</a> ›
+      Materials &amp; Chemistry ›
+      Steam Reforming
+    </p>
+
+    <section class="schema-hero">
+      <h1>Steam Reforming</h1>
+      <p class="schema-subtitle">A SciSchema.org Process Schema</p>
+
+      <p class="schema-meta">
+        Domain: Materials &amp; Chemistry<br>
+        Schema: Steam Reforming Process Schema
+      </p>
+
+      <p class="schema-description">
+        Steam reforming is an industrial process used to produce hydrogen by reacting hydrocarbons with high-temperature steam.
+      </p>
+    </section>
+
+    <section class="schema-section">
+      <h2>Properties from Steam Reforming</h2>
+
+      <p class="schema-description">
+        The table below lists the top-level properties of this master schema.
+        Each property may contain more detailed nested fields in the JSON Schema representation.
+      </p>
+
+      <table class="schema-table">
+        <thead>
+          <tr>
+            <th>Property</th>
+            <th>Expected Type</th>
+            <th>Description</th>
+            <th>Required</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>process_metadata</td>
+            <td>Object</td>
+            <td>General metadata about the steam reforming process.</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>input_parameters</td>
+            <td>Object</td>
+            <td>Parameters defining the input conditions for the steam reforming process.</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>catalyst_properties</td>
+            <td>Object</td>
+            <td>Properties related to the catalyst used in the steam reforming process, including synthesis method, composition, and performance metrics.</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>stability_metrics</td>
+            <td>Object</td>
+            <td>Parameters measuring catalyst durability and resistance to deactivation</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td>emissions_and_byproducts</td>
+            <td>Object</td>
+            <td>Environmental impact metrics and carbon management parameters</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td>performance_metrics</td>
+            <td>Object</td>
+            <td>Key performance metrics of the steam reforming process.</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>reactor_geometry</td>
+            <td>Object</td>
+            <td>Geometrical parameters of the reactor.</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td>performance_evaluation_criteria</td>
+            <td>Object</td>
+            <td>Performance evaluation criteria for microreactors.</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td>system_properties</td>
+            <td>Object</td>
+            <td>Reactor-level characteristics affecting heat management and physical design</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td>post_processing</td>
+            <td>Object</td>
+            <td>Parameters related to downstream processing of reformate gas</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td>economic_metrics</td>
+            <td>Object</td>
+            <td>Financial indicators for assessing the economic viability of the steam reforming process with carbon capture</td>
+            <td>No</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="schema-download">
+        <h2>Machine-readable schema representations</h2>
+
+        <p>
+          This schema is available in two machine-readable representations:
+          as an ORKG template, which can be exported as SHACL, and as a JSON Schema
+          document for download and reuse.
+        </p>
+
+        <ul>
+          <li>
+            <span>ORKG template / SHACL representation — forthcoming</span>
+          </li>
+          <li>
+            <a href="master-schema.json">Download master-schema.json</a>
+            <span> — JSON Schema representation</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <a href="/terms/">Terms and conditions</a>
+    <span>•</span>
+    <span>SciSchema</span>
+    <span>•</span>
+    <span>V0.1.0</span>
+    <span>|</span>
+    <span>2026-06-04</span>
+  </footer>
+</body>
+</html>

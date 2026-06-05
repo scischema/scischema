@@ -1,0 +1,2026 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Refined CRISPR-Cas9 Process Schema",
+    "description": "A comprehensive schema representing the CRISPR-Cas9 gene-editing process, including inputs, experimental settings, instruments, outputs, and advanced CRISPR variants. This schema integrates applications in SOX gene editing, stem cell research, cancer modeling, and regenerative medicine.",
+    "type": "object",
+    "properties": {
+        "crisprCas9Process": {
+            "type": "object",
+            "description": "Root object representing the entire CRISPR-based gene-editing or detection process.",
+            "properties": {
+                "inputs": {
+                    "type": "object",
+                    "description": "Components and sequences required for the CRISPR-based editing or detection process.",
+                    "properties": {
+                        "guideRNA": {
+                            "type": "object",
+                            "description": "The guide RNA (gRNA) or CRISPR RNA (crRNA) that directs the Cas nuclease to the target DNA or RNA sequence (5' to 3' direction).",
+                            "properties": {
+                                "sequence": {
+                                    "type": "string",
+                                    "description": "The nucleotide spacer sequence of the gRNA/crRNA. Must be 20 nucleotides for standard Cas9, variable for other nucleases like Cas12a, Cas13a, and Cas14.",
+                                    "minLength": 18,
+                                    "maxLength": 30,
+                                    "pattern": "^[ACGTUacgtu]+$"
+                                },
+                                "inSilicoDesigner": {
+                                    "type": "string",
+                                    "description": "Tool used for designing the gRNA/crRNA sequence (e.g., CHOPCHOP, CRISPOR, Benchling, IDT).",
+                                    "enum": [
+                                        "CHOPCHOP",
+                                        "CRISPOR",
+                                        "Benchling",
+                                        "IDT",
+                                        "Other"
+                                    ]
+                                },
+                                "designerDetails": {
+                                    "type": "string",
+                                    "description": "Additional details about the in-silico designer if 'Other' is selected."
+                                },
+                                "modifications": {
+                                    "type": "array",
+                                    "description": "Chemical or structural modifications applied to the gRNA/crRNA to enhance stability or specificity.",
+                                    "items": {
+                                        "type": "string",
+                                        "enum": [
+                                            "2'-O-methyl",
+                                            "Phosphorothioate",
+                                            "2'-Fluoro",
+                                            "Other"
+                                        ]
+                                    }
+                                },
+                                "modificationDetails": {
+                                    "type": "string",
+                                    "description": "Additional details about gRNA/crRNA modifications if 'Other' is selected."
+                                },
+                                "sgRNAStructure": {
+                                    "type": "object",
+                                    "description": "Structural features of the sgRNA that influence Cas9 conformational dynamics and cleavage activity.",
+                                    "properties": {
+                                        "fullLength": {
+                                            "type": "boolean",
+                                            "description": "Whether the sgRNA is full-length, which drives inward lobe closure of Cas9."
+                                        },
+                                        "truncatedVariants": {
+                                            "type": "array",
+                                            "description": "Details of any truncated sgRNA variants used (e.g., \u0394guide1-20, \u0394hairpins1-2).",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "variantName": {
+                                                        "type": "string",
+                                                        "description": "Name of the truncated sgRNA variant (e.g., \u0394guide1-20)."
+                                                    },
+                                                    "sequence": {
+                                                        "type": "string",
+                                                        "description": "Sequence of the truncated sgRNA variant."
+                                                    }
+                                                },
+                                                "required": [
+                                                    "variantName",
+                                                    "sequence"
+                                                ]
+                                            }
+                                        }
+                                    }
+                                },
+                                "crRNAType": {
+                                    "type": "string",
+                                    "description": "Type of crRNA used, particularly relevant for Cas12, Cas13, and Cas14 systems (e.g., linear, circular).",
+                                    "enum": [
+                                        "Linear",
+                                        "Circular",
+                                        "Other"
+                                    ]
+                                },
+                                "crRNADetails": {
+                                    "type": "string",
+                                    "description": "Additional details about the crRNA type if 'Other' is selected."
+                                }
+                            },
+                            "required": [
+                                "sequence",
+                                "inSilicoDesigner"
+                            ]
+                        },
+                        "nucleaseSource": {
+                            "type": "object",
+                            "description": "Source and properties of the CRISPR-associated nuclease (e.g., Cas9, Cas12a, Cas13a, Cas14).",
+                            "properties": {
+                                "type": {
+                                    "type": "string",
+                                    "description": "Type of CRISPR nuclease used (e.g., Cas9, Cas12a, Cas13a, Cas14, BaseEditor, PrimeEditor).",
+                                    "enum": [
+                                        "Cas9",
+                                        "Cas12a",
+                                        "Cas13a",
+                                        "Cas14",
+                                        "BaseEditor",
+                                        "PrimeEditor",
+                                        "Other"
+                                    ]
+                                },
+                                "typeDetails": {
+                                    "type": "string",
+                                    "description": "Additional details about the nuclease type if 'Other' is selected."
+                                },
+                                "organism": {
+                                    "type": "string",
+                                    "description": "Source organism of the nuclease (e.g., Streptococcus pyogenes for SpCas9, Acidaminococcus sp. for AsCas12a).",
+                                    "enum": [
+                                        "Streptococcus pyogenes (SpCas9)",
+                                        "Staphylococcus aureus (SaCas9)",
+                                        "Acidaminococcus sp. (AsCas12a)",
+                                        "Francisella novicida (FnCas12a)",
+                                        "Lachnospiraceae bacterium (LbCas12a)",
+                                        "Leptotrichia buccalis (LbuCas13a)",
+                                        "Leptotrichia shahii (LshCas13a)",
+                                        "Other"
+                                    ]
+                                },
+                                "organismDetails": {
+                                    "type": "string",
+                                    "description": "Additional details about the organism if 'Other' is selected."
+                                },
+                                "deliveryFormat": {
+                                    "type": "string",
+                                    "description": "Format of the nuclease and gRNA delivery (e.g., plasmid DNA, mRNA, RNP).",
+                                    "enum": [
+                                        "plasmid DNA",
+                                        "mRNA",
+                                        "Ribonucleoprotein (RNP)",
+                                        "Viral Vector",
+                                        "Other"
+                                    ]
+                                },
+                                "deliveryFormatDetails": {
+                                    "type": "string",
+                                    "description": "Additional details about the delivery format if 'Other' is selected."
+                                },
+                                "engineeredVariant": {
+                                    "type": "string",
+                                    "description": "Engineered variant of the nuclease (e.g., high-fidelity Cas9, dCas9, nCas9).",
+                                    "enum": [
+                                        "Wild-type",
+                                        "High-fidelity (e.g., SpCas9-HF1)",
+                                        "dCas9 (dead Cas9)",
+                                        "nCas9 (nickase Cas9)",
+                                        "\u0394HNH-Cas9",
+                                        "Other"
+                                    ]
+                                },
+                                "variantDetails": {
+                                    "type": "string",
+                                    "description": "Additional details about the engineered variant if 'Other' is selected."
+                                },
+                                "conformationalDynamics": {
+                                    "type": "object",
+                                    "description": "Conformational dynamics of the nuclease domains, particularly relevant for Cas9 and Cas12a.",
+                                    "properties": {
+                                        "hnhDomainState": {
+                                            "type": "string",
+                                            "description": "Conformational state of the HNH nuclease domain (e.g., activated, inactive, intermediate).",
+                                            "enum": [
+                                                "Activated",
+                                                "Inactive",
+                                                "Intermediate",
+                                                "Other"
+                                            ]
+                                        },
+                                        "hnhDomainStateDetails": {
+                                            "type": "string",
+                                            "description": "Additional details about the HNH domain conformational state if 'Other' is selected."
+                                        },
+                                        "fretConstructs": {
+                                            "type": "array",
+                                            "description": "Details of FRET constructs used to monitor conformational dynamics (e.g., Cas9hinge, Cas9HNH-1, Cas9HNH-2).",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "constructName": {
+                                                        "type": "string",
+                                                        "description": "Name of the FRET construct (e.g., Cas9hinge, Cas9HNH-1)."
+                                                    },
+                                                    "labeledResidues": {
+                                                        "type": "string",
+                                                        "description": "Residues labeled with FRET dyes (e.g., D435C/E945C for Cas9hinge)."
+                                                    },
+                                                    "dyesUsed": {
+                                                        "type": "string",
+                                                        "description": "FRET dyes used (e.g., Cy3/Cy5)."
+                                                    },
+                                                    "ratioA": {
+                                                        "type": "number",
+                                                        "description": "Observed (ratio)A value, which is proportional to FRET efficiency."
+                                                    }
+                                                },
+                                                "required": [
+                                                    "constructName",
+                                                    "labeledResidues",
+                                                    "dyesUsed"
+                                                ]
+                                            }
+                                        },
+                                        "allostericCommunication": {
+                                            "type": "boolean",
+                                            "description": "Whether allosteric communication between HNH and RuvC domains was observed."
+                                        },
+                                        "linkerMutations": {
+                                            "type": "array",
+                                            "description": "Details of mutations introduced in the HNH-RuvC linker region to study allosteric communication.",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "mutation": {
+                                                        "type": "string",
+                                                        "description": "Mutation introduced (e.g., E923P/T924P)."
+                                                    },
+                                                    "effectOnCleavage": {
+                                                        "type": "string",
+                                                        "description": "Effect of the mutation on target and non-target strand cleavage."
+                                                    }
+                                                },
+                                                "required": [
+                                                    "mutation"
+                                                ]
+                                            }
+                                        }
+                                    }
+                                },
+                                "transCleavageActivity": {
+                                    "type": "boolean",
+                                    "description": "Whether the nuclease exhibits trans-cleavage activity (e.g., Cas12a, Cas13a, Cas14)."
+                                }
+                            },
+                            "required": [
+                                "type",
+                                "organism",
+                                "deliveryFormat"
+                            ]
+                        },
+                        "targetDNA": {
+                            "type": "object",
+                            "description": "Target DNA sequence and Protospacer Adjacent Motif (PAM), if applicable.",
+                            "properties": {
+                                "referenceGenome": {
+                                    "type": "string",
+                                    "description": "The specific genome build used to anchor coordinates (e.g., GRCh38, GRCm39).",
+                                    "enum": [
+                                        "GRCh38 (hg38)",
+                                        "GRCh37 (hg19)",
+                                        "GRCm39 (Mouse)",
+                                        "Other"
+                                    ]
+                                },
+                                "referenceGenomeDetails": {
+                                    "type": "string",
+                                    "description": "Additional details about the reference genome if 'Other' is selected."
+                                },
+                                "genomicLocation": {
+                                    "type": "string",
+                                    "description": "Genomic location of the target DNA (e.g., chromosome, position, gene name). Format: 'chrX:start-end'."
+                                },
+                                "pamSequence": {
+                                    "type": "string",
+                                    "description": "Protospacer Adjacent Motif (PAM) sequence required for nuclease binding (e.g., 'NGG' for SpCas9, 'TTTV' for Cas12a).",
+                                    "pattern": "^[ACGTUacgtu]{3,6}$"
+                                },
+                                "targetSequence": {
+                                    "type": "string",
+                                    "description": "The nucleotide target sequence adjacent to the PAM (5' to 3' direction). Length depends on the nuclease type (e.g., 20 nt for Cas9, 23 nt for Cas12a).",
+                                    "minLength": 18,
+                                    "maxLength": 30,
+                                    "pattern": "^[ACGTUacgtu]+$"
+                                },
+                                "strand": {
+                                    "type": "string",
+                                    "description": "Strand of the DNA targeted by the gRNA (plus or minus).",
+                                    "enum": [
+                                        "plus",
+                                        "minus"
+                                    ]
+                                },
+                                "predictedOffTargetSites": {
+                                    "type": "array",
+                                    "description": "Computational predictions of potential off-target activity based on sequence homology and PAM availability.",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "genomicLocation": {
+                                                "type": "string",
+                                                "description": "Genomic location of the predicted off-target site (e.g., 'chrX:start-end')."
+                                            },
+                                            "sequence": {
+                                                "type": "string",
+                                                "description": "Sequence of the predicted off-target site."
+                                            },
+                                            "mismatchPositions": {
+                                                "type": "array",
+                                                "description": "Positions of mismatches relative to the target sequence (1-based indexing).",
+                                                "items": {
+                                                    "type": "integer",
+                                                    "minimum": 1,
+                                                    "maximum": 30
+                                                }
+                                            },
+                                            "mismatchCount": {
+                                                "type": "integer",
+                                                "description": "Total number of mismatches between the gRNA and the off-target site.",
+                                                "minimum": 1
+                                            },
+                                            "pam": {
+                                                "type": "string",
+                                                "description": "PAM sequence of the off-target site.",
+                                                "pattern": "^[ACGTUacgtu]{3,6}$"
+                                            }
+                                        },
+                                        "required": [
+                                            "genomicLocation",
+                                            "sequence",
+                                            "mismatchCount",
+                                            "pam"
+                                        ]
+                                    }
+                                },
+                                "offTargetSites": {
+                                    "type": "array",
+                                    "description": "List of potential off-target sites with mismatches relative to the target sequence.",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "genomicLocation": {
+                                                "type": "string",
+                                                "description": "Genomic location of the off-target site (e.g., 'chrX:start-end')."
+                                            },
+                                            "sequence": {
+                                                "type": "string",
+                                                "description": "Sequence of the off-target site."
+                                            },
+                                            "mismatchPositions": {
+                                                "type": "array",
+                                                "description": "Positions of mismatches relative to the target sequence (1-based indexing).",
+                                                "items": {
+                                                    "type": "integer",
+                                                    "minimum": 1,
+                                                    "maximum": 30
+                                                }
+                                            },
+                                            "mismatchCount": {
+                                                "type": "integer",
+                                                "description": "Total number of mismatches between the gRNA and the off-target site.",
+                                                "minimum": 1
+                                            },
+                                            "pam": {
+                                                "type": "string",
+                                                "description": "PAM sequence of the off-target site.",
+                                                "pattern": "^[ACGTUacgtu]{3,6}$"
+                                            },
+                                            "conformationalState": {
+                                                "type": "string",
+                                                "description": "Conformational state of the nuclease domain when bound to this off-target site (e.g., activated, inactive, intermediate).",
+                                                "enum": [
+                                                    "Activated",
+                                                    "Inactive",
+                                                    "Intermediate",
+                                                    "Other"
+                                                ]
+                                            }
+                                        },
+                                        "required": [
+                                            "genomicLocation",
+                                            "sequence",
+                                            "mismatchCount",
+                                            "pam"
+                                        ]
+                                    }
+                                }
+                            },
+                            "required": [
+                                "referenceGenome",
+                                "genomicLocation",
+                                "pamSequence",
+                                "targetSequence"
+                            ]
+                        },
+                        "targetRNA": {
+                            "type": "object",
+                            "description": "Target RNA sequence for Cas13-based detection systems, if applicable.",
+                            "properties": {
+                                "genomicLocation": {
+                                    "type": "string",
+                                    "description": "Genomic location of the target RNA (e.g., virus, gene name)."
+                                },
+                                "targetSequence": {
+                                    "type": "string",
+                                    "description": "The nucleotide target sequence for the crRNA (5' to 3' direction).",
+                                    "minLength": 18,
+                                    "maxLength": 30,
+                                    "pattern": "^[ACGUacgu]+$"
+                                },
+                                "preSpacerFlankingSite": {
+                                    "type": "string",
+                                    "description": "Pre-spacer flanking site (PFS) sequence required for Cas13 binding (e.g., 'A' for LwaCas13a).",
+                                    "pattern": "^[ACGUacgu]{1,2}$"
+                                }
+                            },
+                            "required": [
+                                "genomicLocation",
+                                "targetSequence"
+                            ]
+                        },
+                        "donorTemplate": {
+                            "type": "object",
+                            "description": "Donor template for Homology-Directed Repair (HDR) or base/prime editing, if applicable.",
+                            "properties": {
+                                "sequence": {
+                                    "type": "string",
+                                    "description": "Sequence of the donor template (ssDNA, dsDNA, or plasmid)."
+                                },
+                                "type": {
+                                    "type": "string",
+                                    "description": "Type of donor template (e.g., ssDNA, dsDNA, plasmid).",
+                                    "enum": [
+                                        "ssDNA",
+                                        "dsDNA",
+                                        "plasmid",
+                                        "Other"
+                                    ]
+                                },
+                                "typeDetails": {
+                                    "type": "string",
+                                    "description": "Additional details about the donor template type if 'Other' is selected."
+                                },
+                                "homologyArmLength": {
+                                    "type": "integer",
+                                    "description": "Length of homology arms in base pairs (bp), if applicable.",
+                                    "minimum": 20,
+                                    "maximum": 1000
+                                },
+                                "modifications": {
+                                    "type": "array",
+                                    "description": "Chemical or structural modifications applied to the donor template to enhance HDR efficiency.",
+                                    "items": {
+                                        "type": "string",
+                                        "enum": [
+                                            "Phosphorothioate",
+                                            "2'-O-methyl",
+                                            "Locked Nucleic Acid (LNA)",
+                                            "Other"
+                                        ]
+                                    }
+                                },
+                                "modificationDetails": {
+                                    "type": "string",
+                                    "description": "Additional details about donor template modifications if 'Other' is selected."
+                                }
+                            },
+                            "required": [
+                                "sequence",
+                                "type"
+                            ]
+                        },
+                        "editingStrategy": {
+                            "type": "object",
+                            "description": "Strategy used for gene editing or detection (e.g., knockout, knock-in, base editing, prime editing, SOX gene editing).",
+                            "properties": {
+                                "type": {
+                                    "type": "string",
+                                    "description": "Type of editing or detection strategy employed.",
+                                    "enum": [
+                                        "Knockout",
+                                        "Knock-in",
+                                        "Base Editing",
+                                        "Prime Editing",
+                                        "Transcriptional Regulation",
+                                        "Epigenetic Modulation",
+                                        "SOX Gene Editing",
+                                        "Stem Cell Differentiation",
+                                        "Cancer Modeling",
+                                        "Regenerative Medicine",
+                                        "Other"
+                                    ]
+                                },
+                                "typeDetails": {
+                                    "type": "string",
+                                    "description": "Additional details about the editing or detection strategy if 'Other' is selected."
+                                },
+                                "soxGeneTarget": {
+                                    "type": "string",
+                                    "description": "Specific SOX gene targeted for editing (e.g., SOX2, SOX9, SOX17).",
+                                    "enum": [
+                                        "SOX1",
+                                        "SOX2",
+                                        "SOX3",
+                                        "SOX4",
+                                        "SOX5",
+                                        "SOX6",
+                                        "SOX7",
+                                        "SOX8",
+                                        "SOX9",
+                                        "SOX10",
+                                        "SOX11",
+                                        "SOX17",
+                                        "Other"
+                                    ]
+                                },
+                                "soxGeneTargetDetails": {
+                                    "type": "string",
+                                    "description": "Additional details about the SOX gene target if 'Other' is selected."
+                                },
+                                "baseEditorType": {
+                                    "type": "string",
+                                    "description": "Type of base editor used (e.g., CBE, ABE, CGBE), if applicable.",
+                                    "enum": [
+                                        "Cytosine Base Editor (CBE)",
+                                        "Adenine Base Editor (ABE)",
+                                        "Glycosylase Base Editor (CGBE)",
+                                        "Dual Base Editor (AGBE)",
+                                        "Other"
+                                    ]
+                                },
+                                "baseEditorDetails": {
+                                    "type": "string",
+                                    "description": "Additional details about the base editor if 'Other' is selected."
+                                },
+                                "primeEditorType": {
+                                    "type": "string",
+                                    "description": "Type of prime editor used (e.g., PE2, PE3, PEmax), if applicable.",
+                                    "enum": [
+                                        "PE2",
+                                        "PE3",
+                                        "PEmax",
+                                        "Other"
+                                    ]
+                                },
+                                "primeEditorDetails": {
+                                    "type": "string",
+                                    "description": "Additional details about the prime editor if 'Other' is selected."
+                                },
+                                "pegRNA": {
+                                    "type": "object",
+                                    "description": "Prime editing guide RNA (pegRNA) details, if applicable.",
+                                    "properties": {
+                                        "sequence": {
+                                            "type": "string",
+                                            "description": "Sequence of the pegRNA, including spacer, reverse transcriptase template, and primer binding site."
+                                        },
+                                        "spacerLength": {
+                                            "type": "integer",
+                                            "description": "Length of the spacer sequence in the pegRNA.",
+                                            "minimum": 10,
+                                            "maximum": 30
+                                        },
+                                        "templateLength": {
+                                            "type": "integer",
+                                            "description": "Length of the reverse transcriptase template in the pegRNA.",
+                                            "minimum": 10,
+                                            "maximum": 50
+                                        },
+                                        "pbsLength": {
+                                            "type": "integer",
+                                            "description": "Length of the primer binding site (PBS) in the pegRNA.",
+                                            "minimum": 8,
+                                            "maximum": 15
+                                        }
+                                    },
+                                    "required": [
+                                        "sequence"
+                                    ]
+                                },
+                                "detectionTarget": {
+                                    "type": "string",
+                                    "description": "Specific target for detection strategies (e.g., antibiotic resistance gene, antibiotic molecule).",
+                                    "enum": [
+                                        "Antibiotic Resistance Gene",
+                                        "Antibiotic Molecule",
+                                        "Other"
+                                    ]
+                                },
+                                "detectionTargetDetails": {
+                                    "type": "string",
+                                    "description": "Additional details about the detection target if 'Other' is selected."
+                                },
+                                "signalAmplification": {
+                                    "type": "string",
+                                    "description": "Method used for signal amplification in detection strategies (e.g., RPA, LAMP, HCR).",
+                                    "enum": [
+                                        "Recombinase Polymerase Amplification (RPA)",
+                                        "Loop-Mediated Isothermal Amplification (LAMP)",
+                                        "Hybridization Chain Reaction (HCR)",
+                                        "Strand Displacement Amplification (SDA)",
+                                        "Other"
+                                    ]
+                                },
+                                "signalAmplificationDetails": {
+                                    "type": "string",
+                                    "description": "Additional details about the signal amplification method if 'Other' is selected."
+                                },
+                                "biosensingMethod": {
+                                    "type": "string",
+                                    "description": "Biosensing method used for detection (e.g., fluorescence, colorimetric, electrochemical).",
+                                    "enum": [
+                                        "Fluorescence",
+                                        "Colorimetric",
+                                        "Electrochemical",
+                                        "Surface-Enhanced Raman Scattering (SERS)",
+                                        "Metal Isotope Labeling",
+                                        "Other"
+                                    ]
+                                },
+                                "biosensingMethodDetails": {
+                                    "type": "string",
+                                    "description": "Additional details about the biosensing method if 'Other' is selected."
+                                }
+                            },
+                            "required": [
+                                "type"
+                            ]
+                        }
+                    },
+                    "required": [
+                        "guideRNA",
+                        "nucleaseSource",
+                        "targetDNA"
+                    ]
+                },
+                "deliveryExecution": {
+                    "type": "object",
+                    "description": "Groups the physical execution, molecular format, timing, and biological host for the CRISPR-Cas9 process.",
+                    "properties": {
+                        "deliveryMethod": {
+                            "type": "object",
+                            "description": "Integrated unit combining delivery method, specific instrument, and detailed protocol steps.",
+                            "properties": {
+                                "methodName": {
+                                    "type": "string",
+                                    "description": "Delivery method (e.g., Electroporation, Lipofection, Viral Transduction) or assay type (e.g., in vitro detection).",
+                                    "enum": [
+                                        "Electroporation",
+                                        "Lipofection",
+                                        "Viral Transduction",
+                                        "Peptide-Mediated Delivery",
+                                        "Nanoparticles",
+                                        "In Vitro Detection",
+                                        "Other"
+                                    ]
+                                },
+                                "methodDetails": {
+                                    "type": "string",
+                                    "description": "Additional details about the delivery method or assay type if 'Other' is selected."
+                                },
+                                "instrument": {
+                                    "type": "object",
+                                    "description": "Specific hardware used for delivery or detection.",
+                                    "properties": {
+                                        "manufacturer": {
+                                            "type": "string",
+                                            "description": "Manufacturer of the delivery or detection system (e.g., Thermo Fisher, Lonza, Bio-Rad)."
+                                        },
+                                        "model": {
+                                            "type": "string",
+                                            "description": "Model of the delivery or detection system (e.g., Neon, Nucleofector, Lipofectamine)."
+                                        }
+                                    },
+                                    "required": [
+                                        "manufacturer",
+                                        "model"
+                                    ]
+                                },
+                                "protocol": {
+                                    "type": "object",
+                                    "description": "Detailed steps and parameters for the selected delivery method or detection assay.",
+                                    "oneOf": [
+                                        {
+                                            "type": "object",
+                                            "description": "Electroporation (Nucleofection) Protocol.",
+                                            "properties": {
+                                                "protocolType": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "Electroporation"
+                                                    ]
+                                                },
+                                                "steps": {
+                                                    "type": "array",
+                                                    "description": "Steps involved in the Electroporation protocol.",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "stepNumber": {
+                                                                "type": "integer",
+                                                                "description": "Step number in the protocol."
+                                                            },
+                                                            "stepName": {
+                                                                "type": "string",
+                                                                "description": "Name of the step (e.g., 'Cell Preparation', 'RNP Assembly', 'Pulse Application', 'Recovery')."
+                                                            },
+                                                            "description": {
+                                                                "type": "string",
+                                                                "description": "Description of the step."
+                                                            },
+                                                            "parameters": {
+                                                                "type": "object",
+                                                                "description": "Parameters specific to this step (e.g., voltage, pulse duration, cell density).",
+                                                                "properties": {
+                                                                    "voltage": {
+                                                                        "type": "number",
+                                                                        "description": "Voltage applied during electroporation (in volts).",
+                                                                        "minimum": 0
+                                                                    },
+                                                                    "pulseDuration": {
+                                                                        "type": "number",
+                                                                        "description": "Duration of the pulse (in milliseconds).",
+                                                                        "minimum": 0
+                                                                    },
+                                                                    "numberOfPulses": {
+                                                                        "type": "integer",
+                                                                        "description": "Number of pulses applied.",
+                                                                        "minimum": 1
+                                                                    },
+                                                                    "cellDensity": {
+                                                                        "type": "number",
+                                                                        "description": "Density of cells per reaction (e.g., cells/mL).",
+                                                                        "minimum": 0
+                                                                    },
+                                                                    "buffer": {
+                                                                        "type": "string",
+                                                                        "description": "Type of electroporation buffer used (e.g., P3, SE, SF)."
+                                                                    }
+                                                                }
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "stepNumber",
+                                                            "stepName",
+                                                            "description"
+                                                        ]
+                                                    }
+                                                }
+                                            },
+                                            "required": [
+                                                "protocolType",
+                                                "steps"
+                                            ]
+                                        },
+                                        {
+                                            "type": "object",
+                                            "description": "Lipofection Protocol.",
+                                            "properties": {
+                                                "protocolType": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "Lipofection"
+                                                    ]
+                                                },
+                                                "steps": {
+                                                    "type": "array",
+                                                    "description": "Steps involved in the Lipofection protocol.",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "stepNumber": {
+                                                                "type": "integer",
+                                                                "description": "Step number in the protocol."
+                                                            },
+                                                            "stepName": {
+                                                                "type": "string",
+                                                                "description": "Name of the step (e.g., 'Seeding', 'Complex Formation', 'Transfection', 'Analysis')."
+                                                            },
+                                                            "description": {
+                                                                "type": "string",
+                                                                "description": "Description of the step."
+                                                            },
+                                                            "parameters": {
+                                                                "type": "object",
+                                                                "description": "Parameters specific to this step (e.g., reagent volume, incubation time).",
+                                                                "properties": {
+                                                                    "reagent": {
+                                                                        "type": "string",
+                                                                        "description": "Lipofection reagent used (e.g., Lipofectamine CRISPRMAX, RNAiMAX)."
+                                                                    },
+                                                                    "volume": {
+                                                                        "type": "number",
+                                                                        "description": "Volume of reagent used (in microliters).",
+                                                                        "minimum": 0
+                                                                    },
+                                                                    "incubationTime": {
+                                                                        "type": "number",
+                                                                        "description": "Incubation time for complex formation (in minutes).",
+                                                                        "minimum": 0
+                                                                    },
+                                                                    "cellConfluency": {
+                                                                        "type": "number",
+                                                                        "description": "Percentage confluency of cells at the time of transfection.",
+                                                                        "minimum": 0,
+                                                                        "maximum": 100
+                                                                    }
+                                                                }
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "stepNumber",
+                                                            "stepName",
+                                                            "description"
+                                                        ]
+                                                    }
+                                                }
+                                            },
+                                            "required": [
+                                                "protocolType",
+                                                "steps"
+                                            ]
+                                        },
+                                        {
+                                            "type": "object",
+                                            "description": "Viral Transduction Protocol.",
+                                            "properties": {
+                                                "protocolType": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "Viral Transduction"
+                                                    ]
+                                                },
+                                                "steps": {
+                                                    "type": "array",
+                                                    "description": "Steps involved in the Viral Transduction protocol.",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "stepNumber": {
+                                                                "type": "integer",
+                                                                "description": "Step number in the protocol."
+                                                            },
+                                                            "stepName": {
+                                                                "type": "string",
+                                                                "description": "Name of the step (e.g., 'Vector Selection', 'Viral Production', 'Concentration and Titration', 'Transduction', 'Selection')."
+                                                            },
+                                                            "description": {
+                                                                "type": "string",
+                                                                "description": "Description of the step."
+                                                            },
+                                                            "parameters": {
+                                                                "type": "object",
+                                                                "description": "Parameters specific to this step (e.g., viral vector, MOI, incubation time).",
+                                                                "properties": {
+                                                                    "vector": {
+                                                                        "type": "string",
+                                                                        "description": "Viral vector used (e.g., AAV, Lentivirus, Adenovirus)."
+                                                                    },
+                                                                    "moi": {
+                                                                        "type": "number",
+                                                                        "description": "Multiplicity of Infection (MOI).",
+                                                                        "minimum": 0
+                                                                    },
+                                                                    "incubationTime": {
+                                                                        "type": "number",
+                                                                        "description": "Incubation time for transduction (in hours).",
+                                                                        "minimum": 0
+                                                                    },
+                                                                    "enhancer": {
+                                                                        "type": "string",
+                                                                        "description": "Enhancer used to increase transduction efficiency (e.g., polybrene, retronectin)."
+                                                                    }
+                                                                }
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "stepNumber",
+                                                            "stepName",
+                                                            "description"
+                                                        ]
+                                                    }
+                                                }
+                                            },
+                                            "required": [
+                                                "protocolType",
+                                                "steps"
+                                            ]
+                                        },
+                                        {
+                                            "type": "object",
+                                            "description": "Peptide-Mediated Delivery Protocol.",
+                                            "properties": {
+                                                "protocolType": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "Peptide-Mediated Delivery"
+                                                    ]
+                                                },
+                                                "steps": {
+                                                    "type": "array",
+                                                    "description": "Steps involved in the Peptide-Mediated Delivery protocol.",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "stepNumber": {
+                                                                "type": "integer",
+                                                                "description": "Step number in the protocol."
+                                                            },
+                                                            "stepName": {
+                                                                "type": "string",
+                                                                "description": "Name of the step (e.g., 'Complex Formation', 'Incubation', 'Wash')."
+                                                            },
+                                                            "description": {
+                                                                "type": "string",
+                                                                "description": "Description of the step."
+                                                            },
+                                                            "parameters": {
+                                                                "type": "object",
+                                                                "description": "Parameters specific to this step (e.g., peptide type, concentration, incubation time).",
+                                                                "properties": {
+                                                                    "peptideType": {
+                                                                        "type": "string",
+                                                                        "description": "Type of peptide used (e.g., TAT, HA2, Nuclear Localization Signal)."
+                                                                    },
+                                                                    "concentration": {
+                                                                        "type": "number",
+                                                                        "description": "Concentration of peptide used (in micromolar).",
+                                                                        "minimum": 0
+                                                                    },
+                                                                    "incubationTime": {
+                                                                        "type": "number",
+                                                                        "description": "Incubation time (in minutes).",
+                                                                        "minimum": 0
+                                                                    }
+                                                                }
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "stepNumber",
+                                                            "stepName",
+                                                            "description"
+                                                        ]
+                                                    }
+                                                }
+                                            },
+                                            "required": [
+                                                "protocolType",
+                                                "steps"
+                                            ]
+                                        },
+                                        {
+                                            "type": "object",
+                                            "description": "Nanoparticle Delivery Protocol.",
+                                            "properties": {
+                                                "protocolType": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "Nanoparticles"
+                                                    ]
+                                                },
+                                                "steps": {
+                                                    "type": "array",
+                                                    "description": "Steps involved in the Nanoparticle Delivery protocol.",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "stepNumber": {
+                                                                "type": "integer",
+                                                                "description": "Step number in the protocol."
+                                                            },
+                                                            "stepName": {
+                                                                "type": "string",
+                                                                "description": "Name of the step (e.g., 'Formulation', 'Incubation', 'Wash')."
+                                                            },
+                                                            "description": {
+                                                                "type": "string",
+                                                                "description": "Description of the step."
+                                                            },
+                                                            "parameters": {
+                                                                "type": "object",
+                                                                "description": "Parameters specific to this step (e.g., nanoparticle type, concentration, incubation time).",
+                                                                "properties": {
+                                                                    "nanoparticleType": {
+                                                                        "type": "string",
+                                                                        "description": "Type of nanoparticle used (e.g., Lipid Nanoparticle, Gold Nanoparticle)."
+                                                                    },
+                                                                    "concentration": {
+                                                                        "type": "number",
+                                                                        "description": "Concentration of nanoparticles used (in nanomolar).",
+                                                                        "minimum": 0
+                                                                    },
+                                                                    "incubationTime": {
+                                                                        "type": "number",
+                                                                        "description": "Incubation time (in minutes).",
+                                                                        "minimum": 0
+                                                                    },
+                                                                    "targetingLigand": {
+                                                                        "type": "string",
+                                                                        "description": "Targeting ligand used to enhance specificity (e.g., antibody, peptide)."
+                                                                    }
+                                                                }
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "stepNumber",
+                                                            "stepName",
+                                                            "description"
+                                                        ]
+                                                    }
+                                                }
+                                            },
+                                            "required": [
+                                                "protocolType",
+                                                "steps"
+                                            ]
+                                        },
+                                        {
+                                            "type": "object",
+                                            "description": "In Vitro Detection Protocol.",
+                                            "properties": {
+                                                "protocolType": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "In Vitro Detection"
+                                                    ]
+                                                },
+                                                "steps": {
+                                                    "type": "array",
+                                                    "description": "Steps involved in the in vitro detection protocol.",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "stepNumber": {
+                                                                "type": "integer",
+                                                                "description": "Step number in the protocol."
+                                                            },
+                                                            "stepName": {
+                                                                "type": "string",
+                                                                "description": "Name of the step (e.g., 'Sample Preparation', 'RNP Assembly', 'Incubation', 'Signal Detection')."
+                                                            },
+                                                            "description": {
+                                                                "type": "string",
+                                                                "description": "Description of the step."
+                                                            },
+                                                            "parameters": {
+                                                                "type": "object",
+                                                                "description": "Parameters specific to this step (e.g., incubation time, temperature, buffer composition).",
+                                                                "properties": {
+                                                                    "incubationTime": {
+                                                                        "type": "number",
+                                                                        "description": "Incubation time for the reaction (in minutes).",
+                                                                        "minimum": 0
+                                                                    },
+                                                                    "temperature": {
+                                                                        "type": "number",
+                                                                        "description": "Temperature at which the reaction is conducted (in \u00b0C).",
+                                                                        "default": 37
+                                                                    },
+                                                                    "buffer": {
+                                                                        "type": "string",
+                                                                        "description": "Type of buffer used (e.g., HEPES, Tris-HCl)."
+                                                                    },
+                                                                    "reporterProbe": {
+                                                                        "type": "string",
+                                                                        "description": "Type of reporter probe used for signal detection (e.g., fluorescent, colorimetric)."
+                                                                    }
+                                                                }
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "stepNumber",
+                                                            "stepName",
+                                                            "description"
+                                                        ]
+                                                    }
+                                                }
+                                            },
+                                            "required": [
+                                                "protocolType",
+                                                "steps"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
+                            "required": [
+                                "methodName",
+                                "instrument"
+                            ]
+                        },
+                        "deliveryFormat": {
+                            "type": "string",
+                            "description": "Format of the nuclease and gRNA delivery (e.g., plasmid DNA, mRNA, RNP).",
+                            "enum": [
+                                "plasmid DNA",
+                                "mRNA",
+                                "Ribonucleoprotein (RNP)",
+                                "Viral Vector",
+                                "Other"
+                            ]
+                        },
+                        "molarRatios": {
+                            "type": "object",
+                            "description": "Molar ratios of CRISPR components.",
+                            "properties": {
+                                "casToGrna": {
+                                    "type": "number",
+                                    "description": "Molar ratio of Cas nuclease to gRNA/crRNA (e.g., 1:1, 1:2)."
+                                },
+                                "donorToCas": {
+                                    "type": "number",
+                                    "description": "Molar ratio of donor template to Cas nuclease (if applicable)."
+                                }
+                            },
+                            "required": [
+                                "casToGrna"
+                            ]
+                        },
+                        "incubationTimes": {
+                            "type": "object",
+                            "description": "Incubation times for various stages of the process.",
+                            "properties": {
+                                "rnPAssembly": {
+                                    "type": "number",
+                                    "description": "Incubation time for RNP assembly (in minutes).",
+                                    "minimum": 0
+                                },
+                                "postTransfection": {
+                                    "type": "number",
+                                    "description": "Time before assessing editing efficiency post-transfection (in hours).",
+                                    "minimum": 0
+                                },
+                                "recovery": {
+                                    "type": "number",
+                                    "description": "Recovery time post-delivery before further processing (in hours).",
+                                    "minimum": 0
+                                },
+                                "detectionReaction": {
+                                    "type": "number",
+                                    "description": "Incubation time for the detection reaction (in minutes).",
+                                    "minimum": 0
+                                }
+                            },
+                            "required": [
+                                "rnPAssembly",
+                                "postTransfection"
+                            ]
+                        },
+                        "cellType": {
+                            "type": "object",
+                            "description": "Type and characteristics of the cells used in the experiment, if applicable.",
+                            "properties": {
+                                "type": {
+                                    "type": "string",
+                                    "description": "Type of cells used (e.g., primary T cells, iPSCs, cell line, embryonic stem cells).",
+                                    "enum": [
+                                        "Primary T cells",
+                                        "iPSCs",
+                                        "Cell Line",
+                                        "Embryonic Stem Cells",
+                                        "Other"
+                                    ]
+                                },
+                                "typeDetails": {
+                                    "type": "string",
+                                    "description": "Additional details about the cell type if 'Other' is selected."
+                                },
+                                "source": {
+                                    "type": "string",
+                                    "description": "Source of the cells (e.g., donor, commercial cell line)."
+                                },
+                                "donorId": {
+                                    "type": "string",
+                                    "description": "Identifier for the donor, if applicable."
+                                },
+                                "cellLine": {
+                                    "type": "string",
+                                    "description": "Name of the cell line, if applicable."
+                                },
+                                "passageNumber": {
+                                    "type": "integer",
+                                    "description": "Passage number of the cells at the time of editing.",
+                                    "minimum": 0
+                                },
+                                "organism": {
+                                    "type": "string",
+                                    "description": "Organism from which the cells are derived (e.g., human, mouse, axolotl).",
+                                    "enum": [
+                                        "Human",
+                                        "Mouse",
+                                        "Axolotl",
+                                        "Zebrafish",
+                                        "Rat",
+                                        "Other"
+                                    ]
+                                },
+                                "organismDetails": {
+                                    "type": "string",
+                                    "description": "Additional details about the organism if 'Other' is selected."
+                                }
+                            },
+                            "required": [
+                                "type"
+                            ]
+                        },
+                        "cultureConditions": {
+                            "type": "object",
+                            "description": "Conditions under which the cells are cultured and expanded, if applicable.",
+                            "properties": {
+                                "medium": {
+                                    "type": "string",
+                                    "description": "Type of culture medium used (e.g., RPMI, X-VIVO 15)."
+                                },
+                                "supplements": {
+                                    "type": "array",
+                                    "description": "Supplements added to the culture medium (e.g., FBS, cytokines).",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                },
+                                "temperature": {
+                                    "type": "number",
+                                    "description": "Temperature of incubation (in \u00b0C).",
+                                    "default": 37
+                                },
+                                "co2Concentration": {
+                                    "type": "number",
+                                    "description": "CO2 concentration in the incubator (in percentage).",
+                                    "default": 5
+                                },
+                                "humidity": {
+                                    "type": "number",
+                                    "description": "Humidity level in the incubator (in percentage).",
+                                    "minimum": 0,
+                                    "maximum": 100
+                                }
+                            },
+                            "required": [
+                                "medium"
+                            ]
+                        }
+                    },
+                    "required": [
+                        "deliveryMethod",
+                        "deliveryFormat",
+                        "molarRatios",
+                        "incubationTimes",
+                        "cellType"
+                    ]
+                },
+                "experimentalSettings": {
+                    "type": "object",
+                    "description": "Experimental parameters and protocols for delivering CRISPR components into cells or for in vitro detection assays.",
+                    "properties": {
+                        "fretExperiments": {
+                            "type": "object",
+                            "description": "Details of F\u00f6rster Resonance Energy Transfer (FRET) experiments used to study nuclease conformational dynamics, if applicable.",
+                            "properties": {
+                                "experimentType": {
+                                    "type": "string",
+                                    "description": "Type of FRET experiment conducted (e.g., intramolecular FRET, single-molecule FRET).",
+                                    "enum": [
+                                        "Intramolecular FRET",
+                                        "Single-Molecule FRET",
+                                        "Other"
+                                    ]
+                                },
+                                "experimentDetails": {
+                                    "type": "string",
+                                    "description": "Additional details about the FRET experiment if 'Other' is selected."
+                                },
+                                "buffersUsed": {
+                                    "type": "array",
+                                    "description": "Buffers used in the FRET experiments (e.g., reaction buffer with heparin).",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                },
+                                "temperature": {
+                                    "type": "number",
+                                    "description": "Temperature at which FRET experiments were conducted (in \u00b0C)."
+                                },
+                                "dataAnalysis": {
+                                    "type": "object",
+                                    "description": "Methods used for FRET data analysis.",
+                                    "properties": {
+                                        "software": {
+                                            "type": "string",
+                                            "description": "Software used for FRET data analysis (e.g., FluorEssence, Prism)."
+                                        },
+                                        "methods": {
+                                            "type": "array",
+                                            "description": "Methods used for calculating FRET efficiency (e.g., (ratio)A, donor fluorescence lifetime).",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "detectionAssay": {
+                            "type": "object",
+                            "description": "Details of the detection assay used for SOX gene editing or other applications.",
+                            "properties": {
+                                "assayType": {
+                                    "type": "string",
+                                    "description": "Type of detection assay (e.g., DETECTR, SHERLOCK, HOLMES, CaT-SMelor).",
+                                    "enum": [
+                                        "DETECTR",
+                                        "SHERLOCK",
+                                        "HOLMES",
+                                        "CaT-SMelor",
+                                        "FLASH",
+                                        "Other"
+                                    ]
+                                },
+                                "assayDetails": {
+                                    "type": "string",
+                                    "description": "Additional details about the assay type if 'Other' is selected."
+                                },
+                                "amplificationMethod": {
+                                    "type": "string",
+                                    "description": "Method used for nucleic acid amplification, if applicable (e.g., RPA, LAMP, PCR).",
+                                    "enum": [
+                                        "Recombinase Polymerase Amplification (RPA)",
+                                        "Loop-Mediated Isothermal Amplification (LAMP)",
+                                        "Polymerase Chain Reaction (PCR)",
+                                        "None",
+                                        "Other"
+                                    ]
+                                },
+                                "amplificationDetails": {
+                                    "type": "string",
+                                    "description": "Additional details about the amplification method if 'Other' is selected."
+                                },
+                                "signalDetectionMethod": {
+                                    "type": "string",
+                                    "description": "Method used for signal detection (e.g., fluorescence, colorimetric, electrochemical).",
+                                    "enum": [
+                                        "Fluorescence",
+                                        "Colorimetric",
+                                        "Electrochemical",
+                                        "Surface-Enhanced Raman Scattering (SERS)",
+                                        "Metal Isotope Labeling",
+                                        "Other"
+                                    ]
+                                },
+                                "signalDetectionDetails": {
+                                    "type": "string",
+                                    "description": "Additional details about the signal detection method if 'Other' is selected."
+                                },
+                                "limitOfDetection": {
+                                    "type": "string",
+                                    "description": "Limit of detection for the assay (e.g., '10 copies/\u00b5L', '1 pM')."
+                                },
+                                "detectionTime": {
+                                    "type": "number",
+                                    "description": "Time required for detection (in minutes).",
+                                    "minimum": 0
+                                },
+                                "sampleType": {
+                                    "type": "string",
+                                    "description": "Type of sample used in the assay (e.g., clinical, environmental, food).",
+                                    "enum": [
+                                        "Clinical",
+                                        "Environmental",
+                                        "Food",
+                                        "Other"
+                                    ]
+                                },
+                                "sampleTypeDetails": {
+                                    "type": "string",
+                                    "description": "Additional details about the sample type if 'Other' is selected."
+                                }
+                            }
+                        }
+                    },
+                    "required": [
+                        "deliveryMethod",
+                        "molarRatios",
+                        "incubationTimes"
+                    ]
+                },
+                "instruments": {
+                    "type": "object",
+                    "description": "Instruments and equipment used in the CRISPR-based process, excluding delivery systems which are now part of experimentalSettings.",
+                    "properties": {
+                        "synthesiser": {
+                            "type": "object",
+                            "description": "Oligonucleotide synthesiser for creating custom gRNAs, crRNAs, and donor templates.",
+                            "properties": {
+                                "manufacturer": {
+                                    "type": "string",
+                                    "description": "Manufacturer of the synthesiser (e.g., IDT, Thermo Fisher)."
+                                },
+                                "model": {
+                                    "type": "string",
+                                    "description": "Model of the synthesiser."
+                                }
+                            },
+                            "required": [
+                                "manufacturer",
+                                "model"
+                            ]
+                        },
+                        "validationSystem": {
+                            "type": "object",
+                            "description": "Systems used for validating the results of the CRISPR editing or detection process.",
+                            "properties": {
+                                "sequencer": {
+                                    "type": "object",
+                                    "description": "DNA/RNA sequencer used for confirming edits or detection results.",
+                                    "properties": {
+                                        "manufacturer": {
+                                            "type": "string",
+                                            "description": "Manufacturer of the sequencer (e.g., Illumina, Oxford Nanopore, PacBio)."
+                                        },
+                                        "model": {
+                                            "type": "string",
+                                            "description": "Model of the sequencer."
+                                        },
+                                        "sequencingMethod": {
+                                            "type": "string",
+                                            "description": "Sequencing method used (e.g., Sanger, NGS, Long-read).",
+                                            "enum": [
+                                                "Sanger",
+                                                "Next-Generation Sequencing (NGS)",
+                                                "Long-read Sequencing"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "manufacturer",
+                                        "model",
+                                        "sequencingMethod"
+                                    ]
+                                },
+                                "flowCytometer": {
+                                    "type": "object",
+                                    "description": "Flow cytometer used for sorting or analyzing edited cells (if applicable).",
+                                    "properties": {
+                                        "manufacturer": {
+                                            "type": "string",
+                                            "description": "Manufacturer of the flow cytometer (e.g., BD Biosciences, Beckman Coulter)."
+                                        },
+                                        "model": {
+                                            "type": "string",
+                                            "description": "Model of the flow cytometer."
+                                        }
+                                    },
+                                    "required": [
+                                        "manufacturer",
+                                        "model"
+                                    ]
+                                },
+                                "microscope": {
+                                    "type": "object",
+                                    "description": "Microscope used for imaging cells or detection results (if applicable).",
+                                    "properties": {
+                                        "manufacturer": {
+                                            "type": "string",
+                                            "description": "Manufacturer of the microscope (e.g., Zeiss, Leica)."
+                                        },
+                                        "model": {
+                                            "type": "string",
+                                            "description": "Model of the microscope."
+                                        },
+                                        "type": {
+                                            "type": "string",
+                                            "description": "Type of microscope (e.g., Confocal, Fluorescence, Brightfield).",
+                                            "enum": [
+                                                "Confocal",
+                                                "Fluorescence",
+                                                "Brightfield",
+                                                "Other"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "manufacturer",
+                                        "model"
+                                    ]
+                                },
+                                "thermocycler": {
+                                    "type": "object",
+                                    "description": "Thermocycler used for PCR amplification (if applicable).",
+                                    "properties": {
+                                        "manufacturer": {
+                                            "type": "string",
+                                            "description": "Manufacturer of the thermocycler (e.g., Bio-Rad, Applied Biosystems)."
+                                        },
+                                        "model": {
+                                            "type": "string",
+                                            "description": "Model of the thermocycler."
+                                        }
+                                    },
+                                    "required": [
+                                        "manufacturer",
+                                        "model"
+                                    ]
+                                },
+                                "fluorescenceSpectrometer": {
+                                    "type": "object",
+                                    "description": "Fluorescence spectrometer used for FRET experiments or fluorescence-based detection assays.",
+                                    "properties": {
+                                        "manufacturer": {
+                                            "type": "string",
+                                            "description": "Manufacturer of the fluorescence spectrometer (e.g., HORIBA Jobin Yvon)."
+                                        },
+                                        "model": {
+                                            "type": "string",
+                                            "description": "Model of the fluorescence spectrometer."
+                                        },
+                                        "settings": {
+                                            "type": "object",
+                                            "description": "Settings used during FRET experiments or detection assays.",
+                                            "properties": {
+                                                "excitationWavelength": {
+                                                    "type": "number",
+                                                    "description": "Excitation wavelength used (in nm)."
+                                                },
+                                                "emissionRange": {
+                                                    "type": "string",
+                                                    "description": "Emission range collected (e.g., 550-800 nm)."
+                                                },
+                                                "slitWidth": {
+                                                    "type": "number",
+                                                    "description": "Slit width used (in nm)."
+                                                },
+                                                "integrationTime": {
+                                                    "type": "number",
+                                                    "description": "Integration time for fluorescence measurements (in seconds)."
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "manufacturer",
+                                        "model"
+                                    ]
+                                },
+                                "massSpectrometer": {
+                                    "type": "object",
+                                    "description": "Mass spectrometer used for metal isotope labeling detection (e.g., ICPMS).",
+                                    "properties": {
+                                        "manufacturer": {
+                                            "type": "string",
+                                            "description": "Manufacturer of the mass spectrometer (e.g., Thermo Fisher, Agilent)."
+                                        },
+                                        "model": {
+                                            "type": "string",
+                                            "description": "Model of the mass spectrometer."
+                                        },
+                                        "type": {
+                                            "type": "string",
+                                            "description": "Type of mass spectrometer (e.g., ICPMS, MALDI-TOF).",
+                                            "enum": [
+                                                "ICPMS",
+                                                "MALDI-TOF",
+                                                "Other"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "manufacturer",
+                                        "model"
+                                    ]
+                                },
+                                "electrochemicalWorkstation": {
+                                    "type": "object",
+                                    "description": "Electrochemical workstation used for electrochemical detection assays.",
+                                    "properties": {
+                                        "manufacturer": {
+                                            "type": "string",
+                                            "description": "Manufacturer of the electrochemical workstation (e.g., CH Instruments, Metrohm)."
+                                        },
+                                        "model": {
+                                            "type": "string",
+                                            "description": "Model of the electrochemical workstation."
+                                        }
+                                    },
+                                    "required": [
+                                        "manufacturer",
+                                        "model"
+                                    ]
+                                }
+                            },
+                            "required": [
+                                "sequencer"
+                            ]
+                        }
+                    },
+                    "required": [
+                        "synthesiser",
+                        "validationSystem"
+                    ]
+                },
+                "outputs": {
+                    "type": "object",
+                    "description": "Results and metrics from the CRISPR-based editing or detection process.",
+                    "properties": {
+                        "editingEfficiency": {
+                            "type": "number",
+                            "description": "Percentage of cells successfully modified (0-100%), if applicable.",
+                            "minimum": 0,
+                            "maximum": 100
+                        },
+                        "indelProfile": {
+                            "type": "object",
+                            "description": "Breakdown of insertions and deletions (indels) generated, if applicable.",
+                            "properties": {
+                                "insertions": {
+                                    "type": "number",
+                                    "description": "Percentage of insertions in the indel profile."
+                                },
+                                "deletions": {
+                                    "type": "number",
+                                    "description": "Percentage of deletions in the indel profile."
+                                },
+                                "sizeDistribution": {
+                                    "type": "object",
+                                    "description": "Distribution of indel sizes (e.g., 1 bp, 2 bp, etc.).",
+                                    "additionalProperties": {
+                                        "type": "number",
+                                        "description": "Percentage of indels of a specific size."
+                                    }
+                                },
+                                "details": {
+                                    "type": "string",
+                                    "description": "Additional details about the indel profile."
+                                }
+                            },
+                            "required": [
+                                "insertions",
+                                "deletions"
+                            ]
+                        },
+                        "onOffTargetRatio": {
+                            "type": "object",
+                            "description": "Ratio and analysis of on-target to off-target edits, if applicable.",
+                            "properties": {
+                                "scoreType": {
+                                    "type": "string",
+                                    "description": "Type of score used to quantify on-target/off-target activity (e.g., E-score, S-score, CFD score).",
+                                    "enum": [
+                                        "E-score",
+                                        "S-score",
+                                        "CFD score",
+                                        "Other"
+                                    ]
+                                },
+                                "scoreValue": {
+                                    "type": "number",
+                                    "description": "Value of the on-target/off-target score."
+                                },
+                                "scoreDetails": {
+                                    "type": "string",
+                                    "description": "Additional details about the score if 'Other' is selected."
+                                },
+                                "offTargetSites": {
+                                    "type": "array",
+                                    "description": "List of identified off-target sites with their locations and editing frequencies.",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "genomicLocation": {
+                                                "type": "string",
+                                                "description": "Genomic location of the off-target site (e.g., 'chrX:start-end')."
+                                            },
+                                            "sequence": {
+                                                "type": "string",
+                                                "description": "Sequence of the off-target site."
+                                            },
+                                            "mismatches": {
+                                                "type": "integer",
+                                                "description": "Number of mismatches between the gRNA and the off-target site."
+                                            },
+                                            "editingFrequency": {
+                                                "type": "number",
+                                                "description": "Frequency of editing at the off-target site (0-100%).",
+                                                "minimum": 0,
+                                                "maximum": 100
+                                            },
+                                            "hnhConformationalState": {
+                                                "type": "string",
+                                                "description": "Conformational state of the HNH domain when bound to this off-target site (e.g., activated, inactive, intermediate).",
+                                                "enum": [
+                                                    "Activated",
+                                                    "Inactive",
+                                                    "Intermediate",
+                                                    "Other"
+                                                ]
+                                            }
+                                        },
+                                        "required": [
+                                            "genomicLocation",
+                                            "sequence",
+                                            "mismatches",
+                                            "editingFrequency"
+                                        ]
+                                    }
+                                }
+                            },
+                            "required": [
+                                "scoreType",
+                                "scoreValue"
+                            ]
+                        },
+                        "genomicStability": {
+                            "type": "object",
+                            "description": "Reports on large-scale structural variations resulting from the edit (e.g., translocations, large deletions), if applicable.",
+                            "properties": {
+                                "translocations": {
+                                    "type": "boolean",
+                                    "description": "Whether translocations were detected."
+                                },
+                                "largeDeletions": {
+                                    "type": "boolean",
+                                    "description": "Whether large deletions were detected."
+                                },
+                                "chromosomeLoss": {
+                                    "type": "boolean",
+                                    "description": "Whether chromosome loss was detected."
+                                },
+                                "details": {
+                                    "type": "string",
+                                    "description": "Additional details about genomic stability, including methods used for detection (e.g., karyotyping, PEM-seq)."
+                                }
+                            }
+                        },
+                        "biologicalFitnessReport": {
+                            "type": "object",
+                            "description": "A unified unit reporting on the quality, health, and functionality of the living product post-edit, if applicable.",
+                            "properties": {
+                                "cellViability": {
+                                    "type": "number",
+                                    "description": "Percentage of viable cells post-editing (0-100%).",
+                                    "minimum": 0,
+                                    "maximum": 100
+                                },
+                                "cellProliferation": {
+                                    "type": "number",
+                                    "description": "Fold change in cell proliferation post-editing relative to control.",
+                                    "minimum": 0
+                                },
+                                "functionalAssays": {
+                                    "type": "object",
+                                    "description": "Results of functional assays to evaluate the edited cells (e.g., cytokine production, cytotoxicity).",
+                                    "properties": {
+                                        "cytokineProduction": {
+                                            "type": "object",
+                                            "description": "Levels of cytokines produced by edited cells (e.g., IFN-\u03b3, IL-2).",
+                                            "additionalProperties": {
+                                                "type": "number",
+                                                "description": "Concentration of the cytokine (in pg/mL or ng/mL)."
+                                            }
+                                        },
+                                        "cytotoxicity": {
+                                            "type": "number",
+                                            "description": "Percentage of target cells killed by edited CAR-T cells (0-100%).",
+                                            "minimum": 0,
+                                            "maximum": 100
+                                        },
+                                        "activationMarkers": {
+                                            "type": "object",
+                                            "description": "Expression levels of activation markers (e.g., CD69, CD25).",
+                                            "additionalProperties": {
+                                                "type": "number",
+                                                "description": "Percentage of cells expressing the marker."
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "required": [
+                                "cellViability"
+                            ]
+                        },
+                        "medicalObjective": {
+                            "type": "object",
+                            "description": "Combines the targeted disease and the intended therapeutic strategy, if applicable.",
+                            "properties": {
+                                "targetDisease": {
+                                    "type": "string",
+                                    "description": "Disease targeted by the edited cells or detection assay (e.g., cancer, genetic disorder, bacterial infection, SOXopathies)."
+                                },
+                                "therapeuticPotential": {
+                                    "type": "string",
+                                    "description": "Potential therapeutic applications of the edited cells or detection assay (e.g., CAR-T therapy, gene correction, regenerative medicine)."
+                                },
+                                "safetyConcerns": {
+                                    "type": "string",
+                                    "description": "Potential safety concerns associated with the edited cells or detection assay (e.g., off-target effects, immunogenicity)."
+                                }
+                            },
+                            "required": [
+                                "targetDisease",
+                                "therapeuticPotential"
+                            ]
+                        },
+                        "conformationalDynamicsResults": {
+                            "type": "object",
+                            "description": "Results from FRET experiments and other assays studying nuclease conformational dynamics, if applicable.",
+                            "properties": {
+                                "hnhActivationThreshold": {
+                                    "type": "number",
+                                    "description": "Threshold (ratio)A value or other metric indicating HNH domain activation."
+                                },
+                                "offTargetCleavageCorrelation": {
+                                    "type": "string",
+                                    "description": "Correlation between HNH conformational state and off-target cleavage activity."
+                                },
+                                "allostericControlEvidence": {
+                                    "type": "boolean",
+                                    "description": "Whether evidence of allosteric control between HNH and RuvC domains was observed."
+                                }
+                            }
+                        },
+                        "detectionResults": {
+                            "type": "object",
+                            "description": "Results from CRISPR-based detection assays for SOX gene editing or other applications.",
+                            "properties": {
+                                "targetDetected": {
+                                    "type": "boolean",
+                                    "description": "Whether the target (e.g., SOX gene mutation, antibiotic resistance gene) was detected."
+                                },
+                                "detectionSignal": {
+                                    "type": "number",
+                                    "description": "Quantitative signal from the detection assay (e.g., fluorescence intensity, colorimetric absorbance)."
+                                },
+                                "concentration": {
+                                    "type": "string",
+                                    "description": "Concentration of the target detected (e.g., '10 copies/\u00b5L', '1 nM')."
+                                },
+                                "sampleAnalysis": {
+                                    "type": "array",
+                                    "description": "Analysis of multiple samples, if applicable.",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "sampleId": {
+                                                "type": "string",
+                                                "description": "Identifier for the sample."
+                                            },
+                                            "targetDetected": {
+                                                "type": "boolean",
+                                                "description": "Whether the target was detected in this sample."
+                                            },
+                                            "detectionSignal": {
+                                                "type": "number",
+                                                "description": "Quantitative signal from the detection assay for this sample."
+                                            },
+                                            "concentration": {
+                                                "type": "string",
+                                                "description": "Concentration of the target detected in this sample."
+                                            }
+                                        },
+                                        "required": [
+                                            "sampleId",
+                                            "targetDetected"
+                                        ]
+                                    }
+                                }
+                            },
+                            "required": [
+                                "targetDetected"
+                            ]
+                        }
+                    },
+                    "required": [
+                        "editingEfficiency",
+                        "indelProfile",
+                        "onOffTargetRatio"
+                    ]
+                },
+                "safetyAndSecurityDashboard": {
+                    "type": "object",
+                    "description": "Groups all risk-related data, uniting bio-physical variations with analytical off-target assessments.",
+                    "properties": {
+                        "genomicStability": {
+                            "type": "object",
+                            "description": "Reports on large-scale structural variations resulting from the edit (e.g., translocations, large deletions).",
+                            "properties": {
+                                "translocations": {
+                                    "type": "boolean",
+                                    "description": "Whether translocations were detected."
+                                },
+                                "largeDeletions": {
+                                    "type": "boolean",
+                                    "description": "Whether large deletions were detected."
+                                },
+                                "chromosomeLoss": {
+                                    "type": "boolean",
+                                    "description": "Whether chromosome loss was detected."
+                                },
+                                "details": {
+                                    "type": "string",
+                                    "description": "Additional details about genomic stability, including methods used for detection (e.g., karyotyping, PEM-seq)."
+                                }
+                            }
+                        },
+                        "offTargetAssessment": {
+                            "type": "object",
+                            "description": "Methods and results of off-target assessment.",
+                            "properties": {
+                                "method": {
+                                    "type": "string",
+                                    "description": "Method used for off-target assessment (e.g., GUIDE-seq, CIRCLE-seq, Digenome-seq).",
+                                    "enum": [
+                                        "GUIDE-seq",
+                                        "CIRCLE-seq",
+                                        "Digenome-seq",
+                                        "Other"
+                                    ]
+                                },
+                                "methodDetails": {
+                                    "type": "string",
+                                    "description": "Additional details about the off-target assessment method if 'Other' is selected."
+                                },
+                                "results": {
+                                    "type": "string",
+                                    "description": "Summary of off-target assessment results."
+                                },
+                                "hnhConformationalAnalysis": {
+                                    "type": "string",
+                                    "description": "Analysis of HNH conformational states at off-target sites."
+                                }
+                            },
+                            "required": [
+                                "method"
+                            ]
+                        },
+                        "safetyAndEthics": {
+                            "type": "object",
+                            "description": "Safety and ethical considerations related to the CRISPR-based process.",
+                            "properties": {
+                                "immunogenicity": {
+                                    "type": "object",
+                                    "description": "Assessment of potential immunogenicity of the edited cells or detection assay.",
+                                    "properties": {
+                                        "assessed": {
+                                            "type": "boolean",
+                                            "description": "Whether immunogenicity was assessed."
+                                        },
+                                        "method": {
+                                            "type": "string",
+                                            "description": "Method used for immunogenicity assessment (e.g., HLA typing, T-cell response assay).",
+                                            "enum": [
+                                                "HLA Typing",
+                                                "T-cell Response Assay",
+                                                "Other"
+                                            ]
+                                        },
+                                        "methodDetails": {
+                                            "type": "string",
+                                            "description": "Additional details about the immunogenicity assessment method if 'Other' is selected."
+                                        },
+                                        "results": {
+                                            "type": "string",
+                                            "description": "Summary of immunogenicity assessment results."
+                                        }
+                                    }
+                                },
+                                "ethicalConsiderations": {
+                                    "type": "object",
+                                    "description": "Ethical considerations and approvals related to the CRISPR-based process.",
+                                    "properties": {
+                                        "institutionalReviewBoard": {
+                                            "type": "boolean",
+                                            "description": "Whether the study was approved by an Institutional Review Board (IRB) or Ethics Committee."
+                                        },
+                                        "approvalNumber": {
+                                            "type": "string",
+                                            "description": "Approval number or identifier from the IRB or Ethics Committee."
+                                        },
+                                        "informedConsent": {
+                                            "type": "boolean",
+                                            "description": "Whether informed consent was obtained from donors or participants."
+                                        },
+                                        "dataPrivacy": {
+                                            "type": "boolean",
+                                            "description": "Whether data privacy and confidentiality measures were implemented."
+                                        }
+                                    },
+                                    "required": [
+                                        "institutionalReviewBoard"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "required": [
+                        "offTargetAssessment"
+                    ]
+                },
+                "notes": {
+                    "type": "string",
+                    "description": "Additional notes or observations about the CRISPR-based process."
+                }
+            },
+            "required": [
+                "inputs",
+                "deliveryExecution",
+                "experimentalSettings",
+                "instruments",
+                "outputs"
+            ]
+        }
+    },
+    "required": [
+        "crisprCas9Process"
+    ]
+}

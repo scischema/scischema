@@ -1,0 +1,394 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Bulk RNA-seq Library Preparation and Sequencing Process",
+  "description": "Gold-standard schema representing the complete workflow for Bulk RNA-seq library preparation and sequencing, incorporating best practices from iterative expert evaluation across five rounds of Schema Miner refinement.",
+  "type": "object",
+  "definitions": {
+    "kit_details": {
+      "type": "object",
+      "description": "Reusable kit identification block for extraction, enrichment, or library preparation steps.",
+      "required": ["kit_name", "manufacturer"],
+      "properties": {
+        "kit_name": { "type": "string", "description": "Commercial kit name (e.g., Qiagen RNeasy Plus)" },
+        "manufacturer": { "type": "string", "description": "Kit manufacturer (e.g., Qiagen, NEB, Illumina)" },
+        "catalog_number": { "type": "string" },
+        "kit_version": { "type": "string", "description": "Kit batch or version number" }
+      }
+    }
+  },
+  "required": [
+    "sample", "rna_extraction", "rna_input", "quality_control",
+    "library_preparation", "sequencing", "primary_data_processing",
+    "experimental_design", "metadata"
+  ],
+  "properties": {
+    "sample": {
+      "type": "object",
+      "description": "Biological sample identity and source information.",
+      "required": ["sample_id", "organism", "tissue_type", "source_material"],
+      "properties": {
+        "sample_id": { "type": "string", "examples": ["Sample_001", "GSM123456"] },
+        "organism": { "type": "string", "examples": ["Homo sapiens", "Mus musculus"] },
+        "tissue_type": { "type": "string", "examples": ["liver", "breast tumor"] },
+        "cell_type": { "type": "string", "examples": ["MCF7", "CD4+ T cells"] },
+        "source_material": { "type": "string", "examples": ["fresh frozen", "FFPE", "cultured cells"] },
+        "storage_conditions": {
+          "type": "object",
+          "properties": {
+            "prior_to_extraction": { "type": "string", "examples": ["Flash-frozen at -80°C"] },
+            "post_extraction": { "type": "string", "examples": ["-80°C in RNase-free water"] }
+          }
+        },
+        "treatment_or_condition": { "type": "string", "examples": ["10µM doxorubicin 24h", "Wild-type control"] }
+      }
+    },
+    "rna_extraction": {
+      "type": "object",
+      "description": "RNA isolation methodology. Quality assessment handled exclusively in quality_control block.",
+      "required": ["method", "dnase_treatment"],
+      "properties": {
+        "method": { "type": "string", "examples": ["TRIzol", "Qiagen RNeasy"] },
+        "kit_details": { "$ref": "#/definitions/kit_details" },
+        "protocol_reference": { "type": "string" },
+        "dnase_treatment": { "type": "boolean" },
+        "yield": { "type": "number", "minimum": 0, "description": "Total RNA yield in nanograms (ng)" },
+        "starting_material": {
+          "type": "object",
+          "properties": {
+            "quantity": { "type": "number", "minimum": 0 },
+            "unit": { "type": "string", "enum": ["mg", "g", "cells", "uL"] }
+          }
+        },
+        "extraction_date": { "type": "string", "format": "date" }
+      }
+    },
+    "rna_input": {
+      "type": "object",
+      "description": "RNA input quantity for library preparation — separated from extraction as an independent workflow stage.",
+      "required": ["quantity", "quantity_unit"],
+      "properties": {
+        "quantity": { "type": "number", "minimum": 0.001, "examples": [50, 500, 1000] },
+        "quantity_unit": { "type": "string", "enum": ["ng", "µg"] }
+      }
+    },
+    "quality_control": {
+      "type": "object",
+      "description": "Comprehensive QC metrics spanning post-extraction RNA assessment and post-library-prep library assessment. Both sub-blocks required.",
+      "required": ["rna_integrity", "library_quality"],
+      "properties": {
+        "rna_integrity": {
+          "type": "object",
+          "required": ["rin"],
+          "properties": {
+            "rin": { "type": "number", "minimum": 1, "maximum": 10, "examples": [8.5, 9.2] },
+            "dv200": { "type": "number", "minimum": 0, "maximum": 100, "examples": [65, 95] },
+            "bioanalyzer_profile": { "type": "string", "examples": ["intact 28S/18S peaks", "moderately degraded"] },
+            "quality_assessment_date": { "type": "string", "format": "date" },
+            "spectrophotometric_ratios": {
+              "type": "object",
+              "description": "Spectrophotometric purity ratios from NanoDrop or equivalent",
+              "required": ["a260_a280", "a260_a230"],
+              "properties": {
+                "a260_a280": { "type": "number", "minimum": 1.5, "maximum": 2.5, "description": "Protein contamination indicator; expected ~2.0 for pure RNA" },
+                "a260_a230": { "type": "number", "minimum": 1.5, "maximum": 3.0, "description": "Organic contamination indicator; expected 2.0–2.2 for pure RNA" }
+              }
+            }
+          }
+        },
+        "library_quality": {
+          "type": "object",
+          "description": "Post-library-prep quality metrics",
+          "properties": {
+            "average_insert_size": { "type": "integer", "unit": "bp", "examples": [300] },
+            "min_size": { "type": "integer", "unit": "bp", "examples": [150] },
+            "max_size": { "type": "integer", "unit": "bp", "examples": [500] },
+            "library_concentration": { "type": "number", "unit": "ng/µL", "examples": [12.5] },
+            "quantification_method": { "type": "string", "enum": ["Qubit fluorometry", "Bioanalyzer", "TapeStation", "qPCR"] },
+            "adapter_dimer_contamination": { "type": "boolean" },
+            "gc_content_bias": {
+              "type": "object",
+              "properties": {
+                "detected": { "type": "boolean" },
+                "bias_direction": { "type": "string", "enum": ["high GC", "low GC", "both"] },
+                "assessment_method": { "type": "string" }
+              }
+            },
+            "alignment_rate": { "type": "number", "minimum": 0, "maximum": 100, "unit": "%" },
+            "exon_capture_rate": { "type": "number", "minimum": 0, "maximum": 100, "unit": "%" },
+            "coverage_variance": { "type": "number" }
+          }
+        }
+      }
+    },
+    "library_preparation": {
+      "type": "object",
+      "description": "Complete library construction workflow. Transcript enrichment nested here as an intrinsic construction step.",
+      "required": ["transcript_enrichment", "protocol_or_kit", "library_type", "umi_usage", "fragmentation_and_amplification"],
+      "properties": {
+        "transcript_enrichment": {
+          "type": "object",
+          "required": ["strategy"],
+          "properties": {
+            "strategy": {
+              "type": "string",
+              "enum": ["poly-A selection", "rRNA depletion (RiboZero)", "globin depletion", "total RNA"]
+            },
+            "target_rna": { "type": "string", "examples": ["mRNA", "lncRNA"] },
+            "kit_details": { "$ref": "#/definitions/kit_details" },
+            "protocol_reference": { "type": "string" }
+          }
+        },
+        "protocol_or_kit": { "type": "string", "examples": ["Illumina TruSeq Stranded mRNA", "NEBNext Ultra II"] },
+        "kit_details": { "$ref": "#/definitions/kit_details" },
+        "library_type": {
+          "type": "string",
+          "enum": ["stranded-RF (first-strand)", "stranded-FR (second-strand)", "unstranded"],
+          "description": "Library strandedness using tool-convention labels compatible with STAR, Salmon, HTSeq"
+        },
+        "strand_specific_method": {
+          "type": "string",
+          "enum": ["dUTP/UDG", "ligation-based", "other"],
+          "description": "Biochemical method for strand specificity. dUTP/UDG incorporates dUTP in second-strand synthesis and selectively degrades it."
+        },
+        "umi_usage": { "type": "boolean", "description": "Whether UMIs were incorporated to correct for PCR duplicates" },
+        "adapter_sequences": {
+          "type": "object",
+          "required": ["read1_adapter"],
+          "properties": {
+            "read1_adapter": { "type": "string", "examples": ["AGATCGGAAGAGC"] },
+            "read2_adapter": { "type": "string", "description": "Only applicable for paired-end sequencing", "examples": ["AGATCGGAAGAGC"] }
+          }
+        },
+        "adapter_ligation": {
+          "type": "object",
+          "properties": {
+            "adapter_type": { "type": "string", "enum": ["Y-shaped", "A-tailed", "blunt-end", "other"] },
+            "adapter_sequence_5prime": { "type": "string" },
+            "adapter_sequence_3prime": { "type": "string" },
+            "ligation_strategy": { "type": "string", "examples": ["A-tailing followed by adapter ligation"] }
+          }
+        },
+        "reverse_transcription": { "type": "string", "examples": ["oligo-dT priming", "random hexamers"] },
+        "phosphorothioate_oligos_used": { "type": "boolean", "description": "Whether phosphorothioate oligos were used to prevent adapter dimer amplification" },
+        "indexing": {
+          "type": "object",
+          "required": ["index_type"],
+          "properties": {
+            "index_type": { "type": "string", "enum": ["single", "dual"] },
+            "index_sequence": { "type": "string" },
+            "index_length": { "type": "integer", "minimum": 4, "maximum": 10 }
+          }
+        },
+        "fragmentation_and_amplification": {
+          "type": "object",
+          "required": ["fragmentation_method", "fragmentation_temperature", "fragmentation_time", "pcr_cycles"],
+          "properties": {
+            "fragmentation_method": {
+              "type": "string",
+              "enum": ["enzymatic", "thermal", "sonication", "chemical", "acoustic shearing", "mechanical shearing", "none"]
+            },
+            "target_size": { "type": "integer", "minimum": 100, "maximum": 1000, "unit": "bp", "examples": [300] },
+            "fragmentation_temperature": { "type": "number", "minimum": 4, "unit": "°C", "examples": [94] },
+            "fragmentation_time": { "type": "number", "minimum": 1, "unit": "min", "examples": [3] },
+            "pcr_cycles": {
+              "type": "integer", "minimum": 5, "maximum": 20, "default": 12,
+              "description": "PCR amplification cycles. Optimal count often determined by real-time PCR to avoid over-amplification.",
+              "examples": [12]
+            },
+            "polymerase": { "type": "string", "examples": ["KAPA HiFi"] },
+            "amplification_method": {
+              "type": "string",
+              "enum": ["rolling circle", "bridge PCR", "other"],
+              "description": "Rolling circle (DNBseq) is linear; bridge PCR (Illumina) is exponential with known GC bias issues."
+            },
+            "purification_method": { "type": "string", "enum": ["SPRI beads", "gel electrophoresis", "column-based"] },
+            "size_selection_method": { "type": "string", "enum": ["SPRI bead subtraction", "gel extraction", "none"] }
+          }
+        },
+        "library_preparation_notes": { "type": "string" }
+      }
+    },
+    "sequencing": {
+      "type": "object",
+      "required": ["platform", "read_configuration", "sequencing_depth"],
+      "properties": {
+        "platform": {
+          "type": "string",
+          "examples": ["Illumina NovaSeq 6000", "Illumina NextSeq 2000", "MGI DNBSEQ", "BGISEQ-500", "Element Biosciences AVITI"]
+        },
+        "flow_cell_type": { "type": "string", "examples": ["S4", "S2", "SP"] },
+        "flow_cell_patterned": { "type": "boolean", "description": "Whether a patterned flow cell was used" },
+        "read_configuration": {
+          "type": "object",
+          "required": ["read_type", "read_length"],
+          "properties": {
+            "read_type": { "type": "string", "enum": ["single-end", "paired-end"] },
+            "read_length": {
+              "type": "object",
+              "required": ["read1"],
+              "properties": {
+                "read1": { "type": "integer", "minimum": 1, "unit": "bp", "examples": [150] },
+                "read2": { "type": "integer", "minimum": 1, "unit": "bp", "examples": [150] }
+              }
+            }
+          }
+        },
+        "sequencing_depth": {
+          "type": "integer", "minimum": 1000000,
+          "description": "Total reads per sample. Standard: 20–50 million for bulk RNA-seq DE studies.",
+          "examples": [20000000, 50000000]
+        },
+        "run_id": { "type": "string", "examples": ["SRR123456"] },
+        "multiplexing_pool_size": { "type": "integer", "minimum": 1, "examples": [8, 16] },
+        "sequencing_date": { "type": "string", "format": "date" },
+        "sequencing_notes": { "type": "string" }
+      }
+    },
+    "primary_data_processing": {
+      "type": "object",
+      "description": "Computational analysis workflow. All required fields mandatory for FAIR reproducibility.",
+      "required": [
+        "reference_genome", "gene_annotation", "trimming_tool",
+        "alignment_tool", "quantification_tool", "normalization_method",
+        "software_versions", "processing_date"
+      ],
+      "properties": {
+        "reference_genome": { "type": "string", "examples": ["GRCh38", "GRCm39"] },
+        "gene_annotation": { "type": "string", "examples": ["GENCODE v44", "Ensembl v109"] },
+        "trimming_tool": { "type": "string", "examples": ["fastp v0.23.2", "Trimmomatic v0.39"] },
+        "adapter_filtering_tool": { "type": "string", "examples": ["SOAPnuke", "Cutadapt"] },
+        "alignment_tool": { "type": "string", "examples": ["STAR v2.7.10a", "HISAT2 v2.2.1"] },
+        "quantification_tool": { "type": "string", "examples": ["featureCounts v2.0", "Salmon v1.9.0"] },
+        "normalization_method": { "type": "string", "examples": ["TPM", "TMM", "DESeq2 VST"] },
+        "differential_expression_tool": { "type": "string", "examples": ["DESeq2 v1.38", "edgeR v3.40"] },
+        "software_versions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["tool", "version"],
+            "properties": {
+              "tool": { "type": "string" },
+              "version": { "type": "string" }
+            }
+          }
+        },
+        "processing_date": { "type": "string", "format": "date" },
+        "processing_notes": { "type": "string" }
+      }
+    },
+    "experimental_design": {
+      "type": "object",
+      "required": ["replicates", "comparison_groups", "design_type", "batch_information"],
+      "properties": {
+        "replicates": { "type": "integer", "minimum": 1, "examples": [3] },
+        "batch_information": {
+          "type": "object",
+          "required": ["batch_id"],
+          "properties": {
+            "batch_id": { "type": "string", "examples": ["Batch_2024_01", "LibraryPrepLot_42"] },
+            "batch_correction_method": { "type": "string", "examples": ["ComBat", "limma removeBatchEffect", "none"] }
+          }
+        },
+        "comparison_groups": {
+          "type": "array",
+          "items": { "type": "string" },
+          "examples": [["treated vs control", "tumor vs normal"]]
+        },
+        "design_type": {
+          "type": "string",
+          "enum": ["paired", "unpaired", "time series", "dose response", "factorial"],
+          "description": "Experimental design structure; informs statistical model selection (e.g., paired design requires blocking in DESeq2)"
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Study-level metadata for FAIR compliance and public repository submission.",
+      "required": ["study_id", "experiment_date", "lab", "study_title", "funding_source"],
+      "properties": {
+        "study_id": { "type": "string", "examples": ["RNASEQ_2024_001"] },
+        "study_title": { "type": "string" },
+        "experiment_date": { "type": "string", "format": "date" },
+        "lab": { "type": "string" },
+        "researcher": { "type": "string" },
+        "funding_source": { "type": "string", "examples": ["NIH R01 GM123456"] },
+        "public_repository_accession": { "type": "string", "examples": ["GSE123456", "SRP123456"] },
+        "submission_date": { "type": "string", "format": "date" },
+        "project_id": { "type": "string" },
+        "notes": { "type": "string" }
+      }
+    }
+  },
+  "examples": [{
+    "sample": {
+      "sample_id": "SRR1234567", "organism": "Homo sapiens",
+      "tissue_type": "breast cancer", "cell_type": "MCF7",
+      "source_material": "cultured cells",
+      "storage_conditions": {"prior_to_extraction": "Flash-frozen at -80°C"},
+      "treatment_or_condition": "10µM doxorubicin 24h"
+    },
+    "rna_extraction": {
+      "method": "TRIzol",
+      "kit_details": {"kit_name": "Qiagen RNeasy Plus", "manufacturer": "Qiagen"},
+      "dnase_treatment": true, "yield": 1000, "extraction_date": "2024-01-10"
+    },
+    "rna_input": {"quantity": 500, "quantity_unit": "ng"},
+    "quality_control": {
+      "rna_integrity": {
+        "rin": 9.2, "dv200": 95.3,
+        "bioanalyzer_profile": "intact 28S/18S peaks",
+        "spectrophotometric_ratios": {"a260_a280": 2.0, "a260_a230": 2.3}
+      },
+      "library_quality": {
+        "average_insert_size": 300, "min_size": 150, "max_size": 500,
+        "library_concentration": 12.5, "quantification_method": "Qubit fluorometry",
+        "adapter_dimer_contamination": false
+      }
+    },
+    "library_preparation": {
+      "transcript_enrichment": {"strategy": "poly-A selection", "target_rna": "mRNA"},
+      "protocol_or_kit": "Illumina TruSeq Stranded mRNA Library Prep",
+      "library_type": "stranded-RF (first-strand)",
+      "umi_usage": false,
+      "adapter_sequences": {"read1_adapter": "AGATCGGAAGAGC", "read2_adapter": "AGATCGGAAGAGC"},
+      "fragmentation_and_amplification": {
+        "fragmentation_method": "enzymatic",
+        "fragmentation_temperature": 94, "fragmentation_time": 3,
+        "pcr_cycles": 12, "polymerase": "KAPA HiFi"
+      }
+    },
+    "sequencing": {
+      "platform": "Illumina NovaSeq 6000", "flow_cell_type": "S4",
+      "read_configuration": {"read_type": "paired-end", "read_length": {"read1": 150, "read2": 150}},
+      "sequencing_depth": 50000000, "sequencing_date": "2024-02-01"
+    },
+    "primary_data_processing": {
+      "reference_genome": "GRCh38", "gene_annotation": "GENCODE v44",
+      "trimming_tool": "fastp v0.23.2", "alignment_tool": "STAR v2.7.10a",
+      "quantification_tool": "featureCounts v2.0", "normalization_method": "TPM",
+      "software_versions": [
+        {"tool": "fastp", "version": "0.23.2"},
+        {"tool": "STAR", "version": "2.7.10a"},
+        {"tool": "featureCounts", "version": "2.0"},
+        {"tool": "DESeq2", "version": "1.38"}
+      ],
+      "processing_date": "2024-02-05"
+    },
+    "experimental_design": {
+      "replicates": 3,
+      "batch_information": {"batch_id": "LibraryPrepLot_42", "batch_correction_method": "ComBat"},
+      "comparison_groups": ["treated vs control"],
+      "design_type": "unpaired"
+    },
+    "metadata": {
+      "study_id": "RNASEQ_2024_001",
+      "study_title": "Strand-specific RNA-seq of doxorubicin-treated MCF7 cells",
+      "experiment_date": "2024-01-10",
+      "lab": "Transcriptomics Lab, Caltech",
+      "researcher": "Dr. X Smith",
+      "funding_source": "NIH R01GM123456",
+      "public_repository_accession": "GSE123456",
+      "submission_date": "2024-02-10"
+    }
+  }]
+}

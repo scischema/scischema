@@ -1,0 +1,273 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Fatigue Testing of Metallic Materials",
+    "description": "Master schema representing the fatigue testing process for metallic materials, capturing inputs, parameters, equipment, and outputs.",
+    "type": "object",
+    "properties": {
+        "material": {
+            "type": "object",
+            "description": "Details of the metallic material being tested.",
+            "properties": {
+                "alloyDesignation": {
+                    "type": "string",
+                    "description": "Standard designation of the alloy (e.g., AISI 4140, Al 2024-T3, Ti-6Al-4V)."
+                },
+                "chemicalComposition": {
+                    "type": "object",
+                    "description": "Chemical composition of the material in weight percentage. Keys are element symbols, values are percentages. Optional, as standard alloys are sufficiently identified by alloyDesignation.",
+                    "additionalProperties": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 100
+                    }
+                },
+                "heatTreatmentCondition": {
+                    "type": "string",
+                    "description": "Heat treatment condition of the material (e.g., Q&T, T3, mill-annealed, solution-annealed)."
+                }
+            },
+            "required": [
+                "alloyDesignation",
+                "heatTreatmentCondition"
+            ]
+        },
+        "specimenGeometry": {
+            "type": "object",
+            "description": "Physical dimensions and shape of the test specimen, conforming to standards such as ASTM E466 or ISO 1099.",
+            "properties": {
+                "shape": {
+                    "type": "string",
+                    "enum": [
+                        "cylindrical",
+                        "flat",
+                        "hourglass"
+                    ],
+                    "description": "Geometric shape of the specimen."
+                },
+                "notchCondition": {
+                    "type": "string",
+                    "enum": [
+                        "notched",
+                        "unnotched"
+                    ],
+                    "description": "Whether the specimen is notched or unnotched."
+                },
+                "gaugeLength": {
+                    "type": "number",
+                    "minimum": 0,
+                    "description": "Gauge length of the specimen in millimeters (mm)."
+                },
+                "crossSectionalArea": {
+                    "type": "number",
+                    "minimum": 0,
+                    "description": "Cross-sectional area of the specimen in square millimeters (mm²)."
+                }
+            },
+            "required": [
+                "shape",
+                "notchCondition",
+                "gaugeLength",
+                "crossSectionalArea"
+            ]
+        },
+        "loadingType": {
+            "type": "string",
+            "enum": [
+                "axial",
+                "rotatingBending",
+                "planeBending",
+                "torsion",
+                "multiaxial"
+            ],
+            "description": "Mode of mechanical loading applied during the test."
+        },
+        "loadingParameters": {
+            "type": "object",
+            "description": "Parameters defining the loading conditions applied during testing. One of stressAmplitude or strainAmplitude applies depending on the test control type.",
+            "properties": {
+                "stressAmplitude": {
+                    "type": "number",
+                    "minimum": 0,
+                    "description": "Stress amplitude (σ_a) in megapascals (MPa) for stress-controlled (HCF) tests."
+                },
+                "strainAmplitude": {
+                    "type": "number",
+                    "minimum": 0,
+                    "description": "Strain amplitude (ε_a) in mm/mm (dimensionless) for strain-controlled (LCF) tests."
+                },
+                "stressRatio": {
+                    "type": "number",
+                    "minimum": -1,
+                    "maximum": 1,
+                    "description": "Ratio of minimum to maximum applied stress (R = σ_min / σ_max), defining loading asymmetry. Common values: R = -1 (fully reversed), R = 0 (zero-to-tension), R = 0.1."
+                },
+                "loadingFrequency": {
+                    "type": "number",
+                    "minimum": 0,
+                    "description": "Number of load cycles applied per second (Hz). Ranges from <1 Hz for LCF to 20-60 Hz for conventional HCF, up to 20 kHz for ultrasonic VHCF testing."
+                }
+            },
+            "required": [
+                "stressRatio",
+                "loadingFrequency"
+            ]
+        },
+        "testEnvironment": {
+            "type": "object",
+            "description": "Environmental conditions during the test that may influence crack initiation and propagation.",
+            "properties": {
+                "temperature": {
+                    "type": "number",
+                    "description": "Test temperature in degrees Celsius (°C)."
+                },
+                "atmosphere": {
+                    "type": "string",
+                    "enum": [
+                        "air",
+                        "vacuum",
+                        "inertGas"
+                    ],
+                    "description": "Type of atmosphere during the test."
+                },
+                "medium": {
+                    "type": "string",
+                    "description": "Surrounding medium (e.g., ambient, NaCl solution). Especially relevant for corrosion fatigue."
+                }
+            },
+            "required": [
+                "temperature",
+                "atmosphere"
+            ]
+        },
+        "equipment": {
+            "type": "object",
+            "description": "Details of the testing equipment and standards used.",
+            "properties": {
+                "testingMachine": {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "enum": [
+                                "servoHydraulic",
+                                "electromechanical",
+                                "resonance",
+                                "rotatingBending",
+                                "ultrasonic"
+                            ],
+                            "description": "Type of fatigue testing machine."
+                        }
+                    },
+                    "required": [
+                        "type"
+                    ]
+                },
+                "testingStandard": {
+                    "type": "string",
+                    "description": "Normative procedure followed during testing (e.g., ASTM E466, ASTM E606, ISO 1099, DIN 50100, JIS Z 2273)."
+                }
+            },
+            "required": [
+                "testingMachine",
+                "testingStandard"
+            ]
+        },
+        "outputs": {
+            "type": "object",
+            "description": "Results and outputs from the fatigue test.",
+            "properties": {
+                "numberOfCyclesToFailure": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "Total number of load cycles endured before failure (N_f). For runout specimens, this equals the predefined cycle limit."
+                },
+                "failureCriterion": {
+                    "type": "string",
+                    "description": "Criterion used to define failure (e.g., complete separation, stiffness drop, specified crack length)."
+                },
+                "sNCurve": {
+                    "type": "object",
+                    "description": "Parameters of the S-N (Wöhler) curve derived from the test campaign.",
+                    "properties": {
+                        "basquinEquation": {
+                            "type": "object",
+                            "description": "Basquin equation parameters for stress-controlled (HCF) tests: σ_a = σ'_f * (N_f)^b.",
+                            "properties": {
+                                "fatigueStrengthCoefficient": {
+                                    "type": "number",
+                                    "description": "Fatigue strength coefficient (σ'_f) in megapascals (MPa)."
+                                },
+                                "fatigueStrengthExponent": {
+                                    "type": "number",
+                                    "description": "Fatigue strength exponent (b), dimensionless. Typically negative."
+                                }
+                            }
+                        },
+                        "coffinMansonParameters": {
+                            "type": "object",
+                            "description": "Coffin-Manson parameters for strain-controlled (LCF) tests: ε_p = ε'_f * (N_f)^c.",
+                            "properties": {
+                                "fatigueDuctilityCoefficient": {
+                                    "type": "number",
+                                    "description": "Fatigue ductility coefficient (ε'_f), dimensionless."
+                                },
+                                "fatigueDuctilityExponent": {
+                                    "type": "number",
+                                    "description": "Fatigue ductility exponent (c), dimensionless. Typically negative."
+                                }
+                            }
+                        },
+                        "fatigueLimit": {
+                            "type": "number",
+                            "description": "Fatigue limit or endurance limit in megapascals (MPa). Applicable to materials that exhibit a true fatigue limit (e.g., ferrous alloys)."
+                        }
+                    }
+                },
+                "failureMode": {
+                    "type": "object",
+                    "description": "Details of the failure mode and fracture characteristics, typically documented via SEM fractography.",
+                    "properties": {
+                        "initiationSite": {
+                            "type": "string",
+                            "enum": [
+                                "surface",
+                                "subsurface",
+                                "inclusion",
+                                "defect"
+                            ],
+                            "description": "Location where the fatigue crack initiated."
+                        },
+                        "failureClassification": {
+                            "type": "string",
+                            "enum": [
+                                "surface-initiated",
+                                "interior-initiated"
+                            ],
+                            "description": "Classification of failure initiation mechanism."
+                        },
+                        "fractureSurfaceCharacteristics": {
+                            "type": "string",
+                            "description": "Description of the fracture surface (e.g., striations, beach marks, river patterns, dimples)."
+                        }
+                    },
+                    "required": [
+                        "initiationSite"
+                    ]
+                }
+            },
+            "required": [
+                "numberOfCyclesToFailure",
+                "failureMode"
+            ]
+        }
+    },
+    "required": [
+        "material",
+        "specimenGeometry",
+        "loadingType",
+        "loadingParameters",
+        "testEnvironment",
+        "equipment",
+        "outputs"
+    ]
+}
