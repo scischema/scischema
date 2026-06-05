@@ -128,3 +128,56 @@ footer a {
 footer span {
   margin: 0 8px;
 }
+
+.schema-page {
+  max-width: 1320px;
+}
+
+.schema-subtitle,
+.schema-meta,
+.schema-breadcrumb {
+  font-size: 15px;
+  margin-bottom: 14px;
+}
+
+.schema-breadcrumb {
+  color: #990000;
+  font-weight: 700;
+}
+
+.schema-description {
+  max-width: 1180px;
+}
+
+.schema-table {
+  width: 100%;
+  max-width: 1180px;
+  border-collapse: collapse;
+  margin-top: 22px;
+  font-size: 14px;
+}
+
+.schema-table th {
+  background: #f1f1f1;
+  text-align: left;
+  padding: 12px;
+  border: 1px solid #ddd;
+  font-weight: 700;
+}
+
+.schema-table td {
+  padding: 14px 12px;
+  border: 1px solid #e5e5e5;
+  vertical-align: top;
+}
+
+.schema-table td:first-child,
+.schema-table td:nth-child(2) {
+  color: #cc0000;
+  font-weight: 700;
+  font-family: monospace;
+}
+
+.schema-table tr:nth-child(even) td {
+  background: #fafafa;
+}
