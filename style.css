@@ -146,14 +146,14 @@ footer span {
 }
 
 .schema-description {
-  max-width: 1180px;
+  max-width: 1000px;
 }
 
 .schema-table {
   width: 100%;
-  max-width: 1180px;
+  max-width: 1050px;
   border-collapse: collapse;
-  margin-top: 22px;
+  margin-top: 30px;
   font-size: 14px;
 }
 
@@ -180,4 +180,19 @@ footer span {
 
 .schema-table tr:nth-child(even) td {
   background: #fafafa;
+}
+
+.schema-table td:first-child {
+  width: 220px;
+}
+
+.schema-table td:nth-child(2) {
+  width: 180px;
+}
+
+.schema-section-header td {
+  background: #f1f1f1 !important;
+  font-weight: 700;
+  color: #111 !important;
+  font-family: Arial, Helvetica, sans-serif !important;
 }
