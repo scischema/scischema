@@ -146,12 +146,12 @@ footer span {
 }
 
 .schema-description {
-  max-width: 1000px;
+  max-width: 1180px;
 }
 
 .schema-table {
   width: 100%;
-  max-width: 1050px;
+  max-width: 1180px;
   border-collapse: collapse;
   margin-top: 30px;
   font-size: 14px;
@@ -183,11 +183,15 @@ footer span {
 }
 
 .schema-table td:first-child {
-  width: 220px;
+  width: 240px;
 }
 
 .schema-table td:nth-child(2) {
-  width: 180px;
+  width: 170px;
+}
+
+.schema-table td:nth-child(4) {
+  width: 90px;
 }
 
 .schema-section-header td {
