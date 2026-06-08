@@ -1,6 +1,14 @@
-# SciSchema.org
+<p align="center">
+  <img src="assets/logo.png" alt="SciSchema logo" width="180">
+</p>
 
+<h1 align="center">SciSchema.org</h1>
+
+<p align="center">
 Repository for the SciSchema.org website and machine-readable scientific process schemas.
+</p>
+
+---
 
 This repository contains:
 
@@ -8,7 +16,7 @@ This repository contains:
 * Metadata and auto-generation scripts used to build the schema catalog.
 * Source files for the SciSchema.org website.
 
-Website: https://scischema.org
+🌐 Website: https://scischema.org
 
 ## Repository Structure for Scientific Schema Storage
 
