@@ -21,7 +21,8 @@ This repository contains:
 
 🌐 Website: https://scischema.org
 
-## Repository Structure for Scientific Schema Storage
+
+## Files Relevant for Schema Contributions
 
 ```text
 auto-gen/
@@ -41,7 +42,7 @@ SciSchema is a community-driven collection of machine-readable scientific proces
 
 Please see [CONTRIBUTING.md](CONTRIBUTING.md) for detailed instructions on adding new schemas and submitting pull requests.
 
-## License
+## ⚖️ License
 
 Unless otherwise noted, the schemas and documentation in this repository are licensed under the Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0).
 
