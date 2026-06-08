@@ -159,7 +159,9 @@ Slug:
 
 Short description:
 
-ORKG template URL, if available:
+ORKG template URL (if available):
+
+Contributor Github username (@username):
 
 ### Files Added or Updated
 
@@ -178,4 +180,3 @@ ORKG template URL, if available:
 - [ ] ORKG link works, if provided
 ```
 
-This workflow is simple and consistent: contributors edit the auto-generation inputs, and the final website schema folders always contain only `index.html` and `master-schema.json`.
