@@ -4,6 +4,15 @@
 
 <h1 align="center">SciSchema.org</h1>
 
+<p align="center">
+  <a href="https://scischema.org">
+    <img src="https://img.shields.io/badge/Website-scischema.org-red">
+  </a>
+  <a href="https://creativecommons.org/licenses/by-sa/4.0/">
+    <img src="https://img.shields.io/badge/License-CC_BY--SA_4.0-lightgrey.svg">
+  </a>
+</p>
+
 This repository contains:
 
 * JSON Schema representations of scientific processes.
