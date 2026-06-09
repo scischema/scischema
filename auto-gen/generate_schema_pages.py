@@ -68,7 +68,7 @@ def orkg_html(orkg_url: str) -> str:
 
 
 def update_existing_orkg_link(index_path: Path, orkg_url: str) -> None:
-    """Update only the ORKG template/SHACL link block in an existing schema page."""
+    """Update only the ORKG template/SHACL block in an existing schema page."""
     if not orkg_url.strip():
         print(f"SKIPPED ORKG update, no ORKG URL provided: {index_path}")
         return
@@ -78,14 +78,10 @@ def update_existing_orkg_link(index_path: Path, orkg_url: str) -> None:
 
     pattern = re.compile(
         r"""          <li>\s*
-            (?:
-              <a href="[^"]*">View template in ORKG</a>\s*
-              <span> — ORKG template / SHACL representation</span>
-              |
-              <span>ORKG template / SHACL representation — forthcoming</span>
-            )\s*
-          </li>""",
-        re.VERBOSE,
+\s*(?:<a href="[^"]*">View template in ORKG</a>\s*
+\s*<span> — ORKG template / SHACL representation</span>|<span>ORKG template / SHACL representation — forthcoming</span>)\s*
+\s*</li>""",
+        re.MULTILINE,
     )
 
     updated_html, count = pattern.subn(new_block, html, count=1)
@@ -326,6 +322,7 @@ def main() -> None:
         json_path = out_dir / "master-schema.json"
 
         if SKIP_EXISTING and index_path.exists():
+            print(f"ORKG URL for {process_name}: {orkg_url}")
             update_existing_orkg_link(index_path, orkg_url)
             print(f"SKIPPED existing page generation: {index_path}")
             continue
