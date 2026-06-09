@@ -67,6 +67,36 @@ def orkg_html(orkg_url: str) -> str:
           </li>"""
 
 
+def update_existing_orkg_link(index_path: Path, orkg_url: str) -> None:
+    """Update only the ORKG template/SHACL link block in an existing schema page."""
+    if not orkg_url.strip():
+        print(f"SKIPPED ORKG update, no ORKG URL provided: {index_path}")
+        return
+
+    html = index_path.read_text(encoding="utf-8")
+    new_block = orkg_html(orkg_url)
+
+    pattern = re.compile(
+        r"""          <li>\s*
+            (?:
+              <a href="[^"]*">View template in ORKG</a>\s*
+              <span> — ORKG template / SHACL representation</span>
+              |
+              <span>ORKG template / SHACL representation — forthcoming</span>
+            )\s*
+          </li>""",
+        re.VERBOSE,
+    )
+
+    updated_html, count = pattern.subn(new_block, html, count=1)
+
+    if count:
+        index_path.write_text(updated_html, encoding="utf-8")
+        print(f"UPDATED ORKG link: {index_path}")
+    else:
+        print(f"WARNING: Could not find ORKG block to update: {index_path}")
+
+
 def generate_html(process_name, domain_name, schema_title, description, rows, orkg_url):
     return f"""<!doctype html>
 <html lang="en">
@@ -183,10 +213,7 @@ def generate_schema_index(metadata: list[dict]) -> str:
             continue
 
         if domain_slug not in domains:
-            domains[domain_slug] = {
-                "name": domain_name,
-                "schemas": []
-            }
+            domains[domain_slug] = {"name": domain_name, "schemas": []}
 
         schema_url = f"/schemas/{domain_slug}/{slug}/"
 
@@ -299,7 +326,8 @@ def main() -> None:
         json_path = out_dir / "master-schema.json"
 
         if SKIP_EXISTING and index_path.exists():
-            print(f"SKIPPED existing page: {index_path}")
+            update_existing_orkg_link(index_path, orkg_url)
+            print(f"SKIPPED existing page generation: {index_path}")
             continue
 
         try:

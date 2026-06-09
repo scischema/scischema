@@ -5,45 +5,102 @@
     "properties": {
         "biological_source_material": {
             "type": "object",
+            "description": "Biological source, experimental conditions, and replicate structure.",
             "properties": {
-                "organism": { "type": "string" },
-                "tissue_or_cell_type": { "type": "string" },
-                "treatment_condition": { "type": "string" },
-                "biological_replicates": { "type": "integer", "minimum": 3 },
-                "sample_collection_protocol": { "type": "string" }
+                "organism": {
+                    "type": "string",
+                    "description": "Scientific name of the organism."
+                },
+                "tissue_or_cell_type": {
+                    "type": "string",
+                    "description": "Tissue or cell type from which RNA was extracted."
+                },
+                "treatment_condition": {
+                    "type": "string",
+                    "description": "Experimental condition applied to the biological sample."
+                },
+                "biological_replicates": {
+                    "type": "integer",
+                    "minimum": 3,
+                    "description": "Number of independent biological replicates per condition."
+                },
+                "sample_collection_protocol": {
+                    "type": "string",
+                    "description": "Method used to collect and handle samples prior to RNA extraction."
+                }
             },
             "required": ["organism", "tissue_or_cell_type", "treatment_condition", "biological_replicates"]
         },
         "rna_extraction_and_quality_metrics": {
             "type": "object",
+            "description": "RNA isolation protocol and quality control measurements.",
             "properties": {
-                "protocol": { "type": "string" },
-                "rin": { "type": "number", "minimum": 0, "maximum": 10 },
-                "concentration": { "type": "number", "minimum": 0, "description": "ng/µL" },
-                "a260_280_ratio": { "type": "number" },
-                "quantification_method": { "type": "string" }
+                "protocol": {
+                    "type": "string",
+                    "description": "RNA isolation method used."
+                },
+                "rin": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 10,
+                    "description": "RNA Integrity Number score on a 0-10 scale."
+                },
+                "concentration": {
+                    "type": "number",
+                    "minimum": 0,
+                    "description": "RNA concentration in ng/µL."
+                },
+                "a260_280_ratio": {
+                    "type": "number",
+                    "description": "Absorbance ratio indicating RNA purity."
+                },
+                "quantification_method": {
+                    "type": "string",
+                    "description": "Instrument or method used to measure RNA concentration."
+                }
             },
             "required": ["protocol", "rin", "concentration"]
         },
         "library_preparation_protocol": {
             "type": "object",
+            "description": "cDNA library construction parameters.",
             "properties": {
-                "method": { "type": "string" },
+                "method": {
+                    "type": "string",
+                    "description": "RNA enrichment or depletion strategy used for library preparation."
+                },
                 "strandedness": {
                     "type": "string",
-                    "enum": ["forward", "reverse", "unstranded"]
+                    "enum": ["forward", "reverse", "unstranded"],
+                    "description": "Whether strand-of-origin information is preserved during library synthesis."
                 },
-                "fragmentation_strategy": { "type": "string" },
-                "amplification_cycles": { "type": "integer", "minimum": 0 },
+                "fragmentation_strategy": {
+                    "type": "string",
+                    "description": "Method used to fragment RNA prior to cDNA synthesis."
+                },
+                "amplification_cycles": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "Number of PCR amplification cycles applied during library preparation."
+                },
                 "umi_details": {
                     "type": "object",
-                    "description": "Only applicable when UMIs are used.",
+                    "description": "Unique Molecular Identifier configuration. Only applicable when UMIs are incorporated.",
                     "properties": {
-                        "umi_length": { "type": "integer", "minimum": 4 },
-                        "umi_position": { "type": "string", "enum": ["5_prime", "3_prime", "internal"] },
+                        "umi_length": {
+                            "type": "integer",
+                            "minimum": 4,
+                            "description": "Length of the UMI sequence in base pairs."
+                        },
+                        "umi_position": {
+                            "type": "string",
+                            "enum": ["5_prime", "3_prime", "internal"],
+                            "description": "Position of the UMI within the sequencing read."
+                        },
                         "deduplication_method": {
                             "type": "string",
-                            "enum": ["unique", "percentile", "cluster", "adjacency", "directional"]
+                            "enum": ["unique", "percentile", "cluster", "adjacency", "directional"],
+                            "description": "Algorithm used to resolve PCR duplicates based on UMI sequences."
                         }
                     },
                     "required": ["umi_length", "umi_position", "deduplication_method"]
@@ -53,46 +110,113 @@
         },
         "sequencing_platform_and_configuration": {
             "type": "object",
+            "description": "Sequencing instrument and run configuration.",
             "properties": {
-                "platform": { "type": "string" },
-                "read_length": { "type": "integer", "minimum": 36 },
-                "read_type": { "type": "string", "enum": ["single-end", "paired-end"] },
-                "sequencing_depth": { "type": "number", "minimum": 10, "description": "Millions of reads per sample." }
+                "platform": {
+                    "type": "string",
+                    "description": "Sequencing instrument model used."
+                },
+                "read_length": {
+                    "type": "integer",
+                    "minimum": 36,
+                    "description": "Length of each sequencing read in base pairs."
+                },
+                "read_type": {
+                    "type": "string",
+                    "enum": ["single-end", "paired-end"],
+                    "description": "Whether reads are sequenced from one or both ends of the fragment."
+                },
+                "sequencing_depth": {
+                    "type": "number",
+                    "minimum": 10,
+                    "description": "Average number of reads per sample in millions."
+                }
             },
             "required": ["platform", "read_length", "read_type", "sequencing_depth"]
         },
         "raw_data_quality_control": {
             "type": "object",
+            "description": "Preprocessing and quality control steps applied to raw sequencing reads.",
             "properties": {
-                "adapter_trimming": { "type": "string" },
-                "quality_filtering": { "type": "string" },
-                "qc_assessment_tool": { "type": "string" }
+                "adapter_trimming": {
+                    "type": "string",
+                    "description": "Tool used to remove sequencing adapter sequences from reads."
+                },
+                "quality_filtering": {
+                    "type": "string",
+                    "description": "Criteria or tool used to remove low-quality reads or bases."
+                },
+                "qc_assessment_tool": {
+                    "type": "string",
+                    "description": "Tool used for per-base quality assessment and QC reporting."
+                }
             },
             "required": ["adapter_trimming", "quality_filtering", "qc_assessment_tool"]
         },
         "read_alignment": {
             "type": "object",
+            "description": "Read alignment or pseudoalignment to the reference genome or transcriptome.",
             "properties": {
-                "tool": { "type": "string" },
-                "genome_assembly": { "type": "string" },
-                "annotation_source": { "type": "string" },
-                "annotation_version": { "type": "string" },
-                "alignment_rate": { "type": "number", "minimum": 0, "maximum": 1 }
+                "tool": {
+                    "type": "string",
+                    "description": "Alignment or pseudoalignment tool used."
+                },
+                "genome_assembly": {
+                    "type": "string",
+                    "description": "Reference genome assembly identifier."
+                },
+                "annotation_source": {
+                    "type": "string",
+                    "description": "Transcript annotation database used."
+                },
+                "annotation_version": {
+                    "type": "string",
+                    "description": "Version of the transcript annotation used."
+                },
+                "alignment_rate": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1,
+                    "description": "Proportion of reads successfully aligned to the reference."
+                }
             },
             "required": ["tool", "genome_assembly", "annotation_source", "annotation_version"]
         },
         "expression_quantification": {
             "type": "object",
+            "description": "Strategy for estimating gene or transcript expression levels from aligned reads.",
             "properties": {
-                "level": { "type": "string", "enum": ["gene", "transcript"] },
-                "count_summarization_method": { "type": "string" },
-                "normalization_aware": { "type": "boolean" },
+                "level": {
+                    "type": "string",
+                    "enum": ["gene", "transcript"],
+                    "description": "Resolution at which expression is quantified."
+                },
+                "count_summarization_method": {
+                    "type": "string",
+                    "description": "Tool or method used to summarize aligned reads into expression counts."
+                },
+                "normalization_aware": {
+                    "type": "boolean",
+                    "description": "Whether the quantification step incorporates bias correction."
+                },
                 "low_count_filtering": {
                     "type": "object",
+                    "description": "Criteria for removing lowly expressed genes prior to statistical testing.",
                     "properties": {
-                        "min_counts_per_sample": { "type": "integer", "minimum": 0 },
-                        "min_samples_with_min_counts": { "type": "integer", "minimum": 1 },
-                        "tool": { "type": "string" }
+                        "min_counts_per_sample": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "description": "Minimum read count required in a given sample for gene retention."
+                        },
+                        "min_samples_with_min_counts": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "description": "Minimum number of samples that must meet the count threshold."
+                        },
+                        "tool": {
+                            "type": "string",
+                            "description": "Tool used to apply low-count filtering."
+                        }
                     }
                 }
             },
@@ -100,46 +224,81 @@
         },
         "normalization_method": {
             "type": "object",
-            "description": "Between-sample normalization. RPKM/FPKM not appropriate for DGE.",
+            "description": "Between-sample normalization to correct for library size and composition biases. RPKM/FPKM are within-sample metrics and not appropriate for DGE.",
             "properties": {
                 "method": {
                     "type": "string",
-                    "enum": ["median_of_ratios", "TMM", "upper_quartile", "RUV", "other"]
+                    "enum": ["median_of_ratios", "TMM", "upper_quartile", "RUV", "other"],
+                    "description": "Normalization strategy applied across samples."
                 },
-                "tool": { "type": "string" }
+                "tool": {
+                    "type": "string",
+                    "description": "Software package implementing the normalization."
+                }
             },
             "required": ["method", "tool"]
         },
         "statistical_analysis": {
             "type": "object",
+            "description": "Statistical framework for differential expression testing, including model specification, batch correction, and significance criteria.",
             "properties": {
-                "model_framework": { "type": "string" },
-                "design_formula": { "type": "string" },
-                "covariates": { "type": "array", "items": { "type": "string" } },
+                "model_framework": {
+                    "type": "string",
+                    "description": "Statistical model used for differential expression testing."
+                },
+                "design_formula": {
+                    "type": "string",
+                    "description": "Formula specifying experimental factors and covariates included in the model."
+                },
+                "covariates": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "Additional variables included in the model to account for technical or biological variability."
+                },
                 "dispersion_estimation": {
                     "type": "string",
-                    "enum": ["common", "trended", "per_gene", "local"]
+                    "enum": ["common", "trended", "per_gene", "local"],
+                    "description": "Method for estimating gene-wise overdispersion in count data."
                 },
                 "batch_correction": {
                     "type": "object",
+                    "description": "Correction applied to remove technical variation introduced by experimental batches.",
                     "properties": {
-                        "applied": { "type": "boolean" },
+                        "applied": {
+                            "type": "boolean",
+                            "description": "Whether batch correction was performed."
+                        },
                         "method": {
                             "type": "string",
-                            "enum": ["ComBat", "limma_removeBatchEffect", "SVA", "RUV", "none"]
+                            "enum": ["ComBat", "limma_removeBatchEffect", "SVA", "RUV", "none"],
+                            "description": "Batch correction method used."
                         },
-                        "batch_variable": { "type": "string" }
+                        "batch_variable": {
+                            "type": "string",
+                            "description": "Name of the variable representing batch in the experimental design."
+                        }
                     }
                 },
                 "multiple_testing_correction": {
                     "type": "string",
-                    "enum": ["Benjamini-Hochberg", "Bonferroni", "Holm", "Storey_q_value"]
+                    "enum": ["Benjamini-Hochberg", "Bonferroni", "Holm", "Storey_q_value"],
+                    "description": "Method for controlling the false discovery rate across multiple hypothesis tests."
                 },
                 "significance_thresholds": {
                     "type": "object",
+                    "description": "Thresholds used to declare a gene as differentially expressed.",
                     "properties": {
-                        "adjusted_pvalue_threshold": { "type": "number", "minimum": 0, "maximum": 1 },
-                        "log2_fold_change_threshold": { "type": "number", "minimum": 0 }
+                        "adjusted_pvalue_threshold": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1,
+                            "description": "Maximum adjusted p-value for a gene to be considered significant."
+                        },
+                        "log2_fold_change_threshold": {
+                            "type": "number",
+                            "minimum": 0,
+                            "description": "Minimum absolute log2 fold change required for biological significance."
+                        }
                     },
                     "required": ["adjusted_pvalue_threshold", "log2_fold_change_threshold"]
                 }
@@ -148,6 +307,7 @@
         },
         "output_artifacts": {
             "type": "array",
+            "description": "Files and visualizations generated by the workflow.",
             "items": {
                 "type": "object",
                 "required": ["type", "path"],
@@ -163,28 +323,49 @@
                             "qc_report",
                             "gene_expression_heatmap",
                             "other"
-                        ]
+                        ],
+                        "description": "Category of the output artifact."
                     },
-                    "path": { "type": "string" },
-                    "format": { "type": "string", "enum": ["csv", "tsv", "pdf", "png", "html", "rds", "h5"] }
+                    "path": {
+                        "type": "string",
+                        "description": "File path or URI where the artifact is stored."
+                    },
+                    "format": {
+                        "type": "string",
+                        "enum": ["csv", "tsv", "pdf", "png", "html", "rds", "h5"],
+                        "description": "File format of the output artifact."
+                    }
                 }
             },
             "minItems": 1
         },
         "reproducibility_metadata": {
             "type": "object",
+            "description": "Metadata required to reproduce the workflow and ensure FAIR compliance.",
             "properties": {
                 "software_versions": {
                     "type": "object",
-                    "additionalProperties": { "type": "string" }
+                    "additionalProperties": { "type": "string" },
+                    "description": "Mapping of software tool names to their exact versions."
                 },
                 "workflow_engine": {
                     "type": "string",
-                    "enum": ["Snakemake", "Nextflow", "CWL", "WDL", "Galaxy", "other"]
+                    "enum": ["Snakemake", "Nextflow", "CWL", "WDL", "Galaxy", "other"],
+                    "description": "Workflow management system used to orchestrate the pipeline."
                 },
-                "computational_environment": { "type": "string" },
-                "random_seed": { "type": "integer" },
-                "parameter_settings": { "type": "object", "additionalProperties": true }
+                "computational_environment": {
+                    "type": "string",
+                    "description": "Container or environment specification used for execution."
+                },
+                "random_seed": {
+                    "type": "integer",
+                    "description": "Seed value used in stochastic steps to ensure reproducibility."
+                },
+                "parameter_settings": {
+                    "type": "object",
+                    "additionalProperties": true,
+                    "description": "Non-default parameter configurations applied across workflow tools."
+                }
             },
             "required": ["software_versions", "workflow_engine", "computational_environment"]
         }
