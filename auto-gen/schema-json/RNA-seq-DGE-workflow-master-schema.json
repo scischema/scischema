@@ -375,12 +375,10 @@
         "rna_extraction_and_quality_metrics",
         "library_preparation_protocol",
         "sequencing_platform_and_configuration",
-        "raw_data_quality_control",
         "read_alignment",
         "expression_quantification",
         "normalization_method",
         "statistical_analysis",
-        "output_artifacts",
         "reproducibility_metadata"
     ]
 }
